@@ -7,7 +7,7 @@ _Version = "_V0_0_0"
     
     #def getPaths():
 
-path_cwd = os.get_cwd()
+path_cwd = os.getcwd()
 # e.g. path_cwd = .../amplitudeModulation/amplitudeModulation_programs/amplitudeModulation_V0_0_0
 path_test = os.path.join(path_cwd, f"test{_Version}")
 # e.g. .../amplitudeModulation_V0_0_0/test_V0_0_0
