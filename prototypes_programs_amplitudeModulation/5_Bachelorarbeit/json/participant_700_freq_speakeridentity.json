@@ -1,0 +1,7 @@
+{
+    "participant_700": {
+        "name": "participant_700",
+        "xstr_frequencies": "['(fAM_A=5.0Hz)', '(fAM_B=7.3Hz)', '(fAM_C=13.7Hz)', '(shift=6.0Hz)']",
+        "xstr_speaker_identity": "['(fAM_A=fAM_left)', '(fAM_B=fAM_right)', '(fAM_C=fAM_middle)']"
+    }
+}
