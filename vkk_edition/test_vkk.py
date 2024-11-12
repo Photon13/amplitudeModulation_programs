@@ -16,8 +16,10 @@ freefield.initialize('dome', device=proc_list)
 samplerate = 48828
 # todo: adjust your pink noises and their modified versions as you want, based on the ones you created; these are random
 pinknoise1 = slab.Sound.pinknoise(duration=1.0, samplerate=samplerate, level=80)
+
 pinknoise2 = slab.Sound.pinknoise(duration=1.0, samplerate=samplerate, level=80)
 pinknoise2 = pinknoise2.am(frequency=33)
+
 pinknoise3 = slab.Sound.pinknoise(duration=1.0, samplerate=samplerate, level=80)
 pinknoise3 = pinknoise3.am(frequency=46)
 
@@ -129,7 +131,7 @@ freefield.write('pink_data2', pinknoise2_data, ['RX82', 'RX82']) # correct
 freefield.write('pink_n_samples2', pinknoise2.n_samples, ['RX82', 'RX82'])  # correct
 freefield.write('pink_am_data2', pinknoise2_mod_data, ['RX82', 'RX82']) # correct
 freefield.write('pink_am_n_samples2', pinknoise2_mod.n_samples, ['RX82', 'RX82'])  # correct
-freefield.write('n_trials2', total_trials + 2, ['RX82', 'RX82'])  # works
+freefield.write('n_trials2', total_trials + 1, ['RX82', 'RX82'])  # works
 freefield.write('sequence2', sequence_indices2, ['RX82', 'RX82'])  # works
 
 # channel 3 data (midline)
@@ -137,7 +139,40 @@ freefield.write('pink_data3', pinknoise3_data, ['RX81', 'RX82']) # correct
 freefield.write('pink_n_samples3', pinknoise3.n_samples, ['RX81', 'RX82'])  # correct
 freefield.write('pink_am_data3', pinknoise3_mod_data, ['RX81', 'RX82']) # correct
 freefield.write('pink_am_n_samples3', pinknoise3_mod.n_samples, ['RX81', 'RX82'])  # correct
-freefield.write('n_trials3', total_trials + 3, ['RX81', 'RX82'])  # works
+freefield.write('n_trials3', total_trials + 1, ['RX81', 'RX82'])  # works
 freefield.write('sequence3', sequence_indices3, ['RX81', 'RX82'])  # works
 
 freefield.play(kind='zBusA')
+
+#_________________________________________________________________________________________
+
+print(freefield.all_leds())
+# (azimuth, elevation) ## [left, middle, right] ### actually: [down, middle, up]
+led_coordinates = [(0,25), (0,0), (0,-25)]
+
+
+[ledLeft] = freefield.pick_speakers (
+    (led_coordinates [0]))
+
+[ledMiddle] = freefield.pick_speakers (
+    (led_coordinates [1]))
+
+[ledRight] = freefield.pick_speakers (
+    (led_coordinates [2]))
+
+#________________________________________________________________________
+# todo: select led based on target stream
+# if target == 'stream1:
+    #freefield.write('bitmask1', ledLeft.digital_channel, ledLeft.digital_proc)
+    # so on and so forth
+# elif target == 'stream2:
+freefield.write('bitmask', ledLeft.digital_channel, ledLeft.digital_proc) # this one is in the middle
+freefield.write('bitmask', ledMiddle.digital_channel, ledMiddle.digital_proc) # this one is on top for some reason
+freefield.write('bitmask', ledRight.digital_channel, ledRight.digital_proc) # last one on bottom
+
+
+
+
+freefield.write("bitmask", 0, ledLeft.digital_proc)
+#freefield.write("bitmask", 0, ledMiddle.digital_proc)
+#freefield.write("bitmask", 0, ledRight.digital_proc)
