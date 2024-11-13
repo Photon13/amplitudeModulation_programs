@@ -4,50 +4,7 @@ from pathlib import Path
 import numpy as np
 import random
 #_______________________________________________________________________________________________________________________________________________________
-path_play_buf_rcx = Path(
-    "C:\\projects\\Maik_R_F_K\\Biologie Bachelor\\Bachelorarbeit\\5_Bachelorarbeit\\5_Version_data_programs_etc\\Programs\\rcx\\standard_setup_long.rcx"
-)
-path_button_rcx = Path(
-    "C:\\projects\\Maik_R_F_K\\Biologie Bachelor\\Bachelorarbeit\\Testing Programs\\rcx\\button.rcx"
-)
-proc_list = [['RP2', 'RP2', path_button_rcx],
-             ['RX81', 'RX8', path_play_buf_rcx],
-             ['RX82', 'RX8', path_play_buf_rcx]]
-
-freefield.initialize('dome', device=proc_list)
-#_______________________________________________________________________________________________________________________________________________________
-def generate_pinknoise_segments():
-
-    samplerate = int(48828)
-    level = int(80)
-    duration = float(1.0)
-
-    fAM_base_A = int(7)
-    fAM_base_B = int(13)
-    fAM_base_C = int(17)
-    shift = int(4)
-    #________________________
-    fAM_shifted_A = int( fAM_base_A + shift )
-    fAM_shifted_B = int( fAM_base_B + shift )
-    fAM_shifted_C = int( fAM_base_C + shift )
-    #_________________________________________
-    pinknoise = slab.Sound.pinknoise(
-        duration = duration, samplerate = samplerate, level = level
-    )
-    base_A = pinknoise.am (frequency = fAM_base_A)
-    base_B = pinknoise.am (frequency = fAM_base_B)
-    base_C = pinknoise.am (frequency = fAM_base_C)
-
-    shifted_A = pinknoise.am (frequency = fAM_shifted_A)
-    shifted_B = pinknoise.am (frequency = fAM_shifted_B)
-    shifted_C = pinknoise.am (frequency = fAM_shifted_C)
-
-    return base_A, base_B, base_C, shifted_A, shifted_B, shifted_C
-
-base_A, base_B, base_C, shifted_A, shifted_B, shifted_C = generate_pinknoise_segments()
-#_______________________________________________________________________________________________________________________________________________________
 def assign_speakers():
-
     speaker_coordinates_LMR = [(-35,0), (0,0), (35,0)]
 
     [speaker_left] = freefield.pick_speakers((speaker_coordinates_LMR[0]))
@@ -86,11 +43,70 @@ def assign_speakers():
         print("'''''\n CAVE! Speakers couldn't be assigned to positions. \n'''''")
 
     return speaker_A, speaker_B, speaker_C
-
-speaker_A, speaker_B, speaker_C = assign_speakers()
 #_______________________________________________________________________________________________________________________________________________________
-def apply_filters()
+def assign_leds():
+    # print(freefield.all_leds())
+    led_coordinates = [(0, 25), (0, 0), (0, -25)]  # (azimuth, elevation)
 
+    [ledLeft] = freefield.pick_speakers((led_coordinates[0]))  # this one is in the middle
+
+    [ledMiddle] = freefield.pick_speakers((led_coordinates[1]))  # this one is on top for some reason
+
+    [ledRight] = freefield.pick_speakers((led_coordinates[2]))  # last one on bottom
+
+    return ledLeft, ledMiddle, ledRight
+# _______________________________________________________________________________________________________________________________________________________
+def find_out_target(block_index):
+    """ CHANGE TO GET IT FROM EXCEL!!!"""
+    # read target_sequence ('left', 'both', ...)
+    target_sequence = ['left', 'middle', 'right', 'both']  # only for test
+
+    target = (target_sequence[block_index])
+    return target
+# _______________________________________________________________________________________________________________________________________________________
+def turn_target_led_on(target):
+    if target == "left":
+        freefield.write('bitmask', ledLeft.digital_channel, ledLeft.digital_proc)
+    elif target == 'middle':
+        freefield.write('bitmask', ledMiddle.digital_channel, ledMiddle.digital_proc)
+    elif target == 'right':
+        freefield.write('bitmask', ledRight.digital_channel, ledRight.digital_proc)
+    elif target == 'both':
+        freefield.write('bitmask', ledLeft.digital_channel, ledLeft.digital_proc)
+        freefield.write('bitmask', ledRight.digital_channel, ledRight.digital_proc)
+
+
+def turn_all_leds_off():
+    freefield.write("bitmask", 0, ledLeft.digital_proc)
+    freefield.write("bitmask", 0, ledMiddle.digital_proc)
+    freefield.write("bitmask", 0, ledRight.digital_proc)
+# _______________________________________________________________________________________________________________________________________________________
+def generate_pinknoise_segments():
+
+    samplerate = int(48828)
+    level = int(80)
+    duration = float(1.0)
+
+    fAM_base_A = int(7)
+    fAM_base_B = int(13)
+    fAM_base_C = int(17)
+    shift = int(4)
+    #________________________
+    fAM_shifted_A = int( fAM_base_A + shift )
+    fAM_shifted_B = int( fAM_base_B + shift )
+    fAM_shifted_C = int( fAM_base_C + shift )
+    #_________________________________________
+    pinknoise = slab.Sound.pinknoise(
+        duration = duration, samplerate = samplerate, level = level
+    )
+    base_A = pinknoise.am (frequency = fAM_base_A)
+    base_B = pinknoise.am (frequency = fAM_base_B)
+    base_C = pinknoise.am (frequency = fAM_base_C)
+
+    shifted_A = pinknoise.am (frequency = fAM_shifted_A)
+    shifted_B = pinknoise.am (frequency = fAM_shifted_B)
+    shifted_C = pinknoise.am (frequency = fAM_shifted_C)
+    # _________________________________________
     filter_A = speaker_A.filter
     filter_A.apply(base_A)
     filter_A.apply(shifted_A)
@@ -103,26 +119,7 @@ def apply_filters()
     filter_C.apply(base_C)
     filter_C.apply(shifted_C)
 
-apply_filters()
-#_______________________________________________________________________________________________________________________________________________________
-def write_channels():
-
-    freefield.write('channel_A', speaker_A.analog_channel, speaker_A.analog_proc)
-    #processors = ['RX81', 'RX82']
-    #processors.remove(speaker_A.analog_proc)
-    #freefield.write('channel_A', 0, processors)
-
-    freefield.write('channel_B', speaker_B.analog_channel, speaker_B.analog_proc)
-    #processors = ['RX81', 'RX82']
-    #processors.remove(speaker_B.analog_proc)
-    #freefield.write('channel_B', 0, processors)
-
-    freefield.write('channel_C', speaker_C.analog_channel, speaker_C.analog_proc)
-    #processors = ['RX81', 'RX82']
-    #processors.remove(speaker_C.analog_proc)
-    #freefield.write('channel_C', 0, processors)
-
-write_channels()
+    return base_A, base_B, base_C, shifted_A, shifted_B, shifted_C
 #_______________________________________________________________________________________________________________________________________________________
 def generate_sequences():
     # n_entries in shift_occurence = n_blocks
@@ -199,8 +196,7 @@ def generate_sequences():
             print("'''''\n CAVE: Ungültiger Entry in Liste shift_occurence. \n'''''")
         ###
         i = i+1
-
-sequence_A, sequence_B, sequence_C = generate_sequences() 
+        return sequence_A, sequence_B, sequence_C
 #_______________________________________________________________________________________________________________________________________________________
 def get_sequence_labels_list(sequence_X, nums=[]):
     # sequence_X = sequence_A XOR sequence_B XOR sequence_C
@@ -235,10 +231,25 @@ def gen_sequence_indices(sequence_A, sequence_B, sequence_C):
     sequence_indices_C = np.append(0,sequence_indices_C)
 
     return sequence_indices_A, sequence_indices_B, sequence_indices_C
-
-sequence_indices_A, sequence_indices_B, sequence_indices_C = gen_sequence_indices(sequence_A, sequence_B, sequence_C)
 #_______________________________________________________________________________________________________________________________________________________
-def write_data_samples_trials_sequence():
+def write_channels(speaker_A, speaker_B, speaker_C):
+
+    freefield.write('channel_A', speaker_A.analog_channel, speaker_A.analog_proc)
+    #processors = ['RX81', 'RX82']
+    #processors.remove(speaker_A.analog_proc)
+    #freefield.write('channel_A', 0, processors)
+
+    freefield.write('channel_B', speaker_B.analog_channel, speaker_B.analog_proc)
+    #processors = ['RX81', 'RX82']
+    #processors.remove(speaker_B.analog_proc)
+    #freefield.write('channel_B', 0, processors)
+
+    freefield.write('channel_C', speaker_C.analog_channel, speaker_C.analog_proc)
+    #processors = ['RX81', 'RX82']
+    #processors.remove(speaker_C.analog_proc)
+    #freefield.write('channel_C', 0, processors)
+#_______________________________________________________________________________________________________________________________________________________
+def write_data_samples_trials_sequence(base_A, shifted_A, base_B, shifted_B, base_C, shifted_C):
 
     freefield.write('base_A_data', base_A.data, ['RX81', 'RX82'])
     freefield.write('base_A_n_samples', base_A.n_samples, ['RX81', 'RX82'])
@@ -257,7 +268,7 @@ def write_data_samples_trials_sequence():
     freefield.write('shifted_B_n_samples', shifted_B.n_samples, ['RX81', 'RX82'])
 
     freefield.write('n_trials_B', len(sequence_C), ['RX81', 'RX82'])
-    freefield.write('seq_num_B', sequence_indices_C, ['RX81', 'RX82'])
+    freefield.write('seq_num_B', sequence_indices_B, ['RX81', 'RX82'])
 ###
 ###
     freefield.write('base_C_data', base_C.data, ['RX81', 'RX82'])
@@ -269,59 +280,10 @@ def write_data_samples_trials_sequence():
     freefield.write('n_trials_C', len(sequence_C), ['RX81', 'RX82'])
     freefield.write('seq_num_C', sequence_indices_C, ['RX81', 'RX82'])
 
-write_data_samples_trials_sequence()
 #_______________________________________________________________________________________________________________________________________________________
-def assign_leds():
-    #print(freefield.all_leds())
-    led_coordinates = [(0,25), (0,0), (0,-25)] # (azimuth, elevation)
-
-    [ledLeft] = freefield.pick_speakers ((led_coordinates [0])) # this one is in the middle
-
-    [ledMiddle] = freefield.pick_speakers ((led_coordinates [1])) # this one is on top for some reason
-
-    [ledRight] = freefield.pick_speakers ((led_coordinates [2])) # last one on bottom
-    
-    return ledLeft, ledMiddle, ledRight 
-
-ledLeft, ledMiddle, ledRight = assign_leds()
-#_______________________________________________________________________________________________________________________________________________________
-
-def find_out_target(block_index): 
-    """ CHANGE TO GET IT FROM EXCEL!!!"""
-    #read target_sequence ('left', 'both', ...)
-    target_sequence = ['left'] 
-    
-    target = (target_sequence[block_index])
-    return target
-
-block_index=0 #only for test now
-target = find_out_target(block_index) 
-print(target)
-#_______________________________________________________________________________________________________________________________________________________
-def turn_target_led_on (target, ledLeft, ledMiddle, ledRight):
-    if target == "left":
-        freefield.write('bitmask', ledLeft.digital_channel, ledLeft.digital_proc) 
-    elif target == 'middle':
-        freefield.write('bitmask', ledMiddle.digital_channel, ledMiddle.digital_proc) 
-    elif target == 'right':
-        freefield.write('bitmask', ledRight.digital_channel, ledRight.digital_proc) 
-    elif target == 'both':
-        freefield.write('bitmask', ledLeft.digital_channel, ledLeft.digital_proc)
-        freefield.write('bitmask', ledRight.digital_channel, ledRight.digital_proc)
-
-
-def turn_target_led_off(ledLeft, ledMiddle, ledRight):
-
-    freefield.write("bitmask", 0, ledLeft.digital_proc)
-    freefield.write("bitmask", 0, ledMiddle.digital_proc)
-    freefield.write("bitmask", 0, ledRight.digital_proc)
-#_______________________________________________________________________________________________________________________________________________________
-
-
-n_blocks = 3
-
-def run_experiment(n_blocks):
-    
+"""
+def run_experiment():
+    n_blocks = 3 # test; richtige von globals importieren
     while True:
         participant_nr = input ("\n >>> Participant number?: ")
         participant_nr = int(participant_nr)
@@ -365,22 +327,67 @@ def run_experiment(n_blocks):
             #else
                 repeat loop
         #block_index = block_index +1 (automatisch for-Schleife)
+"""
+#_______________________________________________________________________________________________________________________________________________________
+def initiate_and_pick_speakers_leds():
+    path_play_buf_rcx = Path(
+        "C:\\projects\\Maik_R_F_K\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\amplitudeModulation_programs\\mk_vkk_edition\\standard_setup_long.rcx"
+    )
+    path_button_rcx = Path(
+        "C:\\projects\\Maik_R_F_K\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\amplitudeModulation_programs\\mk_vkk_edition\\button.rcx"
+    )
+    proc_list = [['RP2', 'RP2', path_button_rcx],
+                 ['RX81', 'RX8', path_play_buf_rcx],
+                 ['RX82', 'RX8', path_play_buf_rcx]]
 
-def run_block():
+    freefield.initialize('dome', device=proc_list)
 
-    turn_target_led_on (target, ledLeft, ledMiddle, ledRight)
+    speaker_A, speaker_B, speaker_C = assign_speakers()
+    ledLeft, ledMiddle, ledRight = assign_leds()
+
+    return speaker_A, speaker_B, speaker_C, ledLeft, ledMiddle, ledRight, proc_list
+#_______________________________________________________________________________________________________________________________________________________
+def run_block(block_index):
+
+    turn_all_leds_off() #schaltet die vom letzten block aus, sofern noch an
+
+    target = find_out_target(block_index)
+    turn_target_led_on (target)
+
+    sequence_A, sequence_B, sequence_C = generate_sequences()
+    sequence_indices_A, sequence_indices_B, sequence_indices_C = gen_sequence_indices(sequence_A, sequence_B, sequence_C)
+
+    write_channels(speaker_A, speaker_B, speaker_C)
+    write_data_samples_trials_sequence(base_A, shifted_A, base_B, shifted_B, base_C, shifted_C)
+
     freefield.play(kind='zBusA') #only triggers sounds?
-
-    """WAIT UNTIL DONE"""
-    turn_target_led_off(target, ledLeft, ledMiddle, ledRight)
+#_______________________________________________________________________________________________________________________________________________________
 
 
 
-"""recreate led sheet for leds"""
 
-"""RCX 1->A, 2->B und 3->C ändern bei tags """ #erledigt
+speaker_A, speaker_B, speaker_C, ledLeft, ledMiddle, ledRight, proc_list = initiate_and_pick_speakers_leds()
+base_A, base_B, base_C, shifted_A, shifted_B, shifted_C = generate_pinknoise_segments()
+
+run_block(block_index = 0)
+run_block(block_index = 1)
+run_block(block_index = 2)
+run_block(block_index = 3)
+
+
+
+
+
 
 """CAVE: LED links und rechts müssen 
 untersch Prozessoren benutzen wegen both condition !!!"""
 
 """concatenate all functions for 1 block (block_index++ etc)"""
+
+"""for loop experiment"""
+'''import from excel, json'''
+'''json zu condition 'ABC' etc aendern !!!!!'''
+
+"""evt alles in eigene Klasse packen außer befehle unten
+unten muss dan klassenname vor funktion angefügt werden
+oben klasse importieren"""
