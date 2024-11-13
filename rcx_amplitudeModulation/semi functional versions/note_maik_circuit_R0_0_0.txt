@@ -1,3 +1,0 @@
-working for simultaneous play of sound sequences of 30 sec
-	(longer sequences not tested yet)
-possibly not working for LEDs?
