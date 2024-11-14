@@ -3,8 +3,10 @@ import slab
 from pathlib import Path
 import numpy as np
 import random
+from typing import List
 #_____________________________________________________________________________________________________
-
+n_subblocks = int(1+30)
+#_____________________________________________________________________________________________________
 def initiate_processors():
     
     """ get rcx files"""
@@ -58,69 +60,48 @@ def generate_Sounds():
     return baseLeft, baseMiddle, baseRight, shiftedLeft, shiftedMiddle, shiftedRight
 #_____________________________________________________________________________________________________ 
 
-def generate_sequences():
+def generate_sequences(n_subblocks): # works as desired
     
-    n_subblocks = int(2+30)
+     # 0. subblock: no shift
 
-    sequenceLeft = ['_', '_', '_', '_'] # subblock0 : no shift
-    sequenceRight = ['_', '_', '_', '_']
-    sequenceMiddle = ['_', '_', '_', '_']
+    poss_shift_occurence = ['left', 'middle', 'right']
+    shift_occurence = ['no'] # 0. subblock no shift
+    for i in range (0,n_subblocks-1, 1):
+        shift_occurence = shift_occurence + [random.choice (poss_shift_occurence)]
 
-    shift_occurence = random.choice('A', 'B', 'C', 'D')
+    sequenceLeft = []
+    sequenceMiddle = []
+    sequenceRight = []
 
-    for i in range (0, n_subblocks+1, 1):
-        ###
-        if shift_occurence[i] == 'A':
+    for i in range (0, ((n_subblocks-1)+1), 1): # length(=n_entries) shift_occurence = n_subblocks-1 !
+        if shift_occurence[i] == 'no':
+            sequenceLeft = sequenceLeft +  ['_'] + ['_'] + ['_'] + ['_']
+            sequenceMiddle = sequenceMiddle + ['_'] + ['_'] + ['_'] + ['_']
+            sequenceRight = sequenceRight + ['_'] + ['_'] + ['_'] + ['_']
 
-            sequenceLeft.append ('S')
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
+        elif shift_occurence[i] == 'left':
+            sequenceLeft = sequenceLeft +  ['S'] + ['_'] + ['_'] + ['_']
+            sequenceMiddle = sequenceMiddle + ['_'] + ['_'] + ['_'] + ['_']
+            sequenceRight = sequenceRight + ['_'] + ['_'] + ['_'] + ['_']
 
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
+        elif shift_occurence[i] == 'middle':
+            sequenceLeft = sequenceLeft +  ['_'] + ['_'] + ['_'] + ['_']
+            sequenceMiddle = sequenceMiddle + ['S'] + ['_'] + ['_'] + ['_']
+            sequenceRight = sequenceRight + ['_'] + ['_'] + ['_'] + ['_']
 
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-        ###
-        elif shift_occurence[i] == 'B':
+        elif shift_occurence[i] == 'right':
+            sequenceLeft = sequenceLeft +  ['_'] + ['_'] + ['_'] + ['_']
+            sequenceMiddle = sequenceMiddle + ['_'] + ['_'] + ['_'] + ['_']
+            sequenceRight = sequenceRight + ['S'] + ['_'] + ['_'] + ['_']
 
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('S')
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
+            print(len(sequenceLeft))     # n_entries = 4 * n_subblocks
+            print(len(sequenceMiddle))
+            print(len(sequenceRight))
+            print(shift_occurence)
+            print(sequenceLeft)
+            print(sequenceMiddle)
+            print(sequenceRight)
 
-            sequenceMiddle.append ('S')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-
-        ###
-        elif shift_occurence[i] == 'C':
-
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
-            sequenceLeft.append ('_')
-
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-            sequenceMiddle.append ('_')
-
-            sequenceRight.append ('S')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
-            sequenceRight.append ('_')
     #_________________________________________________
     return sequenceLeft, sequenceMiddle, sequenceRight
 #_____________________________________________________________________________________________________ 
@@ -155,21 +136,22 @@ def gen_sequence_indices(sequenceLeft, sequenceMiddle, sequenceRight):
     different speakers acquire different numbers
     """
     
-    label_nums_list_A = get_sequence_labels_list(sequenceLeft, nums=[1, 2])
-    label_nums_list_B = get_sequence_labels_list(sequenceMiddle, nums=[3, 4])
-    label_nums_list_C = get_sequence_labels_list(sequenceRight, nums=[5, 6])
+    label_nums_list_Left = get_sequence_labels_list(sequenceLeft, nums=[1, 2])
+    label_nums_list_Middle = get_sequence_labels_list(sequenceMiddle, nums=[3, 4])
+    label_nums_list_Right = get_sequence_labels_list(sequenceRight, nums=[5, 6])
 
-    numSeqLeft = np.array(label_nums_list_A).astype('int32')
+    numSeqLeft = np.array(label_nums_list_Left).astype('int32')
     numSeqLeft = np.append(0, numSeqLeft)
 
-    numSeqMiddle = np.array(label_nums_list_B).astype('int32')
+    numSeqMiddle = np.array(label_nums_list_Middle).astype('int32')
     numSeqMiddle = np.append(0, numSeqMiddle)
 
-    numSeqRight = np.array(label_nums_list_C).astype('int32')
+    numSeqRight = np.array(label_nums_list_Right).astype('int32')
     numSeqRight = np.append(0, numSeqRight)
 
     return numSeqLeft, numSeqMiddle, numSeqRight
 #_____________________________________________________________________________________________________   
+
 def pick_write_and_apply_filters(baseLeft, baseMiddle, baseRight, shiftedLeft, shiftedMiddle, shiftedRight):
     
     """ adress speakers """
@@ -181,17 +163,17 @@ def pick_write_and_apply_filters(baseLeft, baseMiddle, baseRight, shiftedLeft, s
     #_____________________________________________________________________ 
 
     """ equals level for all sounds """
-    filter_A = speakerLeft.filter
-    filter_A.apply(baseLeft)
-    filter_A.apply(shiftedLeft)
+    filterLeft = speakerLeft.filter
+    filterLeft.apply(baseLeft)
+    filterLeft.apply(shiftedLeft)
 
-    filter_B = speakerMiddle.filter
-    filter_B.apply(baseMiddle)
-    filter_B.apply(shiftedMiddle)
+    filterMiddle = speakerMiddle.filter
+    filterMiddle.apply(baseMiddle)
+    filterMiddle.apply(shiftedMiddle)
 
-    filter_C = speakerRight.filter
-    filter_C.apply(baseRight)
-    filter_C.apply(shiftedRight)
+    filterRight = speakerRight.filter
+    filterRight.apply(baseRight)
+    filterRight.apply(shiftedRight)
     #_____________________________________________________________________
     
     """ write channel identity """
@@ -247,22 +229,41 @@ def pick_write_and_apply_filters(baseLeft, baseMiddle, baseRight, shiftedLeft, s
     freefield.write('numSeqLeft', numSeqLeft, ['RX81', 'RX82'])
     freefield.write('numSeqMiddle', numSeqMiddle, ['RX81', 'RX82'])
     freefield.write('numSeqRight', numSeqRight, ['RX81', 'RX82'])
+#______________________________________________________________________________________________________
+def generate_target_list(n_subblocks):
+    # gen
+    #export
+#________________________________________________________________________________________________________________
+def turn_target_led_on(target):
+    led_coordinates = [(0, 25), (0, 0), (0, -25)]
 
-    #_____________________________________________________________________
-    
+    [led_21] = freefield.pick_speakers((led_coordinates[0]))  # bit2 top (speaker21) ##rcx digital_channel: 4
+    [led_23] = freefield.pick_speakers((led_coordinates[1]))  # bit3 centre (speaker23) ##rcx digital_channel: 8
+    [led_25] = freefield.pick_speakers((led_coordinates[2]))  # bit4 centre (speaker25) ## rcx digital_channel: 16
 
-    TARGET
-    
-    """ adress LEDs """
-    led_coordinates = [(0, 25), (0, 0), (0, -25)]  # (azimuth, elevation)
+    if target == "left":
+    freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
+    elif target == "middle":
+    freefield.write('bitmaskMiddle', led_23.digital_channel, led_23.digital_proc)
+    elif target == "right":
+    freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
+    elif target == "both":
+    freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
+    freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
+    else:
+        print("'''''\n CAVE: Invalid target for led. \n'''''")
+#___________________________________________________________________________________________________________
+def turn_all_leds_off():
+    led_coordinates = [(0, 25), (0, 0), (0, -25)]
 
-    [ledLeft] = freefield.pick_speakers((led_coordinates[0]))  # this one is in the middle
-    [ledMiddle] = freefield.pick_speakers((led_coordinates[1]))  # this one is on top for some reason
-    [ledRight] = freefield.pick_speakers((led_coordinates[2]))  # last one on bottom
+    [led_21] = freefield.pick_speakers((led_coordinates[0]))  # bit2 top (speaker21) ##rcx digital_channel: 4
+    [led_23] = freefield.pick_speakers((led_coordinates[1]))  # bit3 centre (speaker23) ##rcx digital_channel: 8
+    [led_25] = freefield.pick_speakers((led_coordinates[2]))  # bit4 centre (speaker25) ## rcx digital_channel: 16
 
-
-    TURN LED OFF
-
+    freefield.write('bitmaskLeft', 0, led_21.digital_proc)
+    freefield.write('bitmaskMiddle', 0, led_23.digital_proc)
+    freefield.write('bitmaskRight', 0, led_25.digital_proc)
+#___________________________________________________________________________________________
 
 #_____________________________________________________________________________________________________
 if __name__ == "__main__":
