@@ -2,10 +2,10 @@ import freefield
 
 from Globals import Globals
 
-__all__ = ["Globals"]
 
-class Leds:
+class LedMethods:
     
+    # for each block
     def turn_targetLed_on( target ):
 
         ledCoordinates  = Globals.ledCoordinates
@@ -25,7 +25,7 @@ class Leds:
         else:
             print( "Turning on target LED failed. Invalid target.")
 
-
+    # for each block
     def turn_all_leds_off( ):
 
         ledCoordinates  = Globals.ledCoordinates

@@ -1,44 +1,14 @@
 import random
-
-import slab
-import freefield
+import numpy as np
 
 from Globals import Globals
-from typing import List
 
-#_______________________________________________________________________________________________________________________
+class ShiftOccurenceSequenceMethods:
 
-class SoundsAndSequences:
-
-    """ at start of experiment"""
-    @staticmethod
-    def generate_soundSnippets():
-        famLeft_base, famLeft_shifted, famMiddle_base, famMiddle_shifted, famRight_base, famRight_shifted = SoundsAndSequences.randomise_speakers()
-
-        samplerate = 48828
-        level = 80
-        duration = 1.0 # float!
-
-        pinknoise = slab.pinknoise( duration= duration, samplerate= samplerate, level= level)
-
-        soundLeft_base = pinknoise.am( frequency= famLeft_base)
-        soundLeft_shifted = pinknoise.am( frequency= famLeft_shifted)
-
-        soundMiddle_base = pinknoise.am( frequency= famMiddle_base)
-        soundMiddle_shifted = pinknoise.am( frequency= famMiddle_shifted)
-
-        soundRight_base = pinknoise.am( frequency= famRight_base)
-        soundRight_shifted = pinknoise.am( frequency= famRight_shifted)
-
-        soundList = [soundLeft_base, soundLeft_shifted, soundMiddle_base, soundMiddle_shifted, soundRight_base, soundRight_shifted]
-
-        return soundList
-    
-    #_______________________________________________________________________________________________________________________
-
+    # for each block    
     # help method for generate_soundSequences()
     @staticmethod 
-    def assign_occurenceShift():
+    def __assign_occurenceShift():
         n_subblocks = Globals.n_subblocks   
         # n_1secSnippets = n_subblocks * 4
 
@@ -47,10 +17,10 @@ class SoundsAndSequences:
 
         return shiftOccurence
     
-    """" for each block"""
+    # for each block
     @staticmethod 
     def generate_soundSequences():
-        shiftOccurence = SoundsAndSequences.assign_occurenceShift()
+        shiftOccurence = ShiftOccurenceSequenceMethods.__assign_occurenceShift()
         """
         left no shift:   1  ;  left shift:   2
         middle no shift: 3  ;  middle shift: 4
@@ -83,5 +53,12 @@ class SoundsAndSequences:
         #print(f"\n{nrSeqMiddle}")
         #print(f"\n{nrSeqRight}")
         #print(shiftOccurence)
+        
+        nrSeqLeft = np.array(nrSeqLeft).astype('int32')
+        # nrSeqLeft = np.append(0, nrSeqLeft) #?
+        nrSeqMiddle = np.array(nrSeqMiddle).astype('int32')
+        # nrSeqMiddle = np.append(0, nrSeqMiddle) #?
+        nrSeqRight = np.array(nrSeqRight).astype('int32')
+        # nrSeqRight = np.append(0, nrSeqRight) #?
+
         return shiftOccurence, nrSeqLeft, nrSeqMiddle, nrSeqRight
-    #_______________________________________________________________________________________________________________________
