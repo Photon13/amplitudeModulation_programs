@@ -7,12 +7,13 @@ import freefield
 
 from Globals import Globals
 import SoundMethods
+from ShiftOccurenceSequenceMethods import ShiftOccurenceSequenceMethods
 
 class SpeakerMethods:
 
     # for each block
     @staticmethod
-    def write_speakers(soundList, shiftOccurence):
+    def write_speakers(soundList):
 
         """ write the speaker coordinates on tag 'channel{position}' """
         speakerCoordinates  = Globals.speakerCoordinates
@@ -29,7 +30,7 @@ class SpeakerMethods:
         -> odd numbers indicate an unshifted sound snippet (=base) shall be played
         -> even numbers indicate a shifted sound snippet shall be played
         each sound snippet is 1 sec long """
-        shiftOccurence, nrSeqLeft, nrSeqMiddle, nrSeqRight = SoundMethods.generate_soundSequences()
+        shiftOccurence, nrSeqLeft, nrSeqMiddle, nrSeqRight = ShiftOccurenceSequenceMethods.generate_soundSequences()
         soundLeft_base = soundList[0] # soundList = [soundLeft_base, soundLeft_shifted, soundMiddle_base, soundMiddle_shifted, soundRight_base, soundRight_shifted]
         soundLeft_shifted = soundList[1]
         soundMiddle_base = soundList[2]

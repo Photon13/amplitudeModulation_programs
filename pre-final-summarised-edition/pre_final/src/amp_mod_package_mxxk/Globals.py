@@ -1,4 +1,11 @@
+import os
+from pathlib import Path
+
 class Globals():
+    
+    path_cwd = Path(os.getcwd())
+    # folder .../amplitudeModulation_programs/pre-final-summarised-edition has to be opened !
+
     ledCoordinates = [(0, -25), (0, 0), (0, 25)]
     speakerCoordnates = [(-37.5, 0), (0, 0), (37.5, 0)]
 
