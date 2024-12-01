@@ -1,16 +1,15 @@
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
-import openpyxl # funzt nicht
+import openpyxl 
 
 from Globals import Globals
-from SoundMethods import SoundMethods
-from ShiftOccurenceSequenceMethods import ShiftOccurenceSequenceMethods
 
 class ExportMethods:
     
+    ### methods to add: EXPORT PARTICIPANT AS JSON (Block instances should already be included in Participant instance (?)) 
      
-
+    """ creates empty list """
     @staticmethod
     def precreate_shiftOccurenceDf():
         protoDf_list = []
@@ -24,9 +23,9 @@ class ExportMethods:
     
     @staticmethod
     def generate_dfShiftOccurence(protoDf_list, participant_nr):
-        date = datetime.today().strftime('%Y_%m_%d')
+        date = datetime.today().strftime('%Y%m%d')
 
-        save_path = Globals.path_cwd / f"participant_{participant_nr}_{date}_dfShiftOccurence"
+        save_path = Globals.path_cwd / f"participant{participant_nr}_{date}_ShiftOccurence.xlsx"
 
         columns = ["block"]
         for i in range (Globals.n_subblocks):
@@ -44,7 +43,7 @@ class ExportMethods:
 
 
 
-""" test """
+""" TEST:
 participant_nr = 777
 protoDf_list  = ExportMethods.precreate_shiftOccurenceDf()
 shiftOccurence, nrSeqLeft, nrSeqMiddle, nrSeqRight = ShiftOccurenceSequenceMethods.generate_soundSequences()
@@ -55,3 +54,4 @@ for i in range (7):
 
 ExportMethods.generate_dfShiftOccurence(protoDf_list, participant_nr)
 
+"""
