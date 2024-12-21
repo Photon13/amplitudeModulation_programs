@@ -2,13 +2,17 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 import openpyxl 
+import json
 
 from Globals import Globals
+from Participant import Participant
 
 class ExportMethods:
     
     ### methods to add: EXPORT PARTICIPANT AS JSON (Block instances should already be included in Participant instance (?)) 
      
+
+
     """ creates empty list """
     @staticmethod
     def precreate_shiftOccurenceDf():

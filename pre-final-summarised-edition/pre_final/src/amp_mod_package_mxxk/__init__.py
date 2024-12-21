@@ -52,6 +52,7 @@ from pathlib import Path
 
 
 from Globals import Globals
+from ParticipantHelpMethods import ParticipantHelpMethods
 from Participant import Participant
 from Block import Block
 
@@ -59,32 +60,26 @@ from SoundMxxk import SoundMxxk
 from SpeakerMethods import SpeakerMethods
 from LedMethods import LedMethods
 
+from ExportMethods import ExportMethods
 
+
+np.set_printoptions(linewidth = 200)
 
 class ExperimentWrapperMethods:
      
-    def prepare_participant(participant_nr): # works as desired
-        participant = Participant(participant_nr)
-        participant.set_randomisedSpeakerFrequencies()
-        participant.set_blockDict()
-        participant.set_targetList()
-        participant.set_targetsToAllBlocks()
-
-        return participant
-
-    def prepare_block(block_nr): # works as desired
+    def prepare_block(participant:Participant, block_nr): # works as desired
         participant.blockDict[f"block_{block_nr}"].set_shiftOccurence()
         participant.blockDict[f"block_{block_nr}"].set_nrSeqs()
 
         #print(participant.blockDict[f"block_{block_nr}"].shiftOccurence)
         return participant.blockDict[f"block_{block_nr}"]
 
-    def run_block(block_nr):
+    def run_block(participant:Participant, block_nr):
         SpeakerMethods.write_toSpeakers(participant, block_nr)
         LedMethods.turn_targetLed_on(participant, block_nr)
         freefield.play(kind='zBusA')
-        # (block onset ("timepoint" zBus trigger) 6 button press events
-        # are directly sent to BrainVision Recorder))
+        # (block onset ("timepoint" zBus trigger) button press events
+        # are directly sent to BrainVision Recorder)
 
         # wait:
         #stopTime = time.time() + 124 + 1   # 124 + 1 seconds from now
@@ -99,16 +94,18 @@ class ExperimentWrapperMethods:
 
 
 
-
+"""
 proc_list = [['RP2', 'RP2', Globals.path_cwd],
              ['RX81', 'RX8', Globals.path_cwd],
              ['RX82', 'RX8', Globals.path_cwd]]
 
 freefield.initialize('dome', device=proc_list)
-
+"""
+participant_nr = 55
 # initiate participant:
-participant = ExperimentWrapperMethods.prepare_participant(66)
-
+participant = ParticipantHelpMethods.precreate_participant(participant_nr)
+ParticipantHelpMethods.export_participantInstance_asJson(participant, participant_nr)
+"""
 # create sound snippets
 soundData_list = SoundMxxk.set_soundSnippets(participant)
 
@@ -116,6 +113,7 @@ soundData_list = SoundMxxk.set_soundSnippets(participant)
 for i in range(Globals.N_BLOCKS):
      participant.blockDict[f"block_{i}"] = ExperimentWrapperMethods.prepare_block(i)
 
+ExportMethods.export_participantInstance_asJson(participant)
 
 for i in range(Globals.N_BLOCKS):
     print(f"\nRunning block_{i} ...")
@@ -125,6 +123,7 @@ for i in range(Globals.N_BLOCKS):
         inp = input("\nContinue with next block? [yes]/no: ")
         if inp.lower() == "yes":
             break
+"""
 
 # export participant data as json !
 

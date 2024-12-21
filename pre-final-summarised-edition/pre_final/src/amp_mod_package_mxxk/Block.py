@@ -9,31 +9,31 @@ class Block():
     name: str
     target: str
     ShiftOccurence: List[str]
-    n_subblocks: int
     
     #nrSeqLeft: List[] ; later int[]
     #nrSeqMiddle: List[] ; later int[]
     #nrSeqRight: List[] ; later int[]
+    #_______________________________________________________________________
 
-
-    # only call constructor via Participant class !
+    # called via Participant.set_blockDict()
     def __init__(self, blockName):
         self.name = blockName
         self.target = "not_set" # target is assigned in Participant class
 
         self.shiftOccurence = []
-        self.n_subblocks = Globals.N_SUBBLOCKS
         
         self.nrSeqLeft = []
         self.nrSeqMiddle = []
         self.nrSeqRight = []
+    #_______________________________________________________________________    
 
     def set_shiftOccurence(self): # works as desired
-        shiftOccurence = random.choices(["left", "middle", "right"], k = (self.n_subblocks -1)) # excl. 0.subblock
+        shiftOccurence = random.choices(["left", "middle", "right"], k = (Globals.N_SUBBLOCKS -1)) # excl. 0.subblock
         self.shiftOccurence = ["no"]+ shiftOccurence # 0. subblock no shift
 
     def get_shiftOccurence(self):
         return self.shiftOccurence
+    #_______________________________________________________________________
     
     def set_nrSeqs(self):
         """     left no shift:   1  ;  left shift:   2
@@ -71,12 +71,11 @@ class Block():
         self.nrSeqRight = np.array(nrSeqRight).astype('int32') # nrSeqRight = np.append(0, nrSeqRight) #?
         
     def get_nrSeqs(self):
-        #np.set_printoptions(linewidth = 200)
         #print(participant.blockDict[f"block_{i}"].nrSeqLeft)
         #print(participant.blockDict[f"block_{i}"].nrSeqMiddle)
         #print(participant.blockDict[f"block_{i}"].nrSeqRight)
         return self.nrSeqLeft, self.nrSeqMiddle, self.nrSeqRight 
-    
+    #_______________________________________________________________________
 
 
         
