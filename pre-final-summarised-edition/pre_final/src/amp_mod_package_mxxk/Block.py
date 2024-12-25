@@ -3,8 +3,9 @@ import numpy as np
 from typing import List
 
 from Globals import Globals
+from Participant import Participant
 
-class Block():
+class Block(Participant):
 
     name: str
     target: str
