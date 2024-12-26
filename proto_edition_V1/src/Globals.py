@@ -9,10 +9,10 @@ class Globals():
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
 
     # Frequencies of amplitude modulation
-    FAM_A_BASE = 7
-    FAM_B_BASE = 9
-    FAM_C_BASE = 11
-    SHIFT = 6
+    FAM_A_BASE = 3
+    FAM_B_BASE = 7
+    FAM_C_BASE = 13
+    SHIFT = 4
 
     FAM_A_SHIFTED = FAM_A_BASE + SHIFT
     FAM_B_SHIFTED = FAM_B_BASE + SHIFT

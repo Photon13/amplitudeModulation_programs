@@ -2,10 +2,10 @@ from datetime import *
 import json
 from pathlib import Path
 import os
-from typing import List
 import re
 import sys
 import random
+from typing import List
 
 from Globals import Globals
 
@@ -26,7 +26,7 @@ class Participant:
     n_blocks: int
     n_subblocks: int
 
-    targetList : list[str]
+    targetList : List[str]
     famDict : dict
     blockDict : dict # <block_name> : <shift position list>
     
@@ -72,7 +72,7 @@ class Participant:
 
     #______________________________________________________________________
     
-    def generate_targetList(self) -> list[str]: 
+    def generate_targetList(self) -> List[str]: 
 
         targetList : list[str] = []
         targetList.append(random.choice(["left", "middle", "right"])) 
@@ -120,7 +120,7 @@ class Participant:
         return blockDict
     
     @staticmethod
-    def generate_randomShiftOccurenceList() -> list[str]:
+    def generate_randomShiftOccurenceList() -> List[str]:
         """ Help method for generate_blockDict() """
         randomShiftOccurenceList = random.choices(["l", "m", "r"], k = (Globals.N_SUBBLOCKS -1)) # excl. 0.subblock
         randomShiftOccurenceList = ["n"]+ randomShiftOccurenceList # 0. subblock no shift

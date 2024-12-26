@@ -37,7 +37,21 @@ class Noise:
         soundRight_base = pinknoise.am( frequency = famRight_base)
         soundRight_shifted = pinknoise.am( frequency = famRight_shifted)
         
-        dictSoundData = {"soundLeft_base": soundLeft_base,
+        # fade-in
+        soundLeft_base.ramp(when ='onset', duration = 1.0)
+        soundLeft_shifted.ramp(when = 'onset', duration = 1.00)
+
+        soundMiddle_base.ramp(when = 'onset', duration = 1.00)
+        soundMiddle_shifted.ramp(when = 'onset', duration = 1.00)
+
+        soundRight_base.ramp(when = 'onset', duration = 1.00)
+        soundRight_shifted.ramp(when = 'onset', duration = 1.00)
+
+
+
+
+        dictSoundData = {
+                "soundLeft_base": soundLeft_base,
                 "soundLeft_shifted": soundLeft_shifted,
                 "soundMiddle_base": soundMiddle_base,
                 "soundMiddle_shifted": soundMiddle_shifted,
@@ -56,6 +70,7 @@ class Noise:
                 right no shift:  5  ;  right shift:  6       """
         
         shiftOccurence : list[str] = participant.blockDict[f"block_{blockNr}"]
+            # n_subblocks
 
         # 0. subblock (no shift at all):
         nrSeqLeft = [1,1,1,1]
@@ -67,31 +82,39 @@ class Noise:
         for i in range( 1, len(shiftOccurence) ): # 0. entry skipped
 
             if( shiftOccurence[i] == "l" ):
-                nrSeqLeft = nrSeqLeft + [2,2,2,2] # shift
+                nrSeqLeft = nrSeqLeft + [2,1,1,1] # shift
                 nrSeqMiddle = nrSeqMiddle + [3,3,3,3] # no shift
                 nrSeqRight = nrSeqRight + [5,5,5,5] # no shift
 
             elif( shiftOccurence[i] == "m" ):
                 nrSeqLeft = nrSeqLeft + [1,1,1,1] # no shift
-                nrSeqMiddle = nrSeqMiddle + [4,4,4,4] # shift
+                nrSeqMiddle = nrSeqMiddle + [4,3,3,3] # shift
                 nrSeqRight = nrSeqRight + [5,5,5,5] # no shift
 
             elif( shiftOccurence[i] == "r" ):
                 nrSeqLeft = nrSeqLeft + [1,1,1,1] # no shift
                 nrSeqMiddle = nrSeqMiddle + [3,3,3,3] # no shift
-                nrSeqRight = nrSeqRight + [6,6,6,6] # shift
+                nrSeqRight = nrSeqRight + [6,5,5,5] # shift
 
             else: 
                 print(COLORRED + "\nProblem occured in generate_nrSeqs(): Probably invalid target in shiftOccurence list." + COLOREND)
 
+
+        print(f"nrSeqLeft: {nrSeqLeft}")
         nrSeqLeft = np.array(nrSeqLeft).astype('int32') # nrSeqLeft = np.append(0, nrSeqLeft) #?
         nrSeqMiddle = np.array(nrSeqMiddle).astype('int32')  # nrSeqMiddle = np.append(0, nrSeqMiddle) #?
         nrSeqRight = np.array(nrSeqRight).astype('int32') # nrSeqRight = np.append(0, nrSeqRight) #?
+
+        #nrSeqLeft = np.append(0, nrSeqLeft)
+        #nrSeqMiddle = np.append(0, nrSeqMiddle)
+        #nrSeqRight = np.append(0, nrSeqRight)
     	
         nrSeqsDict : dict = {}
         nrSeqsDict["nrSeqLeft"] = nrSeqLeft
         nrSeqsDict["nrSeqMiddle"] = nrSeqMiddle
         nrSeqsDict["nrSeqRight"] = nrSeqRight
+
+        print(f"nrSeqLeft: {nrSeqsDict}")
 
         print(COLORGREEN + "Sounds successfully prepared. " + COLOREND + "Message from generate_soundSnippets(participant : object)")
         return nrSeqsDict

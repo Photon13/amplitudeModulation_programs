@@ -8,7 +8,8 @@ COLOREND = '\033[0m'
 class Led():
 
     @staticmethod 
-    def turn_targetLed_on(target):
+    def turn_targetLed_on(target : str):
+        """ target: either "left", "middle", "right" or "both" """
 
         [ledLeft] = freefield.pick_speakers( Globals.LED_COORDINATES[0])
         [ledMiddle] = freefield.pick_speakers( Globals.LED_COORDINATES[1])
@@ -26,6 +27,8 @@ class Led():
         else:
             print( COLORRED + "Invalid target in turn_targetLed_on" + COLOREND)
 
+    
+
     @staticmethod
     def turn_all_leds_off( ):
 
@@ -37,3 +40,7 @@ class Led():
         freefield.write( "bitmaskLeft", 0, ledLeft.digital_proc)
         freefield.write( "bitmaskMiddle", 0, ledMiddle.digital_proc)
         freefield.write( "bitmaskRight", 0, ledRight.digital_proc)
+
+        # AVH bits: 2,3,4 (-25,0),(0,0),(25,0)
+        # freefield bits: 2,3,4 (-25,0),(0,0),(25,0)
+        # freefield_dev bits: 2,3,4 (-25,0),(0,0),(25,0)
