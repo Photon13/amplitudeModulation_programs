@@ -116,7 +116,13 @@ class Main:
 
 
 if __name__ == "__main__":
-    Main.run_mainExperiment( participantNr = 3)
+
+    participantNr : int = 77
+    Main.run_mainExperiment( participantNr)
+
+    #participant = Participant.init_singleParticipant_fromJson(participantNr)
+    #participant.add_eegFileDict()
+    #print(participant.eegFileDict)
 
 
 

@@ -4,12 +4,22 @@ from typing import List
 from pathlib import Path
 
 from Globals import Globals
+from Participant import Participant
 
 COLORBLUE = '\33[34m'
 COLORRED = '\33[31m'
 COLOREND = '\033[0m'
 
 class Auswertung:
+
+    def wrapper_auswertungSingleParticipant(participantNr : int): # works
+
+        participant = Participant.init_singleParticipant_fromJson(participantNr)
+        participant.add_eegFileDict()
+        print(participant.eegFileDict)
+
+
+
 
     def calculate_power(blockNr : int):
         # calculate time/eeg samples for the respective block

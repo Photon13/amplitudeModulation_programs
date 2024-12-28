@@ -8,6 +8,7 @@ import random
 from typing import List
 
 from Globals import Globals
+from Eeg import Eeg
 
 COLORBLUE = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -30,6 +31,8 @@ class Participant:
     targetList : List[str]
     famDict : dict
     blockDict : dict # <block_name> : <shift position list>
+
+    eegFileDict : dict
     
     
     
@@ -48,6 +51,9 @@ class Participant:
         self.targetList = self.generate_targetList()
         self.famDict = self.generate_famDict()
         self.blockDict = self.generate_blockDict()
+
+        self.eegFileDict = {}
+            # later generated
         
    
    
@@ -294,7 +300,12 @@ class Participant:
         #    print(f"{key} : {participantMap[key]}")
         return participantMap
     
- 
+
+
+
+    def add_eegFileDict(self) -> None:
+        eegFileDict : dict= Eeg.getAllEegFiles_forSingleParticipant(self.nr)
+        self.eegFileDict = eegFileDict
   
 
     """

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import re
 
 
 
@@ -62,3 +63,30 @@ class Globals():
     
     PATH_JSON_FOLDER = PATH_CWD / "participant_json"
         # path to json files
+
+
+    PATH_FOLDER_EEG = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\EEG")
+        # path to BrainVision Recorder files
+    PATH_FOLDER_EEG_RAW = PATH_FOLDER_EEG / "raw EEG"
+        # path to unprocessed BrainVision Recorder files
+
+    SEARCH_PATTERN_eeg = re.compile(r""" ^(participant-)    # start str
+                                    \d+                     # some digits (1 or more occurences)
+                                    .*                      # something
+                                    \.                      # dot
+                                    eeg$""",                # extension
+                                    re.VERBOSE)
+    
+    SEARCH_PATTERN_vhdr = re.compile(r""" ^(participant-)    # start str
+                                    \d+                     # some digits (1 or more occurences)
+                                    .*                      # something
+                                    \.                      # dot
+                                    vhdr$""",                # extension
+                                    re.VERBOSE)
+    
+    SEARCH_PATTERN_vmrk = re.compile(r""" ^(participant-)    # start str
+                                    \d+                     # some digits (1 or more occurences)
+                                    .*                      # something
+                                    \.                      # dot
+                                    vmrk$""",                # extension
+                                    re.VERBOSE)
