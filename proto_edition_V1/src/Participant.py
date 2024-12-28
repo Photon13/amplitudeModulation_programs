@@ -9,14 +9,15 @@ from typing import List
 
 from Globals import Globals
 
-
 COLORBLUE = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED = '\33[31m'
 COLOREND = '\033[0m'
 
+
+
+
 class Participant:
-    #______________________________________________________________________
     
     nr: str
     name : str
@@ -30,8 +31,8 @@ class Participant:
     famDict : dict
     blockDict : dict # <block_name> : <shift position list>
     
-
-    #______________________________________________________________________
+    
+    
     
     def __init__( self, participantNr : str ):
 
@@ -48,7 +49,8 @@ class Participant:
         self.famDict = self.generate_famDict()
         self.blockDict = self.generate_blockDict()
         
-    #______________________________________________________________________
+   
+   
 
     def set_date( self ) -> str:
         """ Sets self.date to today's date """
@@ -57,6 +59,8 @@ class Participant:
             # datetime.date.today()
         currentDate : str = currentDate.strftime( '%Y-%m-%d')
         return currentDate
+
+
 
 
     def set_date_manually( self, dateString: str ) -> None: 
@@ -69,8 +73,8 @@ class Participant:
 
         self.date = dateString
 
-
-    #______________________________________________________________________
+    
+    
     
     def generate_targetList(self) -> List[str]: 
 
@@ -108,7 +112,10 @@ class Participant:
 
         targetList = targetList + targetsNormalBlocksShuffled
         return targetList
-    #______________________________________________________________________
+    
+    
+    
+
     def generate_blockDict(self) -> dict:
         """ Creates a dict with <block name> : <list shift position> """
         blockDict : dict = {}
@@ -119,6 +126,9 @@ class Participant:
                 # blockDict[f"block_{i}"] = shift position
         return blockDict
     
+
+
+    
     @staticmethod
     def generate_randomShiftOccurenceList() -> List[str]:
         """ Help method for generate_blockDict() """
@@ -126,43 +136,102 @@ class Participant:
         randomShiftOccurenceList = ["n"]+ randomShiftOccurenceList # 0. subblock no shift
 
         return randomShiftOccurenceList
-    #______________________________________________________________________
     
-    @staticmethod
-    def generate_famDict() -> dict:
-        """ Randomly assigns famA, famB, famC to famLeft, famMiddle, famRight
-            and puts latter ones and shift into dict """
-        intList : list[int]= [0, 1, 2]
-        intList = random.sample(intList, k = 3)
+    
+    
+   
+    def assignFams_helpMethod(self, listFromGlobals : List[int] ) -> List[int]:
+
+        pseudoRandomisedFamList : List[int] 
+        a : int = listFromGlobals[0]
+        b : int = listFromGlobals[1]
+        c : int = listFromGlobals[2]
+
+        # participant.nr ==   (x*6) + z   =>   nr/6 == x + z/6   =>   nr%6 == z
+        # (x*6) is a multiple of 6   ;   here z is the remainder of the division 
+        # x == {0, 1, 2, ..., u}   ;   z == {0, 1, 2, 3, 4, 5}
+
+        if( self.nr % 6 == 1):  # True for .nr == 1 || 7 || 13 || ...
+            pseudoRandomisedFamList = [b, a, c] # famMiddle == famA
+
+        elif( self.nr % 6 == 2): # True for .nr == 2 || 8 || 14 || ...
+            pseudoRandomisedFamList = [c, a, b]  # famMiddle == famA
+        
+        elif( self.nr % 6 == 3): # True for .nr == 3 || 9 || 15 || ...
+            pseudoRandomisedFamList = [a, b, c]  # famMiddle == famB
+
+        elif( self.nr % 6 == 4): # True for .nr == 4 || 10 || 16 || ...
+            pseudoRandomisedFamList = [c, b, a]  # famMiddle == famB
+
+        elif( self.nr % 6 == 5): # True for .nr == 5 || 11 || 17 || ...
+            pseudoRandomisedFamList = [a, c, b]  # famMiddle == famC
+
+        elif( self.nr % 6 == 0): # True for .nr == 6 || 12 || 16 || ...
+            pseudoRandomisedFamList = [b, c, a]  # famMiddle == famC
+
+        else :
+            print( COLORRED + ".famList could not be generated! " + COLOREND + "(Message from assignFams_helpMethod(self, listFromGlobals))")
+            sys.exit()
+
+        return pseudoRandomisedFamList
+
+
+
+
+    def generate_famDict(self) -> dict:
 
         famDict : dict = {}
-        famDict["famLeft"] = Globals.FAM_ABC_BASE_LIST[intList[0]]
-        famDict["famMiddle"] = Globals.FAM_ABC_BASE_LIST[intList[1]]
-        famDict["famRight"] = Globals.FAM_ABC_BASE_LIST[intList[2]]
-        famDict["shift"] = Globals.SHIFT
+
+        pseudoRandomised_baseFamList : List[int] = self.assignFams_helpMethod( Globals.FAM_ABC_BASE_LIST )
+
+        famDict["famLeft_base"] = pseudoRandomised_baseFamList[0] 
+        famDict["famMiddle_base"] = pseudoRandomised_baseFamList[1] 
+        famDict["famRight_base"] = pseudoRandomised_baseFamList[2] 
+
+        pseudoRandomised_shiftedFamList : List[int] = self.assignFams_helpMethod( Globals.FAM_ABC_SHIFTED_LIST )
+
+        famDict["famLeft_shifted"] = pseudoRandomised_shiftedFamList[0]
+        famDict["famMiddle_shifted"] = pseudoRandomised_shiftedFamList[1]
+        famDict["famRight_shifted"] = pseudoRandomised_shiftedFamList[2] 
+
+        pseudoRandomised_shiftList : List[int] = self.assignFams_helpMethod( Globals.SHIFT_ABC_LIST )
+
+        famDict["shiftLeft"] = pseudoRandomised_shiftList[0]
+        famDict["shiftMiddle"] = pseudoRandomised_shiftList[1]
+        famDict["shiftRight"] = pseudoRandomised_shiftList[2]
 
         return famDict
-    #______________________________________________________________________
+    
+
+
 
     def export_participantInstance_toJson( self ) -> None:
         """ Writes attributes + values for single participant to Json txt file """
 
-        self.check_if_Json_exists()
         savePath : Path = Globals.PATH_JSON_FOLDER / f"{self.name}.txt"
         #print(jsonData)
         with open( savePath, "w") as file:
             json.dump( self.__dict__, file, indent=4) 
 
-    def check_if_Json_exists(self) -> None:
-        """ Help method for export_participantInformation_toJson: 
-                Checks if Json with the set participant number exists
-                aborts program if Json exists """
 
-        savePath : Path = Globals.PATH_JSON_FOLDER / f"{self.name}.txt"
+
+
+    def check_if_Json_exists(participantNr : int) -> bool:
+        """  Checks if Json with the given participant number exists
+                returns True if exists
+                returns False if does not exist   """
+
+        savePath : Path = Globals.PATH_JSON_FOLDER / f"participant-{participantNr}.txt"
+
         if savePath.exists() == True:
-            print(COLORRED + "Json already exists! Please change participant number and restart." + COLOREND)
-            sys.exit()
-    #______________________________________________________________________
+            print(COLORRED + "Json already exists! Json will be used to read attributes." + COLOREND)
+            return True
+        else: 
+            print(COLORGREEN + "Creating new participant ..." + COLOREND)
+            return False
+
+  
+
 
     @staticmethod
     def read_participantInformation_fromJson(participantNr : int) -> dict:
@@ -174,6 +243,9 @@ class Participant:
         with open(loadPath, "r") as file:
             data = json.load(file) # type data = dict
         return data
+    
+
+
 
     @staticmethod
     def init_singleParticipant_fromJson(participantNr : int) -> object:
@@ -184,6 +256,8 @@ class Participant:
         participant.__dict__ = data
         print(COLORGREEN + "Participant successfully reinitiated. " + COLOREND + "(Message from init_singleParticipant_fromJson(participantNr : int))")
         return participant
+
+
 
 
     @staticmethod
@@ -220,5 +294,33 @@ class Participant:
         #    print(f"{key} : {participantMap[key]}")
         return participantMap
     
-    #______________________________________________________________________        
+ 
+  
+
+    """
+    @staticmethod
+    def generate_famDict() -> dict:
+        # Randomly assigns famA, famB, famC to famLeft, famMiddle, famRight
+        #    and puts latter ones and shift into dict 
+        intList : list[int]= [0, 1, 2]
+        intList = random.sample(intList, k = 3)
+
+        famDict : dict = {}
+        famDict["famLeft_base"] = Globals.FAM_ABC_BASE_LIST[   intList[0] ]
+        famDict["famMiddle_base"] = Globals.FAM_ABC_BASE_LIST[ intList[1] ]
+        famDict["famRight_base"] = Globals.FAM_ABC_BASE_LIST[  intList[2] ]
+
+        famDict["shiftA"] = Globals.SHIFT_A
+        famDict["shiftB"] = Globals.SHIFT_B
+        famDict["shiftC"] = Globals.SHIFT_C
+
+        famDict["famLeft_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[   intList[0] ]
+        famDict["famMiddle_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[ intList[1] ]
+        famDict["famRight_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[  intList[2] ]
+
+        return famDict
+    """     
+
+    
+       
         

@@ -1,4 +1,5 @@
 import freefield
+import slab
 
 from Globals import Globals
 from Noise import Noise
@@ -9,27 +10,21 @@ COLOREND = '\033[0m'
 
 class Sprecher():
     
-    #@staticmethod
+    @staticmethod
     def get_speakerCoordinates():
 
-        #freefield.read_speaker_table()
-        #SPEAKER_COORDINATES = [0, 1, 2]
         [leftSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
         [middleSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
         [rightSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
 
-        """
-        [leftSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
-        [middleSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
-        [rightSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
-
-        """
         #print(leftSpeaker.analog_proc)
         #print(middleSpeaker.analog_proc)
         #print(rightSpeaker.analog_proc)
 
         return leftSpeaker, middleSpeaker, rightSpeaker
     
+
+
     @staticmethod
     def write_channel(leftSpeaker, middleSpeaker, rightSpeaker) -> None:
 
@@ -37,6 +32,8 @@ class Sprecher():
         freefield.write("channelMiddle", middleSpeaker.analog_channel, middleSpeaker.analog_proc)
         freefield.write("channelRight", rightSpeaker.analog_channel, rightSpeaker.analog_proc)
     
+
+
 
     @staticmethod
     def write_nrSeqs(participant : object, blockNr : int,
@@ -53,6 +50,8 @@ class Sprecher():
             #   for left: 5 (= no shift) or 6 (= shift), resp. 
     
 
+
+
     @staticmethod
     def write_nSnippets(participant : object, leftSpeaker : object, middleSpeaker : object, rightSpeaker : object) -> None:
 
@@ -60,6 +59,8 @@ class Sprecher():
         freefield.write( "n_snippetsMiddle", (participant.n_subblocks *4), middleSpeaker.analog_proc )
         freefield.write( "n_snippetsRight",  (participant.n_subblocks *4), rightSpeaker.analog_proc  )
     
+
+
 
     @staticmethod
     def write_nSamples(dictSoundData : dict,
@@ -74,6 +75,8 @@ class Sprecher():
         freefield.write( "baseRight_n_samples",  dictSoundData["soundRight_base"].n_samples,  rightSpeaker.analog_proc  )
     
     
+
+
     @staticmethod
     def write_soundData(dictSoundData : dict, 
                         leftSpeaker : object, middleSpeaker : object, rightSpeaker : object ) -> None:
@@ -86,6 +89,9 @@ class Sprecher():
         freefield.write( "shiftedLeft_data",   dictSoundData["soundLeft_shifted"].data,   leftSpeaker.analog_proc   )
         freefield.write( "shiftedMiddle_data", dictSoundData["soundMiddle_shifted"].data, middleSpeaker.analog_proc )
         freefield.write( "shiftedRight_data",  dictSoundData["soundRight_shifted"].data,  rightSpeaker.analog_proc  )
+
+
+
 
     @staticmethod
     def wrapper_writeTo_speakers(participant : object, blockNr : int, dictSoundData : dict):
@@ -111,6 +117,9 @@ class Sprecher():
             dictSoundData, 
             leftSpeaker, middleSpeaker, rightSpeaker 
         )   
+
+
+
 
 """ # ['RX81', 'RX82'] funzt nicht:
 

@@ -9,18 +9,21 @@ COLORGREEN = "\033[0;32m"
 COLORRED = '\33[31m'
 COLOREND = '\033[0m'
 
+
+
+
 class Noise:
 
     @staticmethod # only at start
     def generate_soundSnippets(participant : object) -> dict: # seems to work (?)
-        famLeft_base = participant.famDict["famLeft"]
-        famMiddle_base = participant.famDict["famMiddle"]
-        famRight_base = participant.famDict["famRight"]
+        
+        famLeft_base = participant.famDict["famLeft_base"]
+        famMiddle_base = participant.famDict["famMiddle_base"]
+        famRight_base = participant.famDict["famRight_base"]
 
-        shift = participant.famDict["shift"]
-        famLeft_shifted = participant.famDict["famLeft"] + shift
-        famMiddle_shifted = participant.famDict["famMiddle"] + shift
-        famRight_shifted = participant.famDict["famRight"] + shift
+        famLeft_shifted = participant.famDict["famLeft_shifted"]
+        famMiddle_shifted = participant.famDict["famMiddle_shifted"]
+        famRight_shifted = participant.famDict["famRight_shifted"]
 
         samplerate = 48828
         level = 80
@@ -48,8 +51,6 @@ class Noise:
         soundRight_shifted.ramp(when = 'onset', duration = 1.00)
 
 
-
-
         dictSoundData = {
                 "soundLeft_base": soundLeft_base,
                 "soundLeft_shifted": soundLeft_shifted,
@@ -59,6 +60,9 @@ class Noise:
                 "soundRight_shifted": soundRight_shifted}
 
         return dictSoundData
+
+
+
 
     @staticmethod # for each block
     def generate_nrSeqs(participant : object, blockNr : int) -> dict:

@@ -5,6 +5,9 @@ COLORBLUE   = '\33[34m'
 COLORRED    = '\33[31m'
 COLOREND = '\033[0m'
 
+
+
+
 class Led():
 
     @staticmethod 
@@ -26,6 +29,7 @@ class Led():
             freefield.write( "bitmaskRight", ledRight.digital_channel, ledRight.digital_proc)
         else:
             print( COLORRED + "Invalid target in turn_targetLed_on" + COLOREND)
+
 
     
 

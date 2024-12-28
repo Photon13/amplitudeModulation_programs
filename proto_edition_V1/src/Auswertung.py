@@ -40,7 +40,7 @@ class Auswertung:
     
 
     
-    def berechne_Power(participant : object) -> dict:
+    #def berechne_Power(participant : object) -> dict:
 
 
 
@@ -62,7 +62,7 @@ class Auswertung:
 
         return blocksWithConditionDict
     
-    def
-        frequency : int = #
-        dataPath : Path = #
-        get_Power(dataPath, condition, frequency)
+    #def
+    #    frequency : int = #
+    #    dataPath : Path = #
+    #    get_Power(dataPath, condition, frequency)
