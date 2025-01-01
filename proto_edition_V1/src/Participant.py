@@ -8,7 +8,7 @@ import random
 from typing import List
 
 from Globals import Globals
-from Eeg import Eeg
+from Dateien import Dateien
 
 COLORBLUE = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -30,9 +30,9 @@ class Participant:
 
     targetList : List[str]
     famDict : dict
-    blockDict : dict # <block_name> : <shift position list>
+    blockShiftDict : dict # <block_name> : <shift position list>
 
-    eegFileDict : dict
+    blocksWithConditionDict : dict
     
     
     
@@ -50,10 +50,9 @@ class Participant:
 
         self.targetList = self.generate_targetList()
         self.famDict = self.generate_famDict()
-        self.blockDict = self.generate_blockDict()
+        self.blockShiftDict = self.generate_blockShiftDict()
 
-        self.eegFileDict = {}
-            # later generated
+        self.blocksWithConditionDict = self.findAllBlocks_withSpecificCondition()
         
    
    
@@ -122,7 +121,7 @@ class Participant:
     
     
 
-    def generate_blockDict(self) -> dict:
+    def generate_blockShiftDict(self) -> dict:
         """ Creates a dict with <block name> : <list shift position> """
         blockDict : dict = {}
 
@@ -147,6 +146,8 @@ class Participant:
     
    
     def assignFams_helpMethod(self, listFromGlobals : List[int] ) -> List[int]:
+        """ Help method for Participant.generate_famDict() 
+                Position of frequency is pseudo-randomised    """
 
         pseudoRandomisedFamList : List[int] 
         a : int = listFromGlobals[0]
@@ -211,23 +212,36 @@ class Participant:
 
 
 
-    def export_participantInstance_toJson( self ) -> None:
-        """ Writes attributes + values for single participant to Json txt file """
+    def findAllBlocks_withSpecificCondition(self) -> None:
 
-        savePath : Path = Globals.PATH_JSON_FOLDER / f"{self.name}.txt"
-        #print(jsonData)
-        with open( savePath, "w") as file:
-            json.dump( self.__dict__, file, indent=4) 
+        blocksWithConditionDict : dict = {}
+
+        blockNrsLeft : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "left"] # does (i, x) work?
+        blockNrsMiddle : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "middle"]
+        blockNrsRight : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "right"]
+        blockNrsBoth : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "both"]
+            # ´enumerate(<list>)´ returns iterable containing (<index>, <entry>) for each item in list
+            # ´index for (index, entry) in <iterable> if entry == <"irgendwas">´ picks all indices for whose the entry is "irgendwas"
+
+        blocksWithConditionDict["single_leftTarget"] = blockNrsLeft
+        blocksWithConditionDict["single_middleTarget"] = blockNrsMiddle
+        blocksWithConditionDict["single_rightTarget"] = blockNrsRight
+        blocksWithConditionDict["bothTarget"] = blockNrsBoth
+
+        return blocksWithConditionDict 
 
 
 
+    #-------JSON-------#
 
-    def check_if_Json_exists(participantNr : int) -> bool:
+
+    @staticmethod
+    def check_if_Json_exists(participantNr : int, globals : object) -> bool:
         """  Checks if Json with the given participant number exists
                 returns True if exists
                 returns False if does not exist   """
 
-        savePath : Path = Globals.PATH_JSON_FOLDER / f"participant-{participantNr}.txt"
+        savePath : Path = globals.get_pathJsonFolder() / f"participant-{participantNr}.txt"
 
         if savePath.exists() == True:
             print(COLORRED + "Json already exists! Json will be used to read attributes." + COLOREND)
@@ -238,99 +252,40 @@ class Participant:
 
   
 
+    @staticmethod
+    def export_participantInstance_toJson( participant : object, globals : object ) -> None:
+        """ Writes attributes + values for single participant to Json txt file """
+
+        savePath : Path = globals.get_pathJsonFolder() / f"{participant.name}.txt"
+        
+        with open( savePath, "w") as file:
+            json.dump( participant.__dict__, file, indent=4)
+
+
+
 
     @staticmethod
-    def read_participantInformation_fromJson(participantNr : int) -> dict:
+    def read_participantInformation_fromJson(globals : object, fileNameJson : str) -> dict:
         """ Help method for init_participants_fromJson() """
 
-        participantName : str = f"participant-{participantNr}"
-        loadPath : Path = Globals.PATH_JSON_FOLDER / f"{participantName}.txt" 
+        loadPath : Path = globals.get_pathJsonFolder() / fileNameJson
 
         with open(loadPath, "r") as file:
-            data = json.load(file) # type data = dict
-        return data
+            jsonData = json.load(file) # type data = dict
+        return jsonData
     
 
 
 
     @staticmethod
-    def init_singleParticipant_fromJson(participantNr : int) -> object:
+    def init_singleParticipant_fromJson(participantNr : int, globals : object) -> object:
 
-        loadpath = Globals.PATH_JSON_FOLDER / "participant-{participantNr}.txt"
-        data = Participant.read_participantInformation_fromJson( participantNr)
+        jsonData = Participant.read_participantInformation_fromJson( globals, f"participant-{participantNr}.txt" )
         participant = Participant(participantNr)
-        participant.__dict__ = data
-        print(COLORGREEN + "Participant successfully reinitiated. " + COLOREND + "(Message from init_singleParticipant_fromJson(participantNr : int))")
-        return participant
+        participant.__dict__ = jsonData
 
-
-
-
-    @staticmethod
-    def init_participants_fromJson() -> dict:
-        """ Function for reinitiation of participants for data analysis.
-            Participants are stored in a dictionary as participantMap["participant-{participantNr}"]"""
-        
-        dirList : List[str] = os.listdir(Globals.PATH_JSON_FOLDER)
-        fileList : List[str] = []
-
-        for entry in dirList:
-            if os.path.isfile(Globals.PATH_JSON_FOLDER / entry) == True:
-                fileList.append(entry)
-        print(  COLORBLUE + "List of Json files: " + COLOREND 
-                + f"\n{fileList}" )
-        print( COLORBLUE + "Number of Json files: " + COLOREND
-               + f"\n{len(fileList)}" )
-
-        participantMap : dict = {}
-
-        for fileName in fileList:
-            participantNr = re.search(r"\d+", fileName).group()
-                # re.search(<pattern>, <str>") finds first occurence of pattern in String 
-                # r"\d+" matches an int with any number of digits
-                # group() converts match obj into str
-            data = Participant.read_participantInformation_fromJson( participantNr)
-            participantMap[f"participant-{participantNr}"] = Participant(participantNr)
-            participantMap[f"participant-{participantNr}"].__dict__ = data
-            
-            #print(f"Entry participant map [nr]: \n{participantMap[f"participant-{participantNr}"]}\n")
-        
-        #print(COLORBLUE + "Participant Map:" + COLOREND)
-        #for key in participantMap:
-        #    print(f"{key} : {participantMap[key]}")
-        return participantMap
-    
-
-
-
-    def add_eegFileDict(self) -> None:
-        eegFileDict : dict= Eeg.getAllEegFiles_forSingleParticipant(self.nr)
-        self.eegFileDict = eegFileDict
-  
-
-    """
-    @staticmethod
-    def generate_famDict() -> dict:
-        # Randomly assigns famA, famB, famC to famLeft, famMiddle, famRight
-        #    and puts latter ones and shift into dict 
-        intList : list[int]= [0, 1, 2]
-        intList = random.sample(intList, k = 3)
-
-        famDict : dict = {}
-        famDict["famLeft_base"] = Globals.FAM_ABC_BASE_LIST[   intList[0] ]
-        famDict["famMiddle_base"] = Globals.FAM_ABC_BASE_LIST[ intList[1] ]
-        famDict["famRight_base"] = Globals.FAM_ABC_BASE_LIST[  intList[2] ]
-
-        famDict["shiftA"] = Globals.SHIFT_A
-        famDict["shiftB"] = Globals.SHIFT_B
-        famDict["shiftC"] = Globals.SHIFT_C
-
-        famDict["famLeft_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[   intList[0] ]
-        famDict["famMiddle_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[ intList[1] ]
-        famDict["famRight_shifted"] = Globals.FAM_ABC_SHIFTED_LIST[  intList[2] ]
-
-        return famDict
-    """     
+        print(COLORGREEN + "Participant successfully reinitiated. " + COLOREND + "Message from  Dateien.init_singleParticipant_fromJson()")
+        return participant  
 
     
        

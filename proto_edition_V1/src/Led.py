@@ -1,7 +1,10 @@
 import freefield
 from Globals import Globals
 
+import sys
+
 COLORBLUE   = '\33[34m'
+COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
 COLOREND = '\033[0m'
 
@@ -29,6 +32,8 @@ class Led():
             freefield.write( "bitmaskRight", ledRight.digital_channel, ledRight.digital_proc)
         else:
             print( COLORRED + "Invalid target in turn_targetLed_on" + COLOREND)
+            sys.exit()
+        print(COLORGREEN + "TargetLed turned on. " + COLOREND)
 
 
     

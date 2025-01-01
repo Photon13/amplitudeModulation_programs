@@ -4,9 +4,13 @@ import slab
 from Globals import Globals
 from Noise import Noise
 
-COLORBLUE = '\33[34m'
-COLORRED = '\33[31m'
+COLORBLUE   = '\33[34m'
+COLORGREEN = "\033[0;32m"
+COLORRED    = '\33[31m'
 COLOREND = '\033[0m'
+
+
+
 
 class Sprecher():
     
@@ -16,10 +20,6 @@ class Sprecher():
         [leftSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
         [middleSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
         [rightSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
-
-        #print(leftSpeaker.analog_proc)
-        #print(middleSpeaker.analog_proc)
-        #print(rightSpeaker.analog_proc)
 
         return leftSpeaker, middleSpeaker, rightSpeaker
     
@@ -38,16 +38,17 @@ class Sprecher():
     @staticmethod
     def write_nrSeqs(participant : object, blockNr : int,
                      leftSpeaker : object, middleSpeaker : object, rightSpeaker : object ) -> None:
+        """  #   send sequence of number onto rcx:
+             #       for left: 1 (= no shift) or 2 (= shift), resp.;
+             #       for left: 3 (= no shift) or 4 (= shift), resp.;
+             #       for left: 5 (= no shift) or 6 (= shift), resp.    """
 
         nrSeqsDict = Noise.generate_nrSeqs(participant, blockNr)
 
         freefield.write( "nrSeqLeft",   nrSeqsDict["nrSeqLeft"],   leftSpeaker.analog_proc   )
         freefield.write( "nrSeqMiddle", nrSeqsDict["nrSeqMiddle"], middleSpeaker.analog_proc )
         freefield.write( "nrSeqRight",  nrSeqsDict["nrSeqRight"],  rightSpeaker.analog_proc )
-            # send sequence of number onto rcx:
-            #   for left: 1 (= no shift) or 2 (= shift), resp.;
-            #   for left: 3 (= no shift) or 4 (= shift), resp.;
-            #   for left: 5 (= no shift) or 6 (= shift), resp. 
+ 
     
 
 
@@ -80,8 +81,8 @@ class Sprecher():
     @staticmethod
     def write_soundData(dictSoundData : dict, 
                         leftSpeaker : object, middleSpeaker : object, rightSpeaker : object ) -> None:
-
-        # send sound data (data per snippet type) onto rcx
+        """ send sound data (data per snippet type) onto rcx """
+        
         freefield.write( "baseLeft_data",   dictSoundData["soundLeft_base"].data,   leftSpeaker.analog_proc   )
         freefield.write( "baseMiddle_data", dictSoundData["soundMiddle_base"].data, middleSpeaker.analog_proc )
         freefield.write( "baseRight_data",  dictSoundData["soundRight_base"].data,  rightSpeaker.analog_proc  )
@@ -96,6 +97,7 @@ class Sprecher():
     @staticmethod
     def wrapper_writeTo_speakers(participant : object, blockNr : int, dictSoundData : dict):
 
+        print(COLORGREEN + "Writing to speakers ... " + COLOREND)
         leftSpeaker, middleSpeaker, rightSpeaker = Sprecher.get_speakerCoordinates()
         
         Sprecher.write_channel( 

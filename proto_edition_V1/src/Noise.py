@@ -73,7 +73,7 @@ class Noise:
                 middle no shift: 3  ;  middle shift: 4
                 right no shift:  5  ;  right shift:  6       """
         
-        shiftOccurence : list[str] = participant.blockDict[f"block_{blockNr}"]
+        shiftOccurence : list[str] = participant.blockShiftDict[f"block_{blockNr}"]
             # n_subblocks
 
         # 0. subblock (no shift at all):
@@ -104,7 +104,6 @@ class Noise:
                 print(COLORRED + "\nProblem occured in generate_nrSeqs(): Probably invalid target in shiftOccurence list." + COLOREND)
 
 
-        print(f"nrSeqLeft: {nrSeqLeft}")
         nrSeqLeft = np.array(nrSeqLeft).astype('int32') # nrSeqLeft = np.append(0, nrSeqLeft) #?
         nrSeqMiddle = np.array(nrSeqMiddle).astype('int32')  # nrSeqMiddle = np.append(0, nrSeqMiddle) #?
         nrSeqRight = np.array(nrSeqRight).astype('int32') # nrSeqRight = np.append(0, nrSeqRight) #?
@@ -118,7 +117,6 @@ class Noise:
         nrSeqsDict["nrSeqMiddle"] = nrSeqMiddle
         nrSeqsDict["nrSeqRight"] = nrSeqRight
 
-        print(f"nrSeqLeft: {nrSeqsDict}")
 
         print(COLORGREEN + "Sounds successfully prepared. " + COLOREND + "Message from generate_soundSnippets(participant : object)")
         return nrSeqsDict

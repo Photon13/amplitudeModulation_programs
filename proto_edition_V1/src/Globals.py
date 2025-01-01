@@ -1,22 +1,28 @@
 import os
 from pathlib import Path
 import re
+import sys
+
+COLORBLUE = '\33[34m'
+COLORGREEN = "\033[0;32m"
+COLORRED = '\33[31m'
+COLOREND = '\033[0m'
 
 
 
 
 class Globals():
-    """ Contains global variables/ constants for proto_edition_V1 """
 
+                
     # Coordinates for freefield
     LED_COORDINATES = [(0, -25), (0, 0), (0, 25)]
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
     
-    #horizontalSpeakerCoordinatesList : List(str) = [
+    # horizontalSpeakerCoordinatesList : List(str) = [
     #    (-52.5, 0), (-35.5, 0), (-17.5, 0), 
     #    (0, 0), 
     #    (17.5), (35.5, 0), (52.5, 0)
-    #]
+    # ]
 
     # Frequencies of amplitude modulation
     FAM_A_BASE = 3
@@ -54,39 +60,148 @@ class Globals():
 
 
 
-    # Paths
-    PATH_CWD = Path(os.getcwd())
+    #-------PATHS-------#
+
+
+    # amplitudeModulation
+    #        amplitudeModulation_programs
+    #                 proto_edition_V1 (=pathCwd)
+    #                 ------ scr (.py files)
+    #                 ------ data
+    #                        >>>>>> possible_frequency_combinations.txt
+    #                        ------ rcx
+    #                              >>>>>> standard_setup_long_pre_final.rcx
+    #                 ------ participant_json
+    #                        ------ testMode
+    #                        ------ non-testMode
+    #                               >>>>>> participant-{nr}.txt
+    #        BrainVision Recorder
+    #                 testMode
+    #                 non-testMode
+    #                 ------rohDaten
+    #                       ------ participant-{}_roh
+    #                              >>>>>> participant-{}.eeg
+    #                              >>>>>> participant-{}(1).eeg
+    #                              >>>>>> participant-{}.vhdr
+    #                              >>>>>> participant-{}.vmrk
+    #                 ------zwischenDaten
+    #                       ------ participant-{}_zwischen
+    #                 ------vollVerarbeiteteDaten
+    #                       ------ summation
+    #                              >>>>>> summation_diagram_ABC_left_target
+    #                       ------ participant-{}_voll
+    #                              ------ participant-{}_diagramme
+    #                                     >>>>>> participant-{}_diagram_ABC_left_target
+    #                 
+    # 
+
+
+    PATH_CWD = Path( os.getcwd() )
         # cwd must be: "...\\amplitudeModulation_programs\\proto_edition_V1"
-    
+
     PATH_RCX_FILE = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
-        # path to rcx files
-    
-    PATH_JSON_FOLDER = PATH_CWD / "participant_json"
-        # path to json files
+
+    PATH_FOLDER_BRAINVISION_RECORDER = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
 
 
-    PATH_FOLDER_EEG = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\EEG")
-        # path to BrainVision Recorder files
-    PATH_FOLDER_EEG_RAW = PATH_FOLDER_EEG / "raw EEG"
-        # path to unprocessed BrainVision Recorder files
 
-    SEARCH_PATTERN_eeg = re.compile(r""" ^(participant-)    # start str
-                                    \d+                     # some digits (1 or more occurences)
-                                    .*                      # something
-                                    \.                      # dot
-                                    eeg$""",                # extension
-                                    re.VERBOSE)
+
+    mode : str
+
+    def __init__(self, mode : str):
+        """ mode == "testMode" 
+            XOR
+            mode == "non-testMode" """
+        if (mode == "testMode" or mode == "non-testMode"):
+            self.mode = mode
+        else: 
+            (COLORRED + "Invalid mode! -> change mode in Globals() to \"testMode\" or \"non-testMode\"" + COLOREND)
+            sys.exit()
+
+    def get_pathJsonFolder(self) -> Path:
+        pathJsonFolder : Path = Globals.PATH_CWD / "participant_json" / f"{self.mode}"
+        return pathJsonFolder
     
-    SEARCH_PATTERN_vhdr = re.compile(r""" ^(participant-)    # start str
-                                    \d+                     # some digits (1 or more occurences)
-                                    .*                      # something
-                                    \.                      # dot
-                                    vhdr$""",                # extension
-                                    re.VERBOSE)
+
+
+
+    def get_pathBVR_rohDatenFolder(self) -> Path:         # .eeg, .vhdr, .vmrk
+        path_roh : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "rohDaten"
+        return path_roh
     
-    SEARCH_PATTERN_vmrk = re.compile(r""" ^(participant-)    # start str
-                                    \d+                     # some digits (1 or more occurences)
-                                    .*                      # something
-                                    \.                      # dot
-                                    vmrk$""",                # extension
-                                    re.VERBOSE)
+    def get_pathBVR_zwischenDatenFolder(self) -> Path:         # preprocessed EEG (e.g. after interpolation)
+        path_zwischen : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "zwischenDaten"
+        return path_zwischen
+    
+    def get_pathBVR_vollVerarbeiteteDaten(self) -> Path:         # e.g. diagrams
+        path_voll : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "vollVerarbeiteteDaten"
+        return path_voll
+    
+
+
+
+    def get_pathBVR_rohDaten_participantFolder(participantNr : int) -> Path:
+        path_roh_part = Globals.get_pathBVR_rohDatenFolder() / "participant-{participantNr}_roh"
+        return path_roh_part
+
+    def get_pathBVR_zwischenDatenFolder_participantFolder(self, participantNr : int) -> Path:
+        path_zwischen_part : Path = self.get_pathBVR_zwischenDatenFolder() / "participant-{participantNr}_zwischen"
+        return path_zwischen_part
+
+    def get_pathBVR_vollVerarbeiteteDaten_participantFolder(self, participantNr : int) -> Path:
+        path_voll_part : Path = self.get_pathBVR_vollVerarbeiteteDaten() / "participant-{participantNr}_voll"
+        return path_voll_part
+    
+
+
+    
+    def get_pathBVR_vollVerarbeiteteDaten_summationFolder(self) -> Path:
+        path_sum : Path = self.get_pathBVR_vollVerarbeiteteDaten() / "summation"
+        return path_sum
+            # diagrams: (?)
+            #       - power spectrum:
+            #               - powerSpektrum_leftTarget_{}Hz
+            #               - powerSpektrum_leftTarget_{}Hz
+            #               - powerSpektrum_leftTarget_{}Hz
+            #
+            #               - powerSpektrum_rightTarget_{}Hz
+            #               - ...
+            #
+            # resultBVR.text (?)
+            #       - Δpower_lateralTarget_single
+            #       - Δpower_middleTarget_single
+            #       - Δpower_lateralTarget_both
+            #       - Δpower_middleTarget_both
+            #
+            # resultButtonPresses.txt (?)
+
+
+    @staticmethod
+    def get_searchPatternDict(participantNr : int) -> dict:
+
+        SEARCH_PATTERN_eeg = re.compile( rf"participant-  {participantNr}  \.  eeg", re.VERBOSE)
+        SEARCH_PATTERN_eeg_additionalFiles = re.compile( rf"participant-  {participantNr}  [(] \d+ [)]  \.  eeg", re.VERBOSE)
+
+        SEARCH_PATTERN_vhdr = re.compile( rf"participant-  {participantNr}  \.  vhdr", re.VERBOSE)
+        SEARCH_PATTERN_vhdr_additionalFiles = re.compile( rf"participant-  {participantNr}  [(] \d+ [)]  \.  vhdr", re.VERBOSE)
+
+        SEARCH_PATTERN_vmrk = re.compile( rf"participant-  {participantNr}  \.  vmrk", re.VERBOSE)
+        SEARCH_PATTERN_vmrk_additionalFiles = re.compile( rf"participant-  {participantNr}  [(] \d+ [)]  \.  vmrk", re.VERBOSE)
+
+
+        searchPatternDict : dict = {
+            "SEARCH_PATTERN_eeg" : SEARCH_PATTERN_eeg,
+            "SEARCH_PATTERN_eeg_additionalFiles" : SEARCH_PATTERN_eeg_additionalFiles,
+            "SEARCH_PATTERN_vhdr" : SEARCH_PATTERN_vhdr,
+            "SEARCH_PATTERN_vhdr_additionalFiles" : SEARCH_PATTERN_vhdr_additionalFiles,
+            "SEARCH_PATTERN_vmrk" : SEARCH_PATTERN_vmrk,
+            "SEARCH_PATTERN_vmrk_additionalFiles" : SEARCH_PATTERN_vmrk_additionalFiles
+        }
+        return searchPatternDict
+    
+
+
+
+
+
+        
