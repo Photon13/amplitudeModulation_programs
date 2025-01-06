@@ -33,7 +33,7 @@ class Dateien:
 
 
     @staticmethod
-    def get_properFileList(searchPattern : str, pathFolder : Path):
+    def get_properFileList(searchPattern : str, pathFolder : Path) -> List[str]:
 
         fileList : List[str] = Dateien.get_fileList(pathFolder)
         properFileList : List[str] = []
