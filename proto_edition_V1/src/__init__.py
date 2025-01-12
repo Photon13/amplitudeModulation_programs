@@ -15,6 +15,8 @@ import sys
 import time
 import random
 
+from typing import List
+
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
@@ -64,11 +66,19 @@ class Main:
 
 if __name__ == "__main__":
 
-    globals : object = Globals( mode = "testMode" )
+    #globals : object = Globals( mode = "testMode" )
 
-    participantNr : int = 77
+    participantNr : int = 2
 
-    Main.run_mainExperiment( participantNr, globals)
+    if( participantNr % 6 == 1 or participantNr % 6 == 2):
+        x : List[int] = ["b", "a", "c"]
+        y = ["c", "a", "b"]
+        pseudoRandomisedFamList = random.choice( [x, y] )
+        print(pseudoRandomisedFamList)
+    else:
+        print("FEHLER")
+
+    #Main.run_mainExperiment( participantNr, globals)
 
     # if program crashes during experiment:
     # Main.run_mainExperiment( participantNr, globals, blockToStartWith = <> )

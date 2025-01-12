@@ -158,26 +158,28 @@ class Participant:
         # (x*6) is a multiple of 6   ;   here z is the remainder of the division 
         # x == {0, 1, 2, ..., u}   ;   z == {0, 1, 2, 3, 4, 5}
 
-        if( self.nr % 6 == 1):  # True for .nr == 1 || 7 || 13 || ...
-            pseudoRandomisedFamList = [b, a, c] # famMiddle == famA
+        if( self.nr % 6 == 1 or self.nr % 6 == 2):  # True for .nr == 1 || 7 || 13 || ... #or True for .nr == 2 || 8 || 14 || ...
+            x : List[int] = [b, a, c]
+            y : List[int] = [c, a, b]
+            
+            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famA
+  
 
-        elif( self.nr % 6 == 2): # True for .nr == 2 || 8 || 14 || ...
-            pseudoRandomisedFamList = [c, a, b]  # famMiddle == famA
-        
-        elif( self.nr % 6 == 3): # True for .nr == 3 || 9 || 15 || ...
-            pseudoRandomisedFamList = [a, b, c]  # famMiddle == famB
+        elif( self.nr % 6 == 3 or self.nr % 6 == 4): # True for .nr == 3 || 9 || 15 || ... #or True for .nr == 4 || 10 || 16 || ...
+            x : List[int] = [a, b, c]
+            y : List[int] = [c, b, a]
+            
+            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famB
 
-        elif( self.nr % 6 == 4): # True for .nr == 4 || 10 || 16 || ...
-            pseudoRandomisedFamList = [c, b, a]  # famMiddle == famB
 
-        elif( self.nr % 6 == 5): # True for .nr == 5 || 11 || 17 || ...
-            pseudoRandomisedFamList = [a, c, b]  # famMiddle == famC
-
-        elif( self.nr % 6 == 0): # True for .nr == 6 || 12 || 16 || ...
-            pseudoRandomisedFamList = [b, c, a]  # famMiddle == famC
+        elif( self.nr % 6 == 5 or self.nr % 6 == 0): # True for .nr == 5 || 11 || 17 || ... #or True for .nr == 6 || 12 || 16 || ...
+            x : List[int] = [a, c, b]
+            y : List[int] = [b, c, a]
+            
+            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famC
 
         else :
-            print( COLORRED + ".famList could not be generated! " + COLOREND + "(Message from assignFams_helpMethod(self, listFromGlobals))")
+            print( COLORRED + ".famList could not be generated! Invalid participant_nr? " + COLOREND + "(Message from assignFams_helpMethod(self, listFromGlobals))")
             sys.exit()
 
         return pseudoRandomisedFamList
