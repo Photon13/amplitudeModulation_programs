@@ -47,7 +47,6 @@ class Experiment:
 
 
 
-
     @staticmethod
     def run_block(participant : object, blockNr : int, dictSoundData : dict) -> None:
 

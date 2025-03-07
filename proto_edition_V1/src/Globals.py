@@ -13,71 +13,140 @@ COLOREND = '\033[0m'
 
 class Globals():
 
-                
-    # Coordinates for freefield
+    #_______CONSTRUCTOR_of_GLOBALS____________________________________________________________________________________#
+
+    def __init__(self, mode : str):
+        """ mode == "testMode" 
+            XOR
+            mode == "non-testMode" """
+        mode : str
+
+        if (mode == "testMode" or mode == "non-testMode"):
+            self.mode = mode
+        else: 
+            (COLORRED + "Invalid mode! -> change mode in Globals() to \"testMode\" or \"non-testMode\"" + COLOREND)
+            sys.exit()
+
+
+    #_______ COORDINATES: ____________________________________________________________________________________________#
+
+    # Coordinates for horizontal speakers:                  
+    #    (-52.5, 0)                                         
+    #    (-35.5, 0)                                         
+    #    (-17.5, 0)
+    #    (0, 0) 
+    #    (17.5) 
+    #    (35.5, 0) 
+    #    (52.5, 0)
+
     LED_COORDINATES = [(0, -25), (0, 0), (0, 25)]
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
     
-    # horizontalSpeakerCoordinatesList : List(str) = [
-    #    (-52.5, 0), (-35.5, 0), (-17.5, 0), 
-    #    (0, 0), 
-    #    (17.5), (35.5, 0), (52.5, 0)
-    # ]
 
-    # Frequencies of amplitude modulation
+
+
+    #_______ FREQUENCIES: ___________________________________________________#
+
+    # Frequencies of Amplitude modulation___:
     FAM_A_BASE = 3
     FAM_B_BASE = 7
     FAM_C_BASE = 13
 
-    # Δfrequency // shift is added to base fam
+    # ΔFrequency___:
     SHIFT_A = 4
     SHIFT_B = 4
     SHIFT_C = 4
 
-
+    # Shift is added to base fam________:
     FAM_A_SHIFTED = FAM_A_BASE + SHIFT_A
     FAM_B_SHIFTED = FAM_B_BASE + SHIFT_B
     FAM_C_SHIFTED = FAM_C_BASE + SHIFT_C
     
-    FAM_ABC_BASE_LIST = [FAM_A_BASE, FAM_B_BASE, FAM_C_BASE]
-    FAM_ABC_SHIFTED_LIST = [FAM_A_SHIFTED, FAM_B_SHIFTED, FAM_C_SHIFTED]
-    SHIFT_ABC_LIST = [SHIFT_A, SHIFT_B, SHIFT_C]
+    FAM_ABC_BASE_LIST =     [FAM_A_BASE, FAM_B_BASE, FAM_C_BASE]
+    FAM_ABC_SHIFTED_LIST =  [FAM_A_SHIFTED, FAM_B_SHIFTED, FAM_C_SHIFTED]
+    SHIFT_ABC_LIST =        [SHIFT_A, SHIFT_B, SHIFT_C]
+    
+
+    #_______BLOCKS_and_SUBBLOCKS_____________________________________________#
+
+    # Number of subblocks___:
+    N_SUBBLOCKS = (1+15)   
+                                        #   16 subblocks, 4 seconds resp.
+                                        #   1st second: shifted sound; 2.-4. second: unshifted sound 
+                                        #   in sum: 1 block = 64 seconds (4 sec * 16)
+                                        #   CAVE: 0.subblock: always unshifted ! 
+
+    # Number of blocks___:   
+    N_BLOCKS = (2+16)       
+                                        #   2 test blocks + 16 normal blocks
+                                        #   4 conditions (i.e. target types)), 4 blocks resp.
+
+
+    #_______PATHS___________________________________________________________#
+
+    # Path cwd:
+    PATH_CWD = Path( os.getcwd() )
+                                        #   amplitudeModulation / amplitudeModulation_programs / proto_edition_V1
+                                        #   cwd must be: proto_edition_V1 !
+
+
+
+    # Python files:
+    PATH_PYTHON = PATH_CWD /"src"
+                                        #   proto_edition_V1 / src
+
+    
+    
+    # Rcx files:
+    PATH_RCX_FILE = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
+                                        #   proto_edition_V1 / data / rcx / standard_setup_long_pre_final.rcx
+
     
 
 
 
-    # Number of blocks and subblocks
-    N_SUBBLOCKS = (1+15)   
-        # 16 subblocks, 4 seconds resp.
-        # 1st second: shifted sound; 2.-4. second: unshifted sound 
-        # in sum: 1 block = 64 seconds (4 sec * 16)
-        # CAVE: 0.subblock: always unshifted ! 
-        #
-    N_BLOCKS = (2+16)       
-        # 2 test blocks + 16 normal blocks
-        # 4 conditions (i.e. target types)), 4 blocks resp.
+    # Json txt:
+    def get_pathJsonFolder(self) -> Path:
+        pathJsonFolder : Path = Globals.PATH_CWD / "participant_json" / f"{self.mode}"
+        return pathJsonFolder
+                                        #   proto_edition_V1 / participant_json / <mode> / participant-{nr}.txt
+                                        #   <mode> == testMode || non-testMode
+
+
+
+    # Prime numbers:
+        # proto_edition_V1 / data / possible_frequency_combinations.txt
 
 
 
 
-    #-------PATHS-------#
+    # BrainVision Recorder
+    PATH_FOLDER_BRAINVISION_RECORDER = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
+                                        
+                                        #   amplitudeModulation / BrainVision Recorder / <mode>
+                                        #   <mode> == testMode || non-testMode
 
 
-    # amplitudeModulation
-    #        amplitudeModulation_programs
-    #                 proto_edition_V1 (=pathCwd)
-    #                 ------ scr (.py files)
-    #                 ------ data
-    #                        >>>>>> possible_frequency_combinations.txt
-    #                        ------ rcx
-    #                              >>>>>> standard_setup_long_pre_final.rcx
-    #                 ------ participant_json
-    #                        ------ testMode
-    #                        ------ non-testMode
-    #                               >>>>>> participant-{nr}.txt
-    #        BrainVision Recorder
-    #                 testMode
-    #                 non-testMode
+    def get_pathBVR_rohDatenFolder(self) -> Path:         
+        path_roh : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "rohDaten"
+        return path_roh
+                                        #   .eeg, .vhdr, .vmrk
+                                        #   file name: e.g. participant-{}.eeg 
+                                        #                   participant-{}(1).eeg
+
+    def get_pathBVR_zwischenDatenFolder(self) -> Path:         
+        path_zwischen : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "zwischenDaten"
+        return path_zwischen
+                                        #   preprocessed EEG (e.g. after interpolation)
+                                        #   file name: e.g. participant-{}_zwischen.<> ?
+    
+    def get_pathBVR_vollVerarbeiteteDaten(self) -> Path:         
+        path_voll : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "vollVerarbeiteteDaten"
+        return path_voll
+                                        #   e.g. diagrams
+                                        #   file name: e.g. participant-{}_diagram_ABC_left_target
+                                        #                   participant-{}_diagram_ABC_both_target
+
     #                 ------rohDaten
     #                       ------ participant-{}_roh
     #                              >>>>>> participant-{}.eeg
@@ -92,50 +161,19 @@ class Globals():
     #                       ------ participant-{}_voll
     #                              ------ participant-{}_diagramme
     #                                     >>>>>> participant-{}_diagram_ABC_left_target
-    #                 
-    # 
-
-
-    PATH_CWD = Path( os.getcwd() )
-        # cwd must be: "...\\amplitudeModulation_programs\\proto_edition_V1"
-
-    PATH_RCX_FILE = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
-
-    PATH_FOLDER_BRAINVISION_RECORDER = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
 
 
 
 
-    mode : str
-
-    def __init__(self, mode : str):
-        """ mode == "testMode" 
-            XOR
-            mode == "non-testMode" """
-        if (mode == "testMode" or mode == "non-testMode"):
-            self.mode = mode
-        else: 
-            (COLORRED + "Invalid mode! -> change mode in Globals() to \"testMode\" or \"non-testMode\"" + COLOREND)
-            sys.exit()
-
-    def get_pathJsonFolder(self) -> Path:
-        pathJsonFolder : Path = Globals.PATH_CWD / "participant_json" / f"{self.mode}"
-        return pathJsonFolder
     
 
 
 
-    def get_pathBVR_rohDatenFolder(self) -> Path:         # .eeg, .vhdr, .vmrk
-        path_roh : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "rohDaten"
-        return path_roh
     
-    def get_pathBVR_zwischenDatenFolder(self) -> Path:         # preprocessed EEG (e.g. after interpolation)
-        path_zwischen : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "zwischenDaten"
-        return path_zwischen
+
     
-    def get_pathBVR_vollVerarbeiteteDaten(self) -> Path:         # e.g. diagrams
-        path_voll : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "vollVerarbeiteteDaten"
-        return path_voll
+
+
     
 
 

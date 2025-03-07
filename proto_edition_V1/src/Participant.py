@@ -81,7 +81,7 @@ class Participant:
     
     
     
-    def generate_targetList(self) -> List[str]: 
+    def generate_targetList( self ) -> List[str]: 
 
         targetList : list[str] = []
         targetList.append(random.choice(["left", "middle", "right"])) 
@@ -121,7 +121,7 @@ class Participant:
     
     
 
-    def generate_blockShiftDict(self) -> dict:
+    def generate_blockShiftDict( self ) -> dict:
         """ Creates a dict with <block name> : <list shift position> """
         blockDict : dict = {}
 
@@ -145,7 +145,7 @@ class Participant:
     
     
    
-    def assignFams_helpMethod(self, listFromGlobals : List[int] ) -> List[int]:
+    def assignFams_helpMethod( self, listFromGlobals : List[int] ) -> List[int]:
         """ Help method for Participant.generate_famDict() 
                 Position of frequency is pseudo-randomised    """
 
@@ -154,32 +154,29 @@ class Participant:
         b : int = listFromGlobals[1]
         c : int = listFromGlobals[2]
 
-        # participant.nr ==   (x*6) + z   =>   nr/6 == x + z/6   =>   nr%6 == z
-        # (x*6) is a multiple of 6   ;   here z is the remainder of the division 
-        # x == {0, 1, 2, ..., u}   ;   z == {0, 1, 2, 3, 4, 5}
 
-        if( self.nr % 6 == 1 or self.nr % 6 == 2):  # True for .nr == 1 || 7 || 13 || ... #or True for .nr == 2 || 8 || 14 || ...
+        if( self.nr % 6 == 1 or self.nr % 6 == 4):  # 1 || 7 || 13 || ... || 4 || 10 || 16 || ... 
             x : List[int] = [b, a, c]
             y : List[int] = [c, a, b]
             
             pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famA
   
 
-        elif( self.nr % 6 == 3 or self.nr % 6 == 4): # True for .nr == 3 || 9 || 15 || ... #or True for .nr == 4 || 10 || 16 || ...
+        elif( self.nr % 6 == 2 or self.nr % 6 == 5): # 2 || 8 || 14 || ... || 5 || 11 || 17 || ...
             x : List[int] = [a, b, c]
             y : List[int] = [c, b, a]
             
             pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famB
 
 
-        elif( self.nr % 6 == 5 or self.nr % 6 == 0): # True for .nr == 5 || 11 || 17 || ... #or True for .nr == 6 || 12 || 16 || ...
+        elif( self.nr % 6 == 3 or self.nr % 6 == 6): # 3 || 9 || 15 || ... || 6 || 12 || 16 || ...
             x : List[int] = [a, c, b]
             y : List[int] = [b, c, a]
             
             pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famC
 
         else :
-            print( COLORRED + ".famList could not be generated! Invalid participant_nr? " + COLOREND + "(Message from assignFams_helpMethod(self, listFromGlobals))")
+            print( COLORRED + "famList could not be generated!" + COLOREND + "Participant.assignFams_helpMethod()")
             sys.exit()
 
         return pseudoRandomisedFamList
@@ -187,7 +184,7 @@ class Participant:
 
 
 
-    def generate_famDict(self) -> dict:
+    def generate_famDict( self ) -> dict:
 
         famDict : dict = {}
 
@@ -214,7 +211,7 @@ class Participant:
 
 
 
-    def findAllBlocks_withSpecificCondition(self) -> None:
+    def findAllBlocks_withSpecificCondition( self ) -> None:
 
         blocksWithConditionDict : dict = {}
 
@@ -222,8 +219,10 @@ class Participant:
         blockNrsMiddle : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "middle"]
         blockNrsRight : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "right"]
         blockNrsBoth : list[int] = [index for index, entry in enumerate(self.targetList) if entry == "both"]
-            # ´enumerate(<list>)´ returns iterable containing (<index>, <entry>) for each item in list
-            # ´index for (index, entry) in <iterable> if entry == <"irgendwas">´ picks all indices for whose the entry is "irgendwas"
+            # enumerate(<list>) 
+            #   returns iterable containing (<index>, <entry>) for each item in list
+            # index for (index, entry) in <iterable> if entry == <"irgendwas">
+            #   picks all indices for whose the entry is "irgendwas"
 
         blocksWithConditionDict["single_leftTarget"] = blockNrsLeft
         blocksWithConditionDict["single_middleTarget"] = blockNrsMiddle
@@ -238,7 +237,7 @@ class Participant:
 
 
     @staticmethod
-    def check_if_Json_exists(participantNr : int, globals : object) -> bool:
+    def check_if_Json_exists( participantNr : int, globals : object ) -> bool:
         """  Checks if Json with the given participant number exists
                 returns True if exists
                 returns False if does not exist   """
@@ -267,7 +266,7 @@ class Participant:
 
 
     @staticmethod
-    def read_participantInformation_fromJson(globals : object, fileNameJson : str) -> dict:
+    def read_participantInformation_fromJson( globals : object, fileNameJson : str ) -> dict:
         """ Help method for init_participants_fromJson() """
 
         loadPath : Path = globals.get_pathJsonFolder() / fileNameJson
@@ -280,7 +279,7 @@ class Participant:
 
 
     @staticmethod
-    def init_singleParticipant_fromJson(participantNr : int, globals : object) -> object:
+    def init_singleParticipant_fromJson( participantNr : int, globals : object ) -> object:
 
         jsonData = Participant.read_participantInformation_fromJson( globals, f"participant-{participantNr}.txt" )
         participant = Participant(participantNr)
@@ -288,6 +287,7 @@ class Participant:
 
         print(COLORGREEN + "Participant successfully reinitiated. " + COLOREND + "Message from  Dateien.init_singleParticipant_fromJson()")
         return participant  
+    
 
     
        

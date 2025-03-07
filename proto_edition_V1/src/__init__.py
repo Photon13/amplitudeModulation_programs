@@ -64,29 +64,35 @@ class Main:
 
 
 
+
+
+
+
+
+
 if __name__ == "__main__":
 
-    #globals : object = Globals( mode = "testMode" )
+    globals : object = Globals( mode = "testMode" )
+    # AENDERN ZU "non-testMode"
 
-    participantNr : int = 2
 
-    if( participantNr % 6 == 1 or participantNr % 6 == 2):
-        x : List[int] = ["b", "a", "c"]
-        y = ["c", "a", "b"]
-        pseudoRandomisedFamList = random.choice( [x, y] )
-        print(pseudoRandomisedFamList)
-    else:
-        print("FEHLER")
 
-    #Main.run_mainExperiment( participantNr, globals)
+    participantNr : int = 1000
 
-    # if program crashes during experiment:
-    # Main.run_mainExperiment( participantNr, globals, blockToStartWith = <> )
+
+
+    #if( participantNr % 6 == 1 or participantNr % 6 == 2):
+    #    x : List[int] = ["b", "a", "c"]
+    #    y = ["c", "a", "b"]
+    #    pseudoRandomisedFamList = random.choice( [x, y] )
+    #    print(pseudoRandomisedFamList)
+    #else:
+    #    print("FEHLER")
+
+    Main.run_mainExperiment( participantNr, globals, blockToStartWith = 5)
+
+    #if program crashes during experiment:
+    #Main.run_mainExperiment( participantNr, globals, blockToStartWith = <> )
         ## enter desired blockNr : int  at <>
-
-
-
-
-
 
 
