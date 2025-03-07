@@ -248,14 +248,14 @@ def turn_target_led_on(target):
     [led_25] = freefield.pick_speakers((led_coordinates[2]))  # bit4 centre (speaker25) ## rcx digital_channel: 16
 
     if target == "left":
-    freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
+        freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
     elif target == "middle":
-    freefield.write('bitmaskMiddle', led_23.digital_channel, led_23.digital_proc)
+        freefield.write('bitmaskMiddle', led_23.digital_channel, led_23.digital_proc)
     elif target == "right":
-    freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
+        freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
     elif target == "both":
-    freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
-    freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
+        freefield.write('bitmaskLeft', led_21.digital_channel, led_21.digital_proc)
+        freefield.write('bitmaskRight', led_25.digital_channel, led_25.digital_proc)
     else:
         print("'''''\n CAVE: Invalid target for led. \n'''''")
 #___________________________________________________________________________________________________________

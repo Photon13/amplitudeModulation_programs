@@ -94,18 +94,18 @@ class ExperimentWrapperMethods:
 
 
 
-"""
+
 proc_list = [['RP2', 'RP2', Globals.path_cwd],
              ['RX81', 'RX8', Globals.path_cwd],
              ['RX82', 'RX8', Globals.path_cwd]]
 
 freefield.initialize('dome', device=proc_list)
-"""
+
 participant_nr = 55
 # initiate participant:
 participant = ParticipantHelpMethods.precreate_participant(participant_nr)
-ParticipantHelpMethods.export_participantInstance_asJson(participant, participant_nr)
-"""
+#ParticipantHelpMethods.export_participantInstance_asJson(participant, participant_nr)
+
 # create sound snippets
 soundData_list = SoundMxxk.set_soundSnippets(participant)
 
@@ -123,7 +123,7 @@ for i in range(Globals.N_BLOCKS):
         inp = input("\nContinue with next block? [yes]/no: ")
         if inp.lower() == "yes":
             break
-"""
+
 
 # export participant data as json !
 

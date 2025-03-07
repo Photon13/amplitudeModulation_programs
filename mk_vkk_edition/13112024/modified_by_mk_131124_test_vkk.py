@@ -89,7 +89,7 @@ def assign_speakers():
 
 speaker_A, speaker_B, speaker_C = assign_speakers()
 #_______________________________________________________________________________________________________________________________________________________
-def apply_filters()
+def apply_filters():
 
     filter_A = speaker_A.filter
     filter_A.apply(base_A)
@@ -199,7 +199,7 @@ def generate_sequences():
             print("'''''\n CAVE: Ungültiger Entry in Liste shift_occurence. \n'''''")
         ###
         i = i+1
-
+    return sequence_A, sequence_B, sequence_C
 sequence_A, sequence_B, sequence_C = generate_sequences() 
 #_______________________________________________________________________________________________________________________________________________________
 def get_sequence_labels_list(sequence_X, nums=[]):
@@ -363,7 +363,7 @@ def run_experiment(n_blocks):
                 run_block()
                 break
             #else
-                repeat loop
+                #repeat loop
         #block_index = block_index +1 (automatisch for-Schleife)
 
 def run_block():
