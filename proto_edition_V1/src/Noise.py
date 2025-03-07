@@ -26,7 +26,7 @@ class Noise:
         famRight_shifted = participant.famDict["famRight_shifted"]
 
         samplerate = 48828
-        level = 80
+        level = 75
         duration = 1.0 # float!
 
         pinknoise = slab.Sound.pinknoise( duration = duration, samplerate = samplerate, level = level)
@@ -41,14 +41,14 @@ class Noise:
         soundRight_shifted = pinknoise.am( frequency = famRight_shifted)
         
         # fade-in
-        soundLeft_base.ramp(when ='onset', duration = 1.0)
-        soundLeft_shifted.ramp(when = 'onset', duration = 1.00)
+        #soundLeft_base.ramp(when ='onset', duration = 1.0)
+        #soundLeft_shifted.ramp(when = 'onset', duration = 1.00)
 
-        soundMiddle_base.ramp(when = 'onset', duration = 1.00)
-        soundMiddle_shifted.ramp(when = 'onset', duration = 1.00)
+        #soundMiddle_base.ramp(when = 'onset', duration = 1.00)
+        #soundMiddle_shifted.ramp(when = 'onset', duration = 1.00)
 
-        soundRight_base.ramp(when = 'onset', duration = 1.00)
-        soundRight_shifted.ramp(when = 'onset', duration = 1.00)
+        #soundRight_base.ramp(when = 'onset', duration = 1.00)
+        #soundRight_shifted.ramp(when = 'onset', duration = 1.00)
 
 
         dictSoundData = {

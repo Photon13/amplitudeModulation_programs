@@ -44,6 +44,7 @@ class Sprecher():
              #       for left: 5 (= no shift) or 6 (= shift), resp.    """
 
         nrSeqsDict = Noise.generate_nrSeqs(participant, blockNr)
+        print(nrSeqsDict)
 
         freefield.write( "nrSeqLeft",   nrSeqsDict["nrSeqLeft"],   leftSpeaker.analog_proc   )
         freefield.write( "nrSeqMiddle", nrSeqsDict["nrSeqMiddle"], middleSpeaker.analog_proc )
@@ -56,7 +57,7 @@ class Sprecher():
     @staticmethod
     def write_nSnippets(participant : object, leftSpeaker : object, middleSpeaker : object, rightSpeaker : object) -> None:
 
-        freefield.write( "n_snippetsLeft",   (participant.n_subblocks *4), leftSpeaker.analog_proc   ) # 16 * 4
+        freefield.write( "n_snippetsLeft",   (participant.n_subblocks *4), leftSpeaker.analog_proc   ) 
         freefield.write( "n_snippetsMiddle", (participant.n_subblocks *4), middleSpeaker.analog_proc )
         freefield.write( "n_snippetsRight",  (participant.n_subblocks *4), rightSpeaker.analog_proc  )
     
@@ -75,7 +76,7 @@ class Sprecher():
         freefield.write( "baseMiddle_n_samples", dictSoundData["soundMiddle_base"].n_samples, middleSpeaker.analog_proc )
         freefield.write( "baseRight_n_samples",  dictSoundData["soundRight_base"].n_samples,  rightSpeaker.analog_proc  )
     
-    
+ 
 
 
     @staticmethod

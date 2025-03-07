@@ -7,6 +7,7 @@ from TestMethods import TestMethods
 from Led import Led
 from Sprecher import Sprecher
 from Experiment import Experiment
+from Dateien import Dateien
 
 import freefield
 
@@ -16,12 +17,15 @@ import time
 import random
 
 from typing import List
+from pathlib import Path
+
 
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
 COLOREND = '\033[0m'
 COLORPURPLE = "\033[1;35m"
+COLORYELLOW = '\033[33m'
 
 np.set_printoptions(linewidth = 200)
 
@@ -63,7 +67,22 @@ class Main:
 
 
 
+def generate_participantNR_basedOnFreq() -> int:
+    """ generation of participant nr for AM Test: 
+        participantNr is generated as <famA><famB><famC><shift>,
+    #                           e.g. 37114 """
 
+    participantNr : str = ""
+    participantNr += str(Globals.FAM_A_BASE)
+    participantNr += str(Globals.FAM_B_BASE)
+    participantNr += str(Globals.FAM_C_BASE)
+    participantNr += str(Globals.SHIFT_A)
+    participantNr += str(Globals.SHIFT_B)
+    participantNr += str(Globals.SHIFT_C)
+
+    participantNr : int = int(participantNr)
+
+    return participantNr
 
 
 
@@ -72,27 +91,45 @@ class Main:
 
 if __name__ == "__main__":
 
-    globals : object = Globals( mode = "testMode" )
-    # AENDERN ZU "non-testMode"
+    """ keep: block should always be activated """
+
+    #__________INIT_GLOBALS________________________________________________________________
+
+    mode = "testMode"                                                                       # ENABLE FOR all TESTs
+    
+    #mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
+                                                                       
+    globals : object = Globals( mode )                                                      # keep
+    
+    #__________LIST_ALL_EXISTING_JSON_FILES________________________________________________
+
+    pathJsonMode : Path = globals.get_pathJsonFolder()                                      # keep
+    jsonList : List[str] = Dateien.get_fileList(pathJsonMode)
+    for entry in jsonList:                                                                  # keep
+        print("    " + COLORYELLOW + entry + COLOREND)
+    
+    #__________PARTICIPANT_NR______________________________________________________________
+
+    #participantNr : int = generate_participantNR_basedOnFreq() # für AM test               # ENABLE FOR ***AM TEST***
+        
+    participantNr : int = 1004 # normal assignment manually                             # ENABLE FOR eXPERIMENT
+
+    #__________CONFIRM_PARTICIPANT_NR______________________________________________________
+
+    print("    " + COLORBLUE + f"Current participantNr == {participantNr}" + COLOREND)      # keep
+    while True: 
+        inp = input("    " + COLORGREEN + "Continue [yes]? " + COLOREND)                    # keep
+        if inp.lower() == "yes":
+            break
+
+    #_________START_EXPERIMENT_____________________________________________________________
+
+    #Main.run_mainExperiment( participantNr, globals)                                       # keep, DEFAULT = 0 !
+
+    Main.run_mainExperiment( participantNr, globals, blockToStartWith = 3 )                 # ENABLE IF PROGRAM CRASHES
+        ## enter desired blockNr at blockToStartWith
 
 
 
-    participantNr : int = 1000
-
-
-
-    #if( participantNr % 6 == 1 or participantNr % 6 == 2):
-    #    x : List[int] = ["b", "a", "c"]
-    #    y = ["c", "a", "b"]
-    #    pseudoRandomisedFamList = random.choice( [x, y] )
-    #    print(pseudoRandomisedFamList)
-    #else:
-    #    print("FEHLER")
-
-    Main.run_mainExperiment( participantNr, globals, blockToStartWith = 5)
-
-    #if program crashes during experiment:
-    #Main.run_mainExperiment( participantNr, globals, blockToStartWith = <> )
-        ## enter desired blockNr : int  at <>
 
 

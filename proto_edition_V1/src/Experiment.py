@@ -58,22 +58,22 @@ class Experiment:
         Sprecher.wrapper_writeTo_speakers(participant, blockNr, dictSoundData)
 
 
-        timeToWait : int = 1  # waits 1 sec to avoid lag for loading data onto rcx // possibly abundant
-        stopTime : float = time.time() + timeToWait
+        timeToWait1 : int = 1  # waits 1 sec to avoid lag for loading data onto rcx // possibly abundant
+        stopTime1 : float = time.time() + timeToWait1
 
         while True:
-            if time.time() > stopTime:
+            if time.time() > stopTime1:
 
                 freefield.play(kind = "zBusA")
                 print(COLORGREEN + f"Block_{blockNr} started." + COLOREND)
                 break
 
 
-        timeToWait : int = participant.n_subblocks * 4  # each subblock 4 sec
-        stopTime : float = time.time() + timeToWait
+        timeToWait2 : int = participant.n_subblocks *4 *2  # each subblock 4 sec
+        stopTime2 : float = time.time() + timeToWait2      ### CAVE: DURATION SNIPPET SUDDENLY 2 SEC
 
         while True:
-            if time.time() > stopTime:
+            if time.time() > stopTime2:
 
                 Led.turn_all_leds_off()
                 print(COLORGREEN + f"Block_{blockNr} finished." + COLOREND)

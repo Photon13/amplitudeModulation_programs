@@ -83,39 +83,24 @@ class Participant:
     
     def generate_targetList( self ) -> List[str]: 
 
-        targetList : list[str] = []
-        targetList.append(random.choice(["left", "middle", "right"])) 
-            # 0.block: target is single speaker 
-                # test block
-        targetList.append("both") 
-            # 1.block: target is both (left + right speaker)
-                # test block
-        
-        k = ((self.n_blocks)-2) * (1.0/4.0)
-        k = int (k)
+        targetList : list[str] = []     
+                                                
+        targetList.append(random.choice(["left", "middle", "right"]))           # 0.block (test block): target is single speaker            
+        targetList.append("both")                                               # 1.block (test block): target is both (left + right speaker)
 
-        while True:
-            if (k/4 != 1) or (k/4 != 2) or (k/4 != 3) or (k/4 != 4) or (k/4 != 5):
-                break
-            else:
-                print(  COLORRED + "Problem occured in generate_targetList(): " 
-                        + "Number of blocks probably not multiple of 4"
-                        +" ... Check value in Globals" + COLOREND)
-                sys.exit()
 
-        targetsNormalBlocksUnshuffled = []
-        targetsNormalBlocksUnshuffled.extend( k*["left"]   ) 
-        targetsNormalBlocksUnshuffled.extend( k*["middle"] )
-        targetsNormalBlocksUnshuffled.extend( k*["right"]  )
-        targetsNormalBlocksUnshuffled.extend( k*["both"]   )
-            # non-test blocks
-        
-        targetsNormalBlocksShuffled = random.sample(
-            targetsNormalBlocksUnshuffled, 
-            k = self.n_subblocks
-        )       # randomise order of entries
+        j : int = 4                                                             # nr of blocks per condition
 
-        targetList = targetList + targetsNormalBlocksShuffled
+        targetsNormalBlocksUnshuffled = []                                      # non-test blocks
+        targetsNormalBlocksUnshuffled.extend( j*["left"]   ) 
+        targetsNormalBlocksUnshuffled.extend( j*["middle"] )
+        targetsNormalBlocksUnshuffled.extend( j*["right"]  )
+        targetsNormalBlocksUnshuffled.extend( j*["both"]   )
+            
+        targetsNormalBlocksShuffled = random.sample( targetsNormalBlocksUnshuffled, k = 4*j)          # randomise order of entries
+
+        targetList = targetList + targetsNormalBlocksShuffled                                                   # concatenate test and non-test targets
+
         return targetList
     
     
@@ -144,70 +129,28 @@ class Participant:
     
     
     
-   
-    def assignFams_helpMethod( self, listFromGlobals : List[int] ) -> List[int]:
-        """ Help method for Participant.generate_famDict() 
-                Position of frequency is pseudo-randomised    """
-
-        pseudoRandomisedFamList : List[int] 
-        a : int = listFromGlobals[0]
-        b : int = listFromGlobals[1]
-        c : int = listFromGlobals[2]
-
-
-        if( self.nr % 6 == 1 or self.nr % 6 == 4):  # 1 || 7 || 13 || ... || 4 || 10 || 16 || ... 
-            x : List[int] = [b, a, c]
-            y : List[int] = [c, a, b]
-            
-            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famA
-  
-
-        elif( self.nr % 6 == 2 or self.nr % 6 == 5): # 2 || 8 || 14 || ... || 5 || 11 || 17 || ...
-            x : List[int] = [a, b, c]
-            y : List[int] = [c, b, a]
-            
-            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famB
-
-
-        elif( self.nr % 6 == 3 or self.nr % 6 == 6): # 3 || 9 || 15 || ... || 6 || 12 || 16 || ...
-            x : List[int] = [a, c, b]
-            y : List[int] = [b, c, a]
-            
-            pseudoRandomisedFamList = random.choice( [x,y] ) # famMiddle == famC
-
-        else :
-            print( COLORRED + "famList could not be generated!" + COLOREND + "Participant.assignFams_helpMethod()")
-            sys.exit()
-
-        return pseudoRandomisedFamList
-
-
-
 
     def generate_famDict( self ) -> dict:
-
         famDict : dict = {}
 
-        pseudoRandomised_baseFamList : List[int] = self.assignFams_helpMethod( Globals.FAM_ABC_BASE_LIST )
+        helpList : List[int] = [0,1,2]
+        shuffledHelpList = random.sample(helpList, k=3)
 
-        famDict["famLeft_base"] = pseudoRandomised_baseFamList[0] 
-        famDict["famMiddle_base"] = pseudoRandomised_baseFamList[1] 
-        famDict["famRight_base"] = pseudoRandomised_baseFamList[2] 
+        
+        famDict["famLeft_base"] =   Globals.FAM_ABC_BASE_LIST[ shuffledHelpList[0] ]
+        famDict["famMiddle_base"] = Globals.FAM_ABC_BASE_LIST[ shuffledHelpList[1] ] 
+        famDict["famRight_base"] =  Globals.FAM_ABC_BASE_LIST[ shuffledHelpList[2] ] 
 
-        pseudoRandomised_shiftedFamList : List[int] = self.assignFams_helpMethod( Globals.FAM_ABC_SHIFTED_LIST )
+        famDict["shiftLeft"] =      Globals.SHIFT_ABC_LIST[ shuffledHelpList[0] ]
+        famDict["shiftMiddle"] =    Globals.SHIFT_ABC_LIST[ shuffledHelpList[1] ]
+        famDict["shiftRight"] =     Globals.SHIFT_ABC_LIST[ shuffledHelpList[2] ]
 
-        famDict["famLeft_shifted"] = pseudoRandomised_shiftedFamList[0]
-        famDict["famMiddle_shifted"] = pseudoRandomised_shiftedFamList[1]
-        famDict["famRight_shifted"] = pseudoRandomised_shiftedFamList[2] 
-
-        pseudoRandomised_shiftList : List[int] = self.assignFams_helpMethod( Globals.SHIFT_ABC_LIST )
-
-        famDict["shiftLeft"] = pseudoRandomised_shiftList[0]
-        famDict["shiftMiddle"] = pseudoRandomised_shiftList[1]
-        famDict["shiftRight"] = pseudoRandomised_shiftList[2]
+        famDict["famLeft_shifted"] =    famDict["famLeft_base"]     + famDict["shiftLeft"]
+        famDict["famMiddle_shifted"] =  famDict["famMiddle_base"]   + famDict["shiftMiddle"]
+        famDict["famRight_shifted"] =   famDict["famRight_base"]    + famDict["shiftRight"] 
 
         return famDict
-    
+
 
 
 

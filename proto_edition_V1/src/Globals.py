@@ -1,3 +1,17 @@
+#_______good frequency combinations_________#:
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+
+
 import os
 from pathlib import Path
 import re
@@ -19,7 +33,9 @@ class Globals():
         """ mode == "testMode" 
             XOR
             mode == "non-testMode" """
-        mode : str
+        
+        if(mode == "testMode"):
+            print(COLORRED + "TESTMODE ENABLED" + COLOREND)
 
         if (mode == "testMode" or mode == "non-testMode"):
             self.mode = mode
@@ -54,8 +70,8 @@ class Globals():
 
     # ΔFrequency___:
     SHIFT_A = 4
-    SHIFT_B = 4
-    SHIFT_C = 4
+    SHIFT_B = SHIFT_A
+    SHIFT_C = SHIFT_A
 
     # Shift is added to base fam________:
     FAM_A_SHIFTED = FAM_A_BASE + SHIFT_A
@@ -69,11 +85,11 @@ class Globals():
 
     #_______BLOCKS_and_SUBBLOCKS_____________________________________________#
 
-    # Number of subblocks___:
+    # Number of subblocks___:           ##### CAVE: SUBBLOCK LASTS 2 SECONDS FOR WHATEVER REASON!
     N_SUBBLOCKS = (1+15)   
                                         #   16 subblocks, 4 seconds resp.
                                         #   1st second: shifted sound; 2.-4. second: unshifted sound 
-                                        #   in sum: 1 block = 64 seconds (4 sec * 16)
+                                        #   in sum: 1 block = 64 seconds (4 sec * 31)
                                         #   CAVE: 0.subblock: always unshifted ! 
 
     # Number of blocks___:   
