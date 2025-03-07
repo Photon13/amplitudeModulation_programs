@@ -40,7 +40,7 @@ class Noise:
         soundRight_base = pinknoise.am( frequency = famRight_base)
         soundRight_shifted = pinknoise.am( frequency = famRight_shifted)
         
-        # fade-in
+        # fade-in #CAVE: USELESS, ramp must occur in first snippet not all snippets!!!
         #soundLeft_base.ramp(when ='onset', duration = 1.0)
         #soundLeft_shifted.ramp(when = 'onset', duration = 1.00)
 
