@@ -15,6 +15,7 @@ import numpy as np
 import sys
 import time
 import random
+import inspect
 
 from typing import List
 from pathlib import Path
@@ -67,67 +68,91 @@ class Main:
 
 
 
-def generate_participantNR_basedOnFreq() -> int:
-    """ generation of participant nr for AM Test: 
-        participantNr is generated as <famA><famB><famC><shift>,
-    #                           e.g. 37114 """
+    def generate_participantNR_basedOnFreq() -> int:
+        """ generation of participant nr for AM Test: 
+            participantNr is generated as <famA><famB><famC><shift>,
+        #                           e.g. 37114 """
 
-    participantNr : str = ""
-    participantNr += str(Globals.FAM_A_BASE)
-    participantNr += str(Globals.FAM_B_BASE)
-    participantNr += str(Globals.FAM_C_BASE)
-    participantNr += str(Globals.SHIFT_A)
-    participantNr += str(Globals.SHIFT_B)
-    participantNr += str(Globals.SHIFT_C)
+        participantNr : str = ""
+        participantNr += str(Globals.FAM_A_BASE)
+        participantNr += str(Globals.FAM_B_BASE)
+        participantNr += str(Globals.FAM_C_BASE)
+        participantNr += str(Globals.SHIFT_A)
+        participantNr += str(Globals.SHIFT_B)
+        participantNr += str(Globals.SHIFT_C)
 
-    participantNr : int = int(participantNr)
+        participantNr : int = int(participantNr)
 
-    return participantNr
+        return participantNr
 
+    def main():
+        """ keep: block should always be activated """
 
+        #__________INIT_GLOBALS________________________________________________________________
 
+        mode = "testMode"                                                                       # ENABLE FOR all TESTs
+        
+        #mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
+                                                                        
+        globals : object = Globals( mode )                                                      # keep
+        
+        #__________LIST_ALL_EXISTING_JSON_FILES________________________________________________
 
+        pathJsonMode : Path = globals.get_pathJsonFolder()                                      # keep
+        jsonList : List[str] = Dateien.get_fileList(pathJsonMode)
+        for entry in jsonList:                                                                  # keep
+            print("    " + COLORYELLOW + entry + COLOREND)
+        
+        #__________PARTICIPANT_NR______________________________________________________________
+
+        #participantNr : int = Main.generate_participantNR_basedOnFreq() # für AM test          # ENABLE FOR ***AM TEST***
+            
+        participantNr : int = 1004 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
+
+        #__________CONFIRM_PARTICIPANT_NR______________________________________________________
+
+        print("    " + COLORBLUE + f"Current participantNr == {participantNr}" + COLOREND)      # keep
+        while True: 
+            inp = input("    " + COLORGREEN + "Continue [yes]? " + COLOREND)                    # keep
+            if inp.lower() == "yes":
+                break
+
+        #_________START_EXPERIMENT_____________________________________________________________
+
+        #Main.run_mainExperiment( participantNr, globals)                                       # keep, DEFAULT = 0 !
+
+        Main.run_mainExperiment( participantNr, globals, blockToStartWith = 3 )                 # ENABLE IF PROGRAM CRASHES
+            ## enter desired blockNr at blockToStartWith
 
 
 if __name__ == "__main__":
 
-    """ keep: block should always be activated """
+    # Main.main()
 
-    #__________INIT_GLOBALS________________________________________________________________
 
-    mode = "testMode"                                                                       # ENABLE FOR all TESTs
+    shiftOccurence = TestMethods.genRandom_shiftOccurence(testDauer = 5) # in [sec]
+    print(shiftOccurence)
+
+    n_subblocks = len(shiftOccurence)
+    nrSeqLeft = TestMethods.wrapper_gen_nrSeqs("left", n_subblocks, shiftOccurence)
+    nrSeqMiddle = TestMethods.wrapper_gen_nrSeqs("middle", n_subblocks, shiftOccurence)
+    nrSeqRight = TestMethods.wrapper_gen_nrSeqs("right", n_subblocks, shiftOccurence)
+
+    print(nrSeqLeft)
+    print(nrSeqMiddle)
+    print(nrSeqRight)
+
+    # works, but 0.subblock must be fixed
     
-    #mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
-                                                                       
-    globals : object = Globals( mode )                                                      # keep
-    
-    #__________LIST_ALL_EXISTING_JSON_FILES________________________________________________
+    # if playing uniform noise (without shift) is desired, then shiftOccurence should be set as ["none", "none", "none" ...]
 
-    pathJsonMode : Path = globals.get_pathJsonFolder()                                      # keep
-    jsonList : List[str] = Dateien.get_fileList(pathJsonMode)
-    for entry in jsonList:                                                                  # keep
-        print("    " + COLORYELLOW + entry + COLOREND)
-    
-    #__________PARTICIPANT_NR______________________________________________________________
+    TestMethods.test_pureAMpinknoise(positions, frequencies, shiftOccurence)
 
-    #participantNr : int = generate_participantNR_basedOnFreq() # für AM test               # ENABLE FOR ***AM TEST***
-        
-    participantNr : int = 1004 # normal assignment manually                             # ENABLE FOR eXPERIMENT
 
-    #__________CONFIRM_PARTICIPANT_NR______________________________________________________
 
-    print("    " + COLORBLUE + f"Current participantNr == {participantNr}" + COLOREND)      # keep
-    while True: 
-        inp = input("    " + COLORGREEN + "Continue [yes]? " + COLOREND)                    # keep
-        if inp.lower() == "yes":
-            break
 
-    #_________START_EXPERIMENT_____________________________________________________________
 
-    #Main.run_mainExperiment( participantNr, globals)                                       # keep, DEFAULT = 0 !
 
-    Main.run_mainExperiment( participantNr, globals, blockToStartWith = 3 )                 # ENABLE IF PROGRAM CRASHES
-        ## enter desired blockNr at blockToStartWith
 
 
 

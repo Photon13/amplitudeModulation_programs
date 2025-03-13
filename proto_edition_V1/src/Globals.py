@@ -98,6 +98,12 @@ class Globals():
                                         #   4 conditions (i.e. target types)), 4 blocks resp.
 
 
+    #_______SOUND___________________________________________________________#
+
+    SAMPLERATE = 48828
+    LEVEL = 75
+    DURATION = 1.0 # float!
+
     #_______PATHS___________________________________________________________#
 
     # Path cwd:

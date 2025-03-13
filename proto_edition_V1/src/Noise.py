@@ -25,9 +25,9 @@ class Noise:
         famMiddle_shifted = participant.famDict["famMiddle_shifted"]
         famRight_shifted = participant.famDict["famRight_shifted"]
 
-        samplerate = 48828
-        level = 75
-        duration = 1.0 # float!
+        samplerate = Globals.SAMPLERATE
+        level = Globals.LEVEL
+        duration = Globals.DURATION 
 
         pinknoise = slab.Sound.pinknoise( duration = duration, samplerate = samplerate, level = level)
 
