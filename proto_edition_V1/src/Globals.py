@@ -100,9 +100,9 @@ class Globals():
 
     #_______SOUND___________________________________________________________#
 
-    SAMPLERATE = 48828
-    LEVEL = 75
-    DURATION = 1.0 # float!
+    SAMPLERATE : int = 48828
+    LEVEL : int = 75
+    DURATION : float= 1.0 # float!
 
     #_______PATHS___________________________________________________________#
 

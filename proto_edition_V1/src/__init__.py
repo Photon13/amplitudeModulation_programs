@@ -10,6 +10,7 @@ from Experiment import Experiment
 from Dateien import Dateien
 
 import freefield
+import slab
 
 import numpy as np
 import sys
@@ -127,26 +128,18 @@ class Main:
 
 if __name__ == "__main__":
 
-    # Main.main()
-
-
-    shiftOccurence = TestMethods.genRandom_shiftOccurence(testDauer = 5) # in [sec]
-    print(shiftOccurence)
-
-    n_subblocks = len(shiftOccurence)
-    nrSeqLeft = TestMethods.wrapper_gen_nrSeqs("left", n_subblocks, shiftOccurence)
-    nrSeqMiddle = TestMethods.wrapper_gen_nrSeqs("middle", n_subblocks, shiftOccurence)
-    nrSeqRight = TestMethods.wrapper_gen_nrSeqs("right", n_subblocks, shiftOccurence)
-
-    print(nrSeqLeft)
-    print(nrSeqMiddle)
-    print(nrSeqRight)
-
-    # works, but 0.subblock must be fixed
+    #Main.main()
     
-    # if playing uniform noise (without shift) is desired, then shiftOccurence should be set as ["none", "none", "none" ...]
+    # TIPP: wenn ganz sinnlose Fehlermeldungen geworfen werden, dann exisitiert wahrscheinlich
+    # irgendwo ein schwerwiegeneder Syntax-Fehler an irgendeiner Stelle
+    # im Source Code kurz davor
 
-    TestMethods.test_pureAMpinknoise(positions, frequencies, shiftOccurence)
+    # Rcx: Flags sollten eingefügt werden, falls ein Systx Fehler im Code ist,
+    # wäre es evt. schneller über die Flags sichtbar, welche Werte falsch sind
+
+    # mne
+
+    TestMethods.test_speakers(["left", "middle"], [13, 17], False, 4)
 
 
 

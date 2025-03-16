@@ -20,15 +20,15 @@ class Sprecher():
         """ returns speaker object by calling it from coordinates from Globals"""
 
         if( position == "left"):
-            [leftSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
+            leftSpeaker : object = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
             return leftSpeaker
         
         elif( position == "middle"):
-            [middleSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
+            middleSpeaker = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
             return middleSpeaker
         
         elif( position == "right"):
-            [rightSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
+            rightSpeaker = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
             return rightSpeaker
         
         else:

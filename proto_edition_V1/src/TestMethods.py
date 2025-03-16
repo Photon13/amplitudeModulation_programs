@@ -22,35 +22,38 @@ class TestMethods:
     """ Contains methods to be tested in main """
 
     @staticmethod
-    def genRandom_shiftOccurence(testDauer : int = 0, n_subblocks : int = 0) -> list[str]:
+    def convert_nSubblocks_to_nOneSecSnippets(n_subblocks : int) -> int:
+
+        n_oneSecSnippets : int = int(n_subblocks / 4) # rest is deleted if not multiple of 4
+        if( n_subblocks%4 != 0 ):
+            print(COLORRED + "CAVE: testDauer was not multiple of 4, therefore play time is reduced (by max. 3 secs)" + COLOREND)
+
+        return n_oneSecSnippets # equals duration block [sec]
+    
+
+
+    @staticmethod
+    def genRandom_shiftOccurence(n_subblocks : int = 0) -> list[str]:
         """ enter EITHER n_subblocks or testDauer [sec], 
             leave the other one as 0
             CAVE: if testDauer is not multiple of 4, then the remaining rest will be deleted"""
         
-        if(testDauer > 0 and n_subblocks == 0):
-            n_oneSecSnippets : int = int(testDauer / 4) # rest is deleted if not multiple of 4
-            if(testDauer%4 != 0):
-                print(COLORRED + "CAVE: testDauer was not multiple of 4, therefore play time is reduced (by max. 3 secs)" + COLOREND)
 
-        elif( testDauer == 0 and n_subblocks >0):
-            n_oneSecSnippets : int = n_subblocks
-        else:
-            print(COLORRED + "Invalid parameters!" + COLORBLUE + "Enter EITHER n_subblocks or testDauer as params, the other one must be 0 or left out")
-            sys.exit()
-
-        shiftOccurence : list[str] = []
+        n_oneSecSnippets : int = TestMethods.convert_nSubblocks_to_nOneSecSnippets(n_subblocks)
+        
+        shiftOccurence : list[str] = ["none"] # 0.subblock
         possShiftPositions : list[str] = ["left", "middle", "right"]
-        for i in range(0, n_oneSecSnippets):
+
+        for i in range(1, n_oneSecSnippets):
             newEntry : str = random.choice(possShiftPositions)
             shiftOccurence.append(newEntry)
 
         return shiftOccurence
 
 
-
     @staticmethod
-    def test_pureAMpinknoise(positions : list[str], frequencies : list[int], shiftOccurence : list[str]):
-        """ enter all speaker positions to be tested simultaneausly
+    def test_speakers(positions : list[str], frequencies : list[int], shift : bool = False, n_subblocks : int = 0):
+        """ enter all speaker positions to be tested simultaneously
                 e.g. ["left", "middle"] 
             enter all frequencies in same order
                 e.g. [13, 17]                   """
@@ -61,23 +64,31 @@ class TestMethods:
                             + COLOREND + "TestMethods.test_pureAMpinknoise()")
             sys.exit()
         
-        duration    : int = Globals.DURATION, 
-        samplerate  : int = Globals.SAMPLERATE, 
-        level       : int = Globals.LEVEL
         
+        if( shift == True):
+            shiftOccurence = TestMethods.genRandom_shiftOccurence(n_subblocks)
+        else:
+            shiftOccurence : list[str] = []
+            for i in range(0, n_subblocks):
+                shiftOccurence.append("none")
+
+        duration    : float = Globals.DURATION
+        samplerate  : int = Globals.SAMPLERATE
+        level       : int = Globals.LEVEL
 
         for i in range(0, len(positions)):  # loops through all given speakers
+
 
             speakerPosition : str     =  positions[i]
             freq            : int     =  frequencies[i]
 
             speaker         : object  =  Sprecher.getSpeaker(speakerPosition)
 
-            pinknoise       : object  =  slab.Sound.pinknoise( duration, samplerate, level )
-            pinknoiseAM     : object  =  pinknoise.am(freq)
+            pinknoise         =  slab.Sound.pinknoise( duration = duration, samplerate = samplerate, level = level )
+            pinknoiseAM       =  pinknoise.am(freq)
 
             nrSeq                     =  TestMethods.wrapper_gen_nrSeqs( speakerPosition, 
-                                                                         len(shiftOccurence), 
+                                                                         n_subblocks, 
                                                                          shiftOccurence )
             n_snippets      : int     =  len(nrSeq)
 
@@ -114,6 +125,8 @@ class TestMethods:
                 freefield.write( "baseRight_data",          pinknoiseAM.data,           speaker.analog_proc )
                 freefield.write( "shiftedRight_data",       pinknoiseAM.data,           speaker.analog_proc )
 
+            print(nrSeq)
+        print(shiftOccurence)
 
 
 
