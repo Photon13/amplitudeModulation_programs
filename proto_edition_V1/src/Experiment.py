@@ -15,8 +15,11 @@ import random
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
+COLORCYAN = '\033[36m'
+COLORPURPLE = '\033[35m'
+COLORYELLOW = '\033[33m'
+COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
-COLORPURPLE = "\033[1;35m"
 
 np.set_printoptions(linewidth = 200)
 
@@ -42,15 +45,14 @@ class Experiment:
 
         participant = Participant(participantNr)
         participant.export_participantInstance_toJson(participant, globals)
-        print(COLORGREEN + "Participant information successfully prepared. " + COLOREND 
-              + "Message from wrapper_participantPreparation(participantNr : int))")
+        print("    " + "Participant information exported as Json. ")
 
 
 
     @staticmethod
     def run_block(participant : object, blockNr : int, dictSoundData : dict) -> None:
 
-        print(COLORGREEN + f"Preparing block_{blockNr} ..." + COLOREND)
+        print("    " + f"Preparing Block {blockNr}.")
 
         target : str = participant.targetList[blockNr]
         Led.turn_targetLed_on(target)
@@ -65,7 +67,8 @@ class Experiment:
             if time.time() > stopTime1:
 
                 freefield.play(kind = "zBusA")
-                print(COLORGREEN + f"Block_{blockNr} started." + COLOREND)
+                print("    " + "Trigger sent." + COLOREND)
+                print("    " + COLORGREEN + f"Block_{blockNr} started." + COLOREND)
                 break
 
 
@@ -76,5 +79,5 @@ class Experiment:
             if time.time() > stopTime2:
 
                 Led.turn_all_leds_off()
-                print(COLORGREEN + f"Block_{blockNr} finished." + COLOREND)
+                print("    " + COLORGREEN + f"Block_{blockNr} finished." + COLOREND)
                 break

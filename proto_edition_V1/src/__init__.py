@@ -25,9 +25,11 @@ from pathlib import Path
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
-COLOREND = '\033[0m'
-COLORPURPLE = "\033[1;35m"
+COLORCYAN = '\033[36m'
+COLORPURPLE = '\033[35m'
 COLORYELLOW = '\033[33m'
+COLORFAT = '\033[1m'
+COLOREND = '\033[0m'
 
 np.set_printoptions(linewidth = 200)
 
@@ -52,6 +54,13 @@ class Main:
         if( Participant.check_if_Json_exists(participantNr, globals) == False):
             Experiment.wrapper_participantPreparation(participantNr, globals) 
                 # creates new Json if it does not exist yet
+
+        print("\n" + "    " + COLORBLUE + f"BlockToStartWith is {blockToStartWith}." + COLOREND)
+        while True:
+            inp = input("    " + COLORGREEN + "Continue [yes]? " + COLOREND)
+            if inp.lower() == "yes":
+                break
+
 
         participant : object = Participant.init_singleParticipant_fromJson(participantNr, globals)
 
@@ -86,6 +95,8 @@ class Main:
 
         return participantNr
 
+
+
     def main():
         """ keep: block should always be activated """
 
@@ -99,7 +110,7 @@ class Main:
         
         #__________LIST_ALL_EXISTING_JSON_FILES________________________________________________
 
-        pathJsonMode : Path = globals.get_pathJsonFolder()                                      # keep
+        pathJsonMode : Path = Globals.get_pathJsonFolder(globals.mode)                                      # keep
         jsonList : List[str] = Dateien.get_fileList(pathJsonMode)
         for entry in jsonList:                                                                  # keep
             print("    " + COLORYELLOW + entry + COLOREND)
@@ -108,14 +119,15 @@ class Main:
 
         #participantNr : int = Main.generate_participantNR_basedOnFreq() # für AM test          # ENABLE FOR ***AM TEST***
             
-        participantNr : int = 1004 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
+        participantNr : int = 1006 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
 
         #__________CONFIRM_PARTICIPANT_NR______________________________________________________
 
-        print("    " + COLORBLUE + f"Current participantNr == {participantNr}" + COLOREND)      # keep
+        print("    " + COLORBLUE + f"Current participantNr is {participantNr}" + COLOREND)      # keep
         while True: 
             inp = input("    " + COLORGREEN + "Continue [yes]? " + COLOREND)                    # keep
             if inp.lower() == "yes":
+                print("\n")
                 break
 
         #_________START_EXPERIMENT_____________________________________________________________
@@ -126,18 +138,22 @@ class Main:
             ## enter desired blockNr at blockToStartWith
 
 
+
+
+
 if __name__ == "__main__":
 
-    #Main.main()
+    Main.main()
     
     # TIPP: wenn ganz sinnlose Fehlermeldungen geworfen werden, dann exisitiert wahrscheinlich
     # irgendwo ein schwerwiegeneder Syntax-Fehler an irgendeiner Stelle
     # im Source Code kurz davor
 
-    # Rcx: Flags sollten eingefügt werden, falls ein Systx Fehler im Code ist,
+    # Rcx: Flags sollten eingefügt werden, falls ein Syntax Fehler im Code ist,
     # wäre es evt. schneller über die Flags sichtbar, welche Werte falsch sind
 
-    # mne
+    # mne count nr epochs (alternative: cout nr zBus triggers)
+    # for security
 
     TestMethods.test_speakers(["left", "middle"], [13, 17], False, 4)
 

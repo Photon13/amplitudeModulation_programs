@@ -10,9 +10,13 @@ from typing import List
 from Globals import Globals
 from Dateien import Dateien
 
-COLORBLUE = '\33[34m'
+COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
-COLORRED = '\33[31m'
+COLORRED    = '\33[31m'
+COLORCYAN = '\033[36m'
+COLORPURPLE = '\033[35m'
+COLORYELLOW = '\033[33m'
+COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
 
 
@@ -185,13 +189,13 @@ class Participant:
                 returns True if exists
                 returns False if does not exist   """
 
-        savePath : Path = globals.get_pathJsonFolder() / f"participant-{participantNr}.txt"
+        savePath : Path = Globals.get_pathJsonFolder(globals.mode) / f"participant-{participantNr}.txt"
 
         if savePath.exists() == True:
             print(COLORRED + "Json already exists! Json will be used to read attributes." + COLOREND)
             return True
         else: 
-            print(COLORGREEN + "Creating new participant ..." + COLOREND)
+            print("    " + COLORPURPLE + "Creating new participant ..." + COLOREND)
             return False
 
   
@@ -200,7 +204,7 @@ class Participant:
     def export_participantInstance_toJson( participant : object, globals : object ) -> None:
         """ Writes attributes + values for single participant to Json txt file """
 
-        savePath : Path = globals.get_pathJsonFolder() / f"{participant.name}.txt"
+        savePath : Path = Globals.get_pathJsonFolder(globals.mode) / f"{participant.name}.txt"
         
         with open( savePath, "w") as file:
             json.dump( participant.__dict__, file, indent=4)
@@ -212,7 +216,7 @@ class Participant:
     def read_participantInformation_fromJson( globals : object, fileNameJson : str ) -> dict:
         """ Help method for init_participants_fromJson() """
 
-        loadPath : Path = globals.get_pathJsonFolder() / fileNameJson
+        loadPath : Path = Globals.get_pathJsonFolder(globals.mode) / fileNameJson
 
         with open(loadPath, "r") as file:
             jsonData = json.load(file) # type data = dict
@@ -228,7 +232,7 @@ class Participant:
         participant = Participant(participantNr)
         participant.__dict__ = jsonData
 
-        print(COLORGREEN + "Participant successfully reinitiated. " + COLOREND + "Message from  Dateien.init_singleParticipant_fromJson()")
+        print("    " + COLORPURPLE + "Participant successfully reinitiated. " + COLOREND)
         return participant  
     
 

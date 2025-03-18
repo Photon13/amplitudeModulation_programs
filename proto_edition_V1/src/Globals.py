@@ -17,30 +17,34 @@ from pathlib import Path
 import re
 import sys
 
-COLORBLUE = '\33[34m'
+COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
-COLORRED = '\33[31m'
+COLORRED    = '\33[31m'
+COLORCYAN = '\033[36m'
+COLORPURPLE = '\033[35m'
+COLORYELLOW = '\033[33m'
+COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
 
 
 
 
-class Globals():
+class Globals:
 
     #_______CONSTRUCTOR_of_GLOBALS____________________________________________________________________________________#
 
     def __init__(self, mode : str):
-        """ mode == "testMode" 
-            XOR
-            mode == "non-testMode" """
-        
-        if(mode == "testMode"):
-            print(COLORRED + "TESTMODE ENABLED" + COLOREND)
+        """ modes: "testMode", "non-testMode" """
 
         if (mode == "testMode" or mode == "non-testMode"):
             self.mode = mode
+
+            if(mode == "testMode"):
+                print("    " +COLORPURPLE + "TEST mode enabled" + COLOREND)
+            else:
+                print("    " + COLORPURPLE + "NORMAL mode enabled" + COLOREND)
         else: 
-            (COLORRED + "Invalid mode! -> change mode in Globals() to \"testMode\" or \"non-testMode\"" + COLOREND)
+            (COLORRED + "Invalid mode! Change mode in Globals() to \"testMode\" or \"non-testMode\"" + COLOREND)
             sys.exit()
 
 
@@ -58,7 +62,6 @@ class Globals():
     LED_COORDINATES = [(0, -25), (0, 0), (0, 25)]
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
     
-
 
 
     #_______ FREQUENCIES: ___________________________________________________#
@@ -107,133 +110,45 @@ class Globals():
     #_______PATHS___________________________________________________________#
 
     # Path cwd:
-    PATH_CWD = Path( os.getcwd() )
+    PATH_CWD : Path = Path( os.getcwd() )
                                         #   amplitudeModulation / amplitudeModulation_programs / proto_edition_V1
                                         #   cwd must be: proto_edition_V1 !
 
-
-
     # Python files:
-    PATH_PYTHON = PATH_CWD /"src"
+    PATH_PYTHON : Path = PATH_CWD /"src"
                                         #   proto_edition_V1 / src
-
-    
     
     # Rcx files:
-    PATH_RCX_FILE = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
+    PATH_RCX_FILE : Path = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
                                         #   proto_edition_V1 / data / rcx / standard_setup_long_pre_final.rcx
-
-    
-
 
 
     # Json txt:
-    def get_pathJsonFolder(self) -> Path:
-        pathJsonFolder : Path = Globals.PATH_CWD / "participant_json" / f"{self.mode}"
-        return pathJsonFolder
+    @staticmethod
+    def get_pathJsonFolder(mode : str) -> Path:
+        return Globals.PATH_CWD / "participant_json" / f"{mode}"
+
                                         #   proto_edition_V1 / participant_json / <mode> / participant-{nr}.txt
                                         #   <mode> == testMode || non-testMode
 
-
-
-    # Prime numbers:
-        # proto_edition_V1 / data / possible_frequency_combinations.txt
-
-
+    # Log files:
+    @staticmethod
+    def get_pathDateienLog() -> Path:
+        return Globals.get_pathJsonFolder("non-testMode") / "dateienLog.txt"
 
 
     # BrainVision Recorder
-    PATH_FOLDER_BRAINVISION_RECORDER = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
+    PATH_FOLDER_BRAINVISION_RECORDER : Path = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
                                         
                                         #   amplitudeModulation / BrainVision Recorder / <mode>
                                         #   <mode> == testMode || non-testMode
 
-
-    def get_pathBVR_rohDatenFolder(self) -> Path:         
-        path_roh : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "rohDaten"
-        return path_roh
+    @staticmethod
+    def get_pathBVR_rohDatenFolder(mode : str) -> Path:         
+        return Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{mode}" / "rohDaten"
                                         #   .eeg, .vhdr, .vmrk
                                         #   file name: e.g. participant-{}.eeg 
                                         #                   participant-{}(1).eeg
-
-    def get_pathBVR_zwischenDatenFolder(self) -> Path:         
-        path_zwischen : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "zwischenDaten"
-        return path_zwischen
-                                        #   preprocessed EEG (e.g. after interpolation)
-                                        #   file name: e.g. participant-{}_zwischen.<> ?
-    
-    def get_pathBVR_vollVerarbeiteteDaten(self) -> Path:         
-        path_voll : Path = Globals.PATH_FOLDER_BRAINVISION_RECORDER / f"{self.mode}" / "vollVerarbeiteteDaten"
-        return path_voll
-                                        #   e.g. diagrams
-                                        #   file name: e.g. participant-{}_diagram_ABC_left_target
-                                        #                   participant-{}_diagram_ABC_both_target
-
-    #                 ------rohDaten
-    #                       ------ participant-{}_roh
-    #                              >>>>>> participant-{}.eeg
-    #                              >>>>>> participant-{}(1).eeg
-    #                              >>>>>> participant-{}.vhdr
-    #                              >>>>>> participant-{}.vmrk
-    #                 ------zwischenDaten
-    #                       ------ participant-{}_zwischen
-    #                 ------vollVerarbeiteteDaten
-    #                       ------ summation
-    #                              >>>>>> summation_diagram_ABC_left_target
-    #                       ------ participant-{}_voll
-    #                              ------ participant-{}_diagramme
-    #                                     >>>>>> participant-{}_diagram_ABC_left_target
-
-
-
-
-    
-
-
-
-    
-
-    
-
-
-    
-
-
-
-    def get_pathBVR_rohDaten_participantFolder(participantNr : int) -> Path:
-        path_roh_part = Globals.get_pathBVR_rohDatenFolder() / "participant-{participantNr}_roh"
-        return path_roh_part
-
-    def get_pathBVR_zwischenDatenFolder_participantFolder(self, participantNr : int) -> Path:
-        path_zwischen_part : Path = self.get_pathBVR_zwischenDatenFolder() / "participant-{participantNr}_zwischen"
-        return path_zwischen_part
-
-    def get_pathBVR_vollVerarbeiteteDaten_participantFolder(self, participantNr : int) -> Path:
-        path_voll_part : Path = self.get_pathBVR_vollVerarbeiteteDaten() / "participant-{participantNr}_voll"
-        return path_voll_part
-    
-
-
-    
-    def get_pathBVR_vollVerarbeiteteDaten_summationFolder(self) -> Path:
-        path_sum : Path = self.get_pathBVR_vollVerarbeiteteDaten() / "summation"
-        return path_sum
-            # diagrams: (?)
-            #       - power spectrum:
-            #               - powerSpektrum_leftTarget_{}Hz
-            #               - powerSpektrum_leftTarget_{}Hz
-            #               - powerSpektrum_leftTarget_{}Hz
-            #
-            #               - powerSpektrum_rightTarget_{}Hz
-            #               - ...
-            #
-            # resultBVR.text (?)
-            #       - Δpower_lateralTarget_single
-            #       - Δpower_middleTarget_single
-            #       - Δpower_lateralTarget_both
-            #       - Δpower_middleTarget_both
-            #
-            # resultButtonPresses.txt (?)
 
 
     @staticmethod

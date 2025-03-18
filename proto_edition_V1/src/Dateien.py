@@ -9,8 +9,11 @@ from Globals import Globals
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
 COLORRED    = '\33[31m'
+COLORCYAN = '\033[36m'
+COLORPURPLE = '\033[35m'
+COLORYELLOW = '\033[33m'
+COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
-COLORPURPLE = "\033[1;35m"
 
 class Dateien:
 
@@ -51,7 +54,7 @@ def test_searchDatei():
     #print( Globals.get_searchPatternDict(participantNr).keys() ) # shows all available search patterns
 
     globals : object = Globals(mode="testMode")
-    searchPath : Path = globals.get_pathBVR_rohDatenFolder()
+    searchPath : Path = Globals.get_pathBVR_rohDatenFolder(globals.mode)
     searchPatternDict = Globals.get_searchPatternDict(participantNr)
     searchPattern = searchPatternDict["SEARCH_PATTERN_eeg_additionalFiles"]
 
