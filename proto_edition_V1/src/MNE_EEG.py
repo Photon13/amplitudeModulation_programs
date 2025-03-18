@@ -64,3 +64,5 @@ def eigeneEEG():
         #baseline?
         verbose = False
     )
+
+    #CAVE: drop epochs:  0. and 1. subblock

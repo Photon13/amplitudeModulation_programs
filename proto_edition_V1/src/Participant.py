@@ -1,4 +1,3 @@
-from datetime import *
 import json
 from pathlib import Path
 import os
@@ -8,7 +7,9 @@ import random
 from typing import List
 
 from Globals import Globals
+from Log_data import Log_data
 from Dateien import Dateien
+
 
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -27,8 +28,6 @@ class Participant:
     nr: str
     name : str
 
-    date: str
-
     n_blocks: int
     n_subblocks: int
 
@@ -46,9 +45,6 @@ class Participant:
         self.nr = participantNr
         self.name = f"participant-{participantNr}"
 
-        self.date = self.set_date() 
-            # works, old date kept after reinitialisation
-
         self.n_blocks = Globals.N_BLOCKS
         self.n_subblocks = Globals.N_SUBBLOCKS
 
@@ -58,31 +54,6 @@ class Participant:
 
         self.blocksWithConditionDict = self.findAllBlocks_withSpecificCondition()
         
-   
-   
-
-    def set_date( self ) -> str:
-        """ Sets self.date to today's date """
-
-        currentDate : date = date.today()
-            # datetime.date.today()
-        currentDate : str = currentDate.strftime( '%Y-%m-%d')
-        return currentDate
-
-
-
-
-    def set_date_manually( self, dateString: str ) -> None: 
-        """ If participant's session is on > 1 days 
-            or the computers date is wrong 
-            the date can be set manually
-        
-            single date format: YYYY-mm-dd
-            multiple dates format: YYYY-mm-dd-YYYY-mm-dd """
-
-        self.date = dateString
-
-    
     
     
     def generate_targetList( self ) -> List[str]: 
@@ -208,6 +179,8 @@ class Participant:
         
         with open( savePath, "w") as file:
             json.dump( participant.__dict__, file, indent=4)
+
+        Log_data.write_to_dateienLog(f"{participant.name}.txt created")
 
 
 

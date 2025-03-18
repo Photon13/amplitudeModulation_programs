@@ -102,9 +102,9 @@ class Main:
 
         #__________INIT_GLOBALS________________________________________________________________
 
-        mode = "testMode"                                                                       # ENABLE FOR all TESTs
+        #mode = "testMode"                                                                       # ENABLE FOR all TESTs
         
-        #mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
+        mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
                                                                         
         globals : object = Globals( mode )                                                      # keep
         
@@ -119,7 +119,7 @@ class Main:
 
         #participantNr : int = Main.generate_participantNR_basedOnFreq() # für AM test          # ENABLE FOR ***AM TEST***
             
-        participantNr : int = 1006 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
+        participantNr : int = 1007 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
 
         #__________CONFIRM_PARTICIPANT_NR______________________________________________________
 
@@ -152,10 +152,14 @@ if __name__ == "__main__":
     # Rcx: Flags sollten eingefügt werden, falls ein Syntax Fehler im Code ist,
     # wäre es evt. schneller über die Flags sichtbar, welche Werte falsch sind
 
-    # mne count nr epochs (alternative: cout nr zBus triggers)
+    # mne count nr epochs (alternative: count nr zBus triggers)
     # for security
 
-    TestMethods.test_speakers(["left", "middle"], [13, 17], False, 4)
+
+
+
+
+    #TestMethods.test_speakers(["left", "middle"], [13, 17], False, 4)
 
 
 

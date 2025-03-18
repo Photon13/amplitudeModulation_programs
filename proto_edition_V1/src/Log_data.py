@@ -1,3 +1,5 @@
+from datetime import *
+
 from Globals import Globals
 
 COLORBLUE   = '\33[34m'
@@ -11,7 +13,27 @@ COLOREND = '\033[0m'
 
 class Log_data:
 
-    def write_to_dateienLog():
+    @staticmethod
+    def get_currentDate() -> str:
 
-        path_dateienLog = Globals.PATH_CWD
-        #with open(path_dateienLog, "w") as f:
+        currentDate : date = date.today()
+        currentDate : str = currentDate.strftime( '%Y-%m-%d' )
+        return currentDate
+    
+    @staticmethod
+    def get_currentTime() -> str:
+
+        currentDateTime : datetime = datetime.now()
+        currentTime : str = currentDateTime.strftime( '%H:%M' )
+        return currentTime
+    
+     
+    def write_to_dateienLog(text : str):
+
+        path_dateienLog = Globals.get_pathDateienLog()
+        
+        with open(path_dateienLog, "a") as f:           #append!
+            date : str = Log_data.get_currentDate()
+            zeit : str = Log_data.get_currentTime()
+            f.write(date + " " + zeit + " ")
+            f.write(text + "\n")

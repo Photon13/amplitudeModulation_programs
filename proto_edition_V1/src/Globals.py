@@ -134,7 +134,7 @@ class Globals:
     # Log files:
     @staticmethod
     def get_pathDateienLog() -> Path:
-        return Globals.get_pathJsonFolder("non-testMode") / "dateienLog.txt"
+        return Globals.PATH_CWD / "participant_json" / "logs" / "dateienLog.txt"
 
 
     # BrainVision Recorder
