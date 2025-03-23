@@ -1,7 +1,6 @@
 from Participant import Participant
 from Globals import Globals
 from Noise import Noise
-from TestMethods import TestMethods
 from Led import Led
 from Sprecher import Sprecher
 
@@ -27,17 +26,6 @@ np.set_printoptions(linewidth = 200)
 
 
 class Experiment:
-
-    @staticmethod
-    def init_processors() -> None:
-
-        proc_list = [['RP2', 'RP2', Globals.PATH_RCX_FILE],
-                    ['RX81', 'RX8', Globals.PATH_RCX_FILE],
-                    ['RX82', 'RX8', Globals.PATH_RCX_FILE]]
-
-        freefield.initialize('dome', device=proc_list)
-
-
 
 
     @staticmethod

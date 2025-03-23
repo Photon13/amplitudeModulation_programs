@@ -1,5 +1,19 @@
 # Interpreter : z.B. freefield
 
+    # Rcx: Flags sollten eingefügt werden, falls ein Syntax Fehler im Code ist,
+    # wäre es evt. schneller über die Flags sichtbar, welche Werte falsch sind
+
+    # mne count nr epochs (alternative: count nr zBus triggers)
+    # for security
+
+# ToDo:
+# test 1 Hz
+# find button trigger
+# create stimuli for BrainVision, create own setup
+# test other button
+
+
+
 from Participant import Participant
 from Globals import Globals
 from Noise import Noise
@@ -63,8 +77,6 @@ class Main:
 
 
         participant : object = Participant.init_singleParticipant_fromJson(participantNr, globals)
-
-        Experiment.init_processors()
 
         dictSoundData : dict = Noise.generate_soundSnippets(participant)
         
@@ -143,23 +155,16 @@ class Main:
 
 if __name__ == "__main__":
 
+    proc_list = [['RP2', 'RP2', Globals.PATH_RCX_FILE],
+                ['RX81', 'RX8', Globals.PATH_RCX_FILE],
+                ['RX82', 'RX8', Globals.PATH_RCX_FILE]]
+
+    freefield.initialize('dome', device=proc_list)
+
+
     Main.main()
-    
-    # TIPP: wenn ganz sinnlose Fehlermeldungen geworfen werden, dann exisitiert wahrscheinlich
-    # irgendwo ein schwerwiegeneder Syntax-Fehler an irgendeiner Stelle
-    # im Source Code kurz davor
+    #TestMethods.test_speakers(["left", "middle"], [13, 17], True, True, 4)
 
-    # Rcx: Flags sollten eingefügt werden, falls ein Syntax Fehler im Code ist,
-    # wäre es evt. schneller über die Flags sichtbar, welche Werte falsch sind
-
-    # mne count nr epochs (alternative: count nr zBus triggers)
-    # for security
-
-
-
-
-
-    #TestMethods.test_speakers(["left", "middle"], [13, 17], False, 4)
 
 
 

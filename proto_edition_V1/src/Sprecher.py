@@ -19,26 +19,6 @@ COLOREND = '\033[0m'
 
 class Sprecher():
 
-    @staticmethod
-    def getSpeaker(position : str) -> object:
-        """ returns speaker object by calling it from coordinates from Globals"""
-
-        if( position == "left"):
-            leftSpeaker : object = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0]) 
-            return leftSpeaker
-        
-        elif( position == "middle"):
-            middleSpeaker = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
-            return middleSpeaker
-        
-        elif( position == "right"):
-            rightSpeaker = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
-            return rightSpeaker
-        
-        else:
-            print(COLORRED + "Invalid position!" + COLOREND + "Sprecher.getSpeaker()")
-            sys.exit()
-
 
     @staticmethod
     def get_speakerCoordinates():
