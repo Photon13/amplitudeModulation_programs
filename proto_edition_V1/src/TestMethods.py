@@ -4,6 +4,7 @@ import random
 import sys
 import time
 import numpy as np
+from typing import List
 
 
 from Sprecher import Sprecher
@@ -27,14 +28,14 @@ class TestMethods:
     """ Contains methods to be tested in main """
 
     @staticmethod
-    def genRandom_shiftOccurence(positions : str, n_subblocks : int = 0) -> list[str]:
+    def genRandom_shiftOccurence(positions : List[str], n_subblocks : int = 0) -> List[str]:
         """ enter EITHER n_subblocks or testDauer [sec], 
             leave the other one as 0
             CAVE: if testDauer is not multiple of 4, then the remaining rest will be deleted"""
         
         
-        shiftOccurence : list[str] = ["none"] # 0.subblock
-        possShiftPositions : list[str] = positions
+        shiftOccurence : List[str] = ["none"] # 0.subblock
+        possShiftPositions : List[str] = positions
 
         for i in range(1, n_subblocks):
             newEntry : str = random.choice(possShiftPositions)
@@ -46,10 +47,10 @@ class TestMethods:
 
 
 
-    def gen_rowNrs(position: str, n_subblocks) -> list[str]:
+    def gen_rowNrs(position: str, n_subblocks) -> List[str]:
         """ generates sequence of equal numbers,
             number of numbers is 4*n_subblocks """
-        rowNrs : list[str] = []
+        rowNrs : List[str] = []
 
         if( position == "left" ):
             nr : int = 1
@@ -71,14 +72,14 @@ class TestMethods:
         return rowNrs
     
 
-    def replaceNrs_regularShift_basedOnTarget(rowNrs : list[str], shiftOccurrence : list[str], irregularShift : bool):
+    def replaceNrs_regularShift_basedOnTarget(rowNrs : List[str], shiftOccurrence : List[str], irregularShift : bool):
         """ takes number list and replaces a nr with an even nr, if a shift occurs"""
 
         if( irregularShift == False):
-            addList : list[int] = [0, 0, 0]             # shift occurs always in 1st second of subblock
+            addList : List[int] = [0, 0, 0]             # shift occurs always in 1st second of subblock
 
         elif( irregularShift == True):
-            addList : list[int] = [0, 1, 2]             # shift occurrs in resp. 1st, 2nd XOR 3rd second of subblock
+            addList : List[int] = [0, 1, 2]             # shift occurrs in resp. 1st, 2nd XOR 3rd second of subblock
         
         if( rowNrs[0] == 1 ): # i.e. left speaker
                                                         # index in nrSeq (rowNrs) must be quadruple of index in shiftOcurrence (in case of 1st entry = 1)
@@ -108,13 +109,13 @@ class TestMethods:
         return rowNrs
 
 
-    def convert_rowNrs_to_nrSeq(rowNrs : list[str]):
+    def convert_rowNrs_to_nrSeq(rowNrs : List[str]):
         nrSeq = np.array(rowNrs).astype('int32')
         return nrSeq
     
 
-    def wrapper_gen_nrSeqs(position: str, n_subblocks, shiftOccurence : list[str], irregularShift : bool = False):
-        rowNrsRoh : list[str] = TestMethods.gen_rowNrs(position, n_subblocks)
+    def wrapper_gen_nrSeqs(position: str, n_subblocks, shiftOccurence : List[str], irregularShift : bool = False):
+        rowNrsRoh : List[str] = TestMethods.gen_rowNrs(position, n_subblocks)
         rowNrsReplac = TestMethods.replaceNrs_regularShift_basedOnTarget(rowNrsRoh, shiftOccurence, irregularShift)
         nrSeq = TestMethods.convert_rowNrs_to_nrSeq(rowNrsReplac)
         return nrSeq
@@ -123,7 +124,7 @@ class TestMethods:
 
 
     @staticmethod
-    def test_speakers(positions : list[str], frequencies : list[int], shift : bool = False, irregularShift : bool = False, n_subblocks : int = 0):
+    def test_speakers(positions : List[str], frequencies : List[int], shift : bool = False, irregularShift : bool = False, n_subblocks : int = 0):
         """ enter all speaker positions to be tested simultaneously
                 e.g. ["left", "middle"] 
             enter all frequencies in same order
@@ -140,7 +141,7 @@ class TestMethods:
         if( shift == True):
             shiftOccurrence = TestMethods.genRandom_shiftOccurence(positions, n_subblocks)
         else:
-            shiftOccurrence : list[str] = []
+            shiftOccurrence : List[str] = []
             for i in range(0, n_subblocks):
                 shiftOccurrence.append("none")
 
@@ -157,6 +158,7 @@ class TestMethods:
 
             pinknoise         =  slab.Sound.pinknoise( duration = duration, samplerate = samplerate, level = level )
             pinknoiseAM       =  pinknoise.am(freq)
+            shift = 4
 
             nrSeq =  TestMethods.wrapper_gen_nrSeqs( speakerPosition, n_subblocks, shiftOccurrence, irregularShift )
             n_snippets      : int     =  len(nrSeq)
@@ -166,33 +168,24 @@ class TestMethods:
 
                 freefield.write( "channelLeft",             leftSpeaker.analog_channel,     leftSpeaker.analog_proc )
                 freefield.write( "nrSeqLeft",               nrSeq,                          leftSpeaker.analog_proc )
-                freefield.write( "n_snippetsLeft",          n_snippets,                     leftSpeaker.analog_proc )
-                freefield.write( "shiftedLeft_n_samples",   pinknoiseAM.n_samples,          leftSpeaker.analog_proc )
-                freefield.write( "baseLeft_n_samples",      pinknoiseAM.n_samples,          leftSpeaker.analog_proc )
-                freefield.write( "baseLeft_data",           pinknoiseAM.data,               leftSpeaker.analog_proc )
-                freefield.write( "shiftedLeft_data",        pinknoiseAM.data,               leftSpeaker.analog_proc )
+                freefield.write( "n_snippets",          n_snippets,                     leftSpeaker.analog_proc )
+
 
 
             elif( speakerPosition == "middle"):
 
                 freefield.write( "channelMiddle",           middleSpeaker.analog_channel,   middleSpeaker.analog_proc )
                 freefield.write( "nrSeqMiddle",             nrSeq,                          middleSpeaker.analog_proc )
-                freefield.write( "n_snippetsMiddle",        n_snippets,                     middleSpeaker.analog_proc )
-                freefield.write( "shiftedMiddle_n_samples", pinknoiseAM.n_samples,          middleSpeaker.analog_proc )
-                freefield.write( "baseMiddle_n_samples",    pinknoiseAM.n_samples,          middleSpeaker.analog_proc )
-                freefield.write( "baseMiddle_data",         pinknoiseAM.data,               middleSpeaker.analog_proc )
-                freefield.write( "shiftedMiddle_data",      pinknoiseAM.data,               middleSpeaker.analog_proc )
+                freefield.write( "n_snippets",        n_snippets,                     middleSpeaker.analog_proc )
+
 
 
             elif( speakerPosition == "right"):
 
                 freefield.write( "channelRight",            rightSpeaker.analog_channel,    rightSpeaker.analog_proc )   
                 freefield.write( "nrSeqRight",              nrSeq,                          rightSpeaker.analog_proc )
-                freefield.write( "n_snippetsRight",         n_snippets,                     rightSpeaker.analog_proc )
-                freefield.write( "shiftedRight_n_samples",  pinknoiseAM.n_samples,          rightSpeaker.analog_proc )
-                freefield.write( "baseRight_n_samples",     pinknoiseAM.n_samples,          rightSpeaker.analog_proc )
-                freefield.write( "baseRight_data",          pinknoiseAM.data,               rightSpeaker.analog_proc )
-                freefield.write( "shiftedRight_data",       pinknoiseAM.data,               rightSpeaker.analog_proc )
+                freefield.write( "n_snippets",         n_snippets,                     rightSpeaker.analog_proc )
+
 
             freefield.play()
             print("Trigger sent")

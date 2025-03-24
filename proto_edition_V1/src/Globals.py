@@ -67,9 +67,9 @@ class Globals:
     #_______ FREQUENCIES: ___________________________________________________#
 
     # Frequencies of Amplitude modulation___:
-    FAM_A_BASE = 3
-    FAM_B_BASE = 7
-    FAM_C_BASE = 13
+    FAM_A_BASE = 13
+    FAM_B_BASE = 17
+    FAM_C_BASE = 21
 
     # ΔFrequency___:
     SHIFT_A = 4
@@ -119,7 +119,7 @@ class Globals:
                                         #   proto_edition_V1 / src
     
     # Rcx files:
-    PATH_RCX_FILE : Path = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
+    PATH_RCX_FILE : Path = PATH_CWD /"data"/"rcx"/"standard_setup_final.rcx"
                                         #   proto_edition_V1 / data / rcx / standard_setup_long_pre_final.rcx
 
 

@@ -114,9 +114,9 @@ class Main:
 
         #__________INIT_GLOBALS________________________________________________________________
 
-        #mode = "testMode"                                                                       # ENABLE FOR all TESTs
+        #mode = "testMode"                                                                      # ENABLE FOR all TESTs
         
-        mode = "non-testMode"                                                                  # ENABLE FOR eXPERIMENT
+        mode = "non-testMode"                                                                   # ENABLE FOR eXPERIMENT
                                                                         
         globals : object = Globals( mode )                                                      # keep
         
@@ -131,7 +131,7 @@ class Main:
 
         #participantNr : int = Main.generate_participantNR_basedOnFreq() # für AM test          # ENABLE FOR ***AM TEST***
             
-        participantNr : int = 1007 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
+        participantNr : int = 2026 # normal assignment manually                                 # ENABLE FOR eXPERIMENT
 
         #__________CONFIRM_PARTICIPANT_NR______________________________________________________
 
@@ -144,9 +144,9 @@ class Main:
 
         #_________START_EXPERIMENT_____________________________________________________________
 
-        #Main.run_mainExperiment( participantNr, globals)                                       # keep, DEFAULT = 0 !
+        Main.run_mainExperiment( participantNr, globals)                                       # keep, DEFAULT = 0 !
 
-        Main.run_mainExperiment( participantNr, globals, blockToStartWith = 3 )                 # ENABLE IF PROGRAM CRASHES
+        #Main.run_mainExperiment( participantNr, globals, blockToStartWith = 3 )                 # ENABLE IF PROGRAM CRASHES
             ## enter desired blockNr at blockToStartWith
 
 
@@ -162,8 +162,10 @@ if __name__ == "__main__":
     freefield.initialize('dome', device=proc_list)
 
 
-    Main.main()
-    #TestMethods.test_speakers(["left", "middle"], [13, 17], True, True, 4)
+    #Main.main()
+    TestMethods.test_speakers(["left"], [40], True, False, 6)
+    #
+    freefield.halt()
 
 
 
