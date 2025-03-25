@@ -18,10 +18,12 @@ from Participant import Participant
 from Globals import Globals
 from Noise import Noise
 from TestMethods import TestMethods
-from Led import Led
+from Led import Led 
 from Sprecher import Sprecher
 from Experiment import Experiment
+from Test_amPinknoise import Test_amPinknoise
 from Dateien import Dateien
+
 
 import freefield
 import slab
@@ -155,17 +157,19 @@ class Main:
 
 if __name__ == "__main__":
 
-    proc_list = [['RP2', 'RP2', Globals.PATH_RCX_FILE],
-                ['RX81', 'RX8', Globals.PATH_RCX_FILE],
-                ['RX82', 'RX8', Globals.PATH_RCX_FILE]]
+    #proc_list = [['RP2', 'RP2', Globals.PATH_RCX_FILE],
+    #            ['RX81', 'RX8', Globals.PATH_RCX_FILE],
+    #            ['RX82', 'RX8', Globals.PATH_RCX_FILE]]
 
-    freefield.initialize('dome', device=proc_list)
+    #freefield.initialize('dome', device=proc_list)
 
 
     #Main.main()
-    TestMethods.test_speakers(["left"], [40], True, False, 6)
+    #TestMethods.test_speakers(["left"], [40], True, False, 6)
     #
-    freefield.halt()
+    #freefield.halt()
+
+    Test_amPinknoise.testSpeakers2()
 
 
 
