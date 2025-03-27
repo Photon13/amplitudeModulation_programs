@@ -119,7 +119,7 @@ class Globals:
                                         #   proto_edition_V1 / src
     
     # Rcx files:
-    PATH_RCX_FILE : Path = PATH_CWD /"data"/"rcx"/"standard_setup_final.rcx"
+    PATH_RCX_FILE : Path = PATH_CWD /"data"/"rcx"/"standard_setup_long_pre_final.rcx"
                                         #   proto_edition_V1 / data / rcx / standard_setup_long_pre_final.rcx
 
 
