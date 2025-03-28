@@ -1,11 +1,7 @@
-from typing import List
-import random
-import numpy as np
-import sys
-
 from Globals import Globals
-from Experiment import Experiment
-from Sprecher import Sprecher
+
+import freefield
+
 
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -16,28 +12,12 @@ COLORYELLOW = '\033[33m'
 COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
 
-
-
-class Test_amPinknoise:
-
-    def testSpeakers2(positions : List[str], frequencies : List[int], n_subblocks : int = 0):
-        leftSpeaker, middleSpeaker, rightSpeaker = Sprecher.get_speakerCoordinates()
-
-        if( len(positions) != len(frequencies)):
-            print( COLORRED + "Frequencies must have same number of entries as positions!" 
-                            + COLOREND + "TestMethods.test_pureAMpinknoise()")
-            sys.exit()
-
-        nrSeq = Test_amPinknoise.gen_nrSeq(4)
-        print(nrSeq)
-
-        # shifOccurence obsolete
-        # freqs must still be safed for participant
+np.set_printoptions(linewidth = 200)
 
 
 
 
-
+class Experiment:
 
     def gen_nrSeq(n_subblocks):
         """ 1: no shift
@@ -61,9 +41,3 @@ class Test_amPinknoise:
 
         nrSeq = np.array(nrSeq).astype('int32')
         return nrSeq
-
-
-
-
-
-  
