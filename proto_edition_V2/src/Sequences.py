@@ -40,33 +40,78 @@ class Sequences:
         
         return targetList
 
+    @staticmethod
+    def get_shiftPossList():
+        """ 1: no shift
+            2: shift (higher amplitude)
+            for all speakers """
+        poss0 = [2, 1, 1, 1]        # should work, because Schmitt is open for 200 ms if 2 comes
+        poss1 = [1, 2, 1, 1]        # but marker for shift start is sent immediately, when 2 comes
+        poss2 = [1, 1, 2, 1]        # thus, participants have almost 1 sec until next shift might occur to press button
+        poss3 = [2, 1, 2, 1]        
+        poss4 = [1, 2, 2, 1]        # last sec always shift-less
+        poss5 = [2, 2, 1, 1]
+        
+        return [poss0, poss1, poss2, poss3, poss4, poss5]
+
+
+
+    @staticmethod
+    def generate_shiftPositionList(n_subblocks : int):  
+        shiftPosition : List[str] = ["none"]
+        for i in range(n_subblocks):
+            shiftPosition.append(random.choice(["left", "middle", "right"]))
+        return shiftPosition
+    
 
 
     @staticmethod
     def generate_nrSeq(n_subblocks):
-        """ 1: no shift
-            2: shift (higher amplitude)
-            for all speakers """
+        shiftPoss = Sequences.get_shiftPossList(n_subblocks)
+        nrSeq : List[int] = [1, 1, 1, 1] # no shift
 
-        poss1 = [2, 1, 1, 1]        # should work, because Schmitt is open for 200 ms if 2 comes
-        poss2 = [1, 2, 1, 1]        # but marker for shift start is sent immediately, when 2 comes
-        poss3 = [1, 1, 2, 1]        # thus, participants have almost 1 sec until next shift might occur to press button
-        poss4 = [2, 1, 2, 1]        
-        poss5 = [1, 2, 2, 1]        # last sec always shift-less
-        poss6 = [2, 2, 1, 1]
-        
-        shiftPoss = [poss1, poss2, poss3, poss4, poss5, poss6]
-
-        nrSeq = [1, 1, 1, 1] # 0.subblock no shift
         for i in range(1, n_subblocks):
-            nrs = random.choice(shiftPoss)
-            for nr in nrs:
-                nrSeq.append(nr)
+            nrSeq.append(random.choice(shiftPoss))
 
         nrSeq = np.array(nrSeq).astype('int32')
         return nrSeq
 
 
+
+    @staticmethod
+    def generate_nrSeq_forAllSpeakers(n_subblocks : int) -> List[List[int]]:
+        shiftPosition : List[str] = Sequences.generate_shiftPositionList(n_subblocks)
+        shiftPossList = Sequences.get_shiftPossList()
+        nrSeqLeft : List[int] = [1, 1, 1, 1]
+        nrSeqMiddle : List[int] = [1, 1, 1, 1]
+        nrSeqRight : List[int] = [1, 1, 1, 1]
+
+        for i in range(n_subblocks):
+            if(shiftPosition[i] == "left"):
+                nrSeqLeft.append(random.choice(shiftPossList))
+                nrSeqMiddle.append([1, 1, 1, 1])
+                nrSeqRight.append([1, 1, 1, 1])
+
+            elif(shiftPosition[i] == "middle"):
+                nrSeqLeft.append([1, 1, 1, 1])
+                nrSeqMiddle.append(random.choice(shiftPossList))
+                nrSeqRight.append([1, 1, 1, 1])
+
+            elif(shiftPosition[i] == "right"):
+                nrSeqLeft.append([1, 1, 1, 1])
+                nrSeqMiddle.append([1, 1, 1, 1])
+                nrSeqRight.append(random.choice(shiftPossList))
+
+        return [nrSeqLeft, nrSeqMiddle, nrSeqRight]
+
+
+
+
+
+
+
+
+    @staticmethod
     def generate_famList(participantNr : int) -> List[float]: # works
         """ for each 6 participants:
             [40.0, 35.3, 44.7]      # [B,A,C]

@@ -3,6 +3,7 @@ from Globals import Globals
 import freefield
 
 import sys
+import time
 
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -46,8 +47,19 @@ class Led():
         print("    " + "TargetLed turned on. " + COLOREND)
 
 
-    
 
+    @staticmethod
+    def turn_targetLed_onForIntervall(target : str, duration : int):
+        Led.turn_targetLed_on(target)
+        stoppZeit = time.time() + Globals.N_SUBBLOCKS*4
+    
+        while True:
+            if time.time() > stoppZeit:
+                Led.turn_all_leds_off()
+            break
+    
+    
+    
     @staticmethod
     def turn_all_leds_off( ):
 
