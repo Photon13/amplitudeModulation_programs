@@ -88,7 +88,7 @@ class Main:
 
 
     @staticmethod
-    def test_speakers(positionen : List[str], n_subblocks : int):
+    def test_speakers(positionen : List[str], n_subblocks : int, famList : List[float]):
         shiftOccurrence = Main.gen_shiftOccurrence(n_subblocks)
 
         print(shiftOccurrence)
@@ -111,15 +111,18 @@ class Main:
                 freefield.write("volumeFactor", 0.15, speaker.analog_proc) # if more than 1 speaker on, total volume will be higher -> single volumes should be reduced
         freefield.play()
 
+
+
     @staticmethod
-    def test_singleSpeaker(position : str, n_subblocks : int):
+    def test_singleSpeaker(position : str, n_subblocks : int, freq : float):
         positionen = [position]
-        Main.test_speakers(positionen, n_subblocks)
+        famList : List[float] = [freq]
+        Main.test_speakers(positionen, n_subblocks, famList)
 
     @staticmethod
     def test_threeSpeakers(n_subblocks : int):
         positionen = ["left", "middle", "right"]
-        Main.test_speakers(positionen, n_subblocks)
+        Main.test_speakers(positionen, n_subblocks, Main.gen_randomFamList())
 
     @staticmethod
     def testLed(target :str, n_subblocks : int):
@@ -150,6 +153,45 @@ class Main:
         # freefield bits: 2,3,4 (-25,0),(0,0),(25,0)
         # freefield_dev bits: 2,3,4 (-25,0),(0,0),(25,0)
 
+
+
+
+    @staticmethod
+    def test_speakers_modified_withBothProcs(positionen : List[str], n_subblocks : int):
+        leftSpeaker = Main.get_coord("left", "speaker")
+        rightSpeaker = Main.get_coord("right", "speaker")
+        rx82 = leftSpeaker.analog_proc
+        rx81 = rightSpeaker.analog_proc
+
+
+        shiftOccurrence = Main.gen_shiftOccurrence(n_subblocks)
+
+        print(shiftOccurrence)
+        famList : List[float] = Main.gen_randomFamList()
+
+        for i in range(len(positionen)):
+            position : str = positionen[i]
+            speaker = Main.get_coord(position, "speaker")
+            print(f"{position} {speaker.analog_proc}")
+
+            freefield.write(f"channel{position.capitalize()}", speaker.analog_channel, [rx81, rx82] )
+            nrSeq = Main.gen_nrSeq(position, shiftOccurrence)
+            print(nrSeq)
+
+            freefield.write(f"nrSeq{position.capitalize()}", nrSeq, [rx81, rx82] )
+            freefield.write(f"fam{position.capitalize()}", famList[i], [rx81, rx82] )
+            freefield.write("ampRise", 0.4, [rx81, rx82] )
+            freefield.write("n_snippets", len(nrSeq), [rx81, rx82] )
+
+            if(len(positionen) == 1):
+                freefield.write("volumeFactor", 0.2, [rx81, rx82] )
+            else:
+                freefield.write("volumeFactor", 0.15, [rx81, rx82] ) # if more than 1 speaker on, total volume will be higher -> single volumes should be reduced
+        freefield.play()
+
+
+
+
 if __name__ == "__main__":
 
     proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
@@ -158,9 +200,9 @@ if __name__ == "__main__":
     
     freefield.initialize('dome', device=proc_list)
 
-    n_subblocks = 20
-    Main.test_threeSpeakers(n_subblocks)
-    #Main.test_singleSpeaker("right", n_subblocks)
+    n_subblocks = 8
+    #Main.test_threeSpeakers(n_subblocks)
+    Main.test_singleSpeaker("right", n_subblocks, 4.7)
     Main.testLed("both", n_subblocks)
 
 
