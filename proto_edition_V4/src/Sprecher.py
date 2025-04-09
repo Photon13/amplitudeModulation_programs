@@ -50,18 +50,19 @@ class Sprecher():
             speaker = Sprecher.get_coord(position, "speaker")
 
             freefield.write(f"channel{position.capitalize()}", speaker.analog_channel, ["RX81", "RX82"])
+            
             nrSeq = Sequences.gen_nrSeq(position, shiftOccurrence)
             print(nrSeq)
-
             freefield.write(f"nrSeq{position.capitalize()}", nrSeq, ["RX81", "RX82"])
+            
             freefield.write(f"fam{position.capitalize()}", famList[i], ["RX81", "RX82"])
-            freefield.write("ampRise", 0.4, ["RX81", "RX82"])
+            freefield.write("ampRise", 0.45, ["RX81", "RX82"])
             freefield.write("n_snippets", len(nrSeq), ["RX81", "RX82"])
 
             if(len(positionen) == 1):
-                freefield.write("volumeFactor", 0.2, ["RX81", "RX82"])
+                freefield.write("volumeFactor", 0.22, ["RX81", "RX82"])
             else:
-                freefield.write("volumeFactor", 0.15, ["RX81", "RX82"]) # if more than 1 speaker on, total volume will be higher -> single volumes should be reduced
+                freefield.write("volumeFactor", 0.2, ["RX81", "RX82"]) # if more than 1 speaker on, total volume will be higher -> single volumes should be reduced
         freefield.play()
 
 

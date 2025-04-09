@@ -2,6 +2,7 @@ from Globals import Globals
 from Sequences import Sequences
 from Experiment import Experiment
 from Sprecher import Sprecher
+from Led import Led
 
 from typing import List
 import numpy as np
@@ -37,18 +38,23 @@ class Tests:
         )
 
     @staticmethod
-    def test_threeSpeakers(n_subblocks : int, freqs : List[float], shift : bool):
+    def test_threeSpeakers(n_subblocks : int, famList : List[float], shift : bool):
         positionen = ["left", "middle", "right"]
         if( shift == True):
             shiftOccurrence : List[str]= Sequences.gen_shiftOccurrence(n_subblocks)
         else:
             shiftOccurrence : List[str]= Sequences.gen_shiftOccurrence_withoutshifts(n_subblocks)
         Sprecher.writeToAndTrigger_speakers(positionen, 
-                                            Sequences.gen_randomFamList(freqs), 
+                                            famList, 
                                             shiftOccurrence
         )
 
-
-
+    @staticmethod
+    def test_allLeds():
+        """ Leds are activated one after another, shine for 1 sec, resp."""
+        Led.turnOn_targetLed_forTimeIntervall("left", 1)
+        Led.turnOn_targetLed_forTimeIntervall("middle", 1)
+        Led.turnOn_targetLed_forTimeIntervall("right", 1)
+        Led.turnOn_targetLed_forTimeIntervall("both", 1)
 
 

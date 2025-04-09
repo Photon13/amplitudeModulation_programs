@@ -42,21 +42,20 @@ np.set_printoptions(linewidth = 200)
 
 
 
-if __name__ == "__main__":
+
 
                 # Python: Settings: "non-testMode" / "testMode"
                 # Rcx: Load rcx onto procs (->)
                 # Brainvison Recorder: Start in eye mode (Auge)
-
-    proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
+proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
                 ['RX81', 'RX8', Paths.PATH_RCX],
                 ['RX82', 'RX8', Paths.PATH_RCX]]
 
-    freefield.initialize('dome', device=proc_list)
+freefield.initialize('dome', device=proc_list)
 
     #_____TEST_______________________________________________________
     
-    Tests.test_threeSpeakers(n_subblocks = 14, freqs = [0.0, 0.0, 0.0], shift = False)
+Tests.test_threeSpeakers(n_subblocks = 14, freqs = [0.0, 0.0, 0.0], shift = False)
         #Lautstärke messen
 
                 # Python: Run Tests
@@ -72,12 +71,12 @@ if __name__ == "__main__":
                 # Brainvision: File name: Maik_DD_MM_YYYY
                 # Python : Run Experiment
 
-    while True:
+while True:
         inp = input("Start Experiment? [yes]: ")
         if( inp.lower() == "yes"):
             break
 
-    participant = Participant(1)
+participant = Participant(1)
     #run block loop
 
     

@@ -1,6 +1,8 @@
 from Globals import Globals
 
 import freefield
+import random
+import numpy as np
 
 
 COLORBLUE   = '\33[34m'

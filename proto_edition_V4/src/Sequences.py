@@ -3,6 +3,7 @@ from Globals import Globals
 from typing import List
 import random
 import numpy as np
+import sys
 
 COLORBLUE   = '\33[34m'
 COLORGREEN = "\033[0;32m"
@@ -19,6 +20,14 @@ np.set_printoptions(linewidth = 200)
 
 class Sequences:
 
+
+    @staticmethod
+    def gen_shiftOccurrence_withoutShifts(n_subblocks : int) -> List[str]:
+        shiftOccurrence : List[str] = ["none"]
+        for i in range(1, n_subblocks):
+            shiftOccurrence.append("none")
+        return shiftOccurrence
+    
     @staticmethod
     def gen_shiftOccurrence(n_subblocks : int) -> List[str]:
         shiftOccurrence : List[str] = ["none"]
@@ -26,14 +35,15 @@ class Sequences:
             shiftOccurrence.append(random.choice(["left", "middle", "right"]))
         return shiftOccurrence
     
-
     @staticmethod
-    def gen_shiftOccurrence_withoutshifts(n_subblocks : int) -> List[str]:
-        shiftOccurrence : List[str] = ["none"]
-        for i in range(1, n_subblocks):
-            shiftOccurrence.append("none")
-        return shiftOccurrence
+    def generate_blockShiftDict(n_subblocks : int):
+        blockShiftDict : dict = {}
+        for i in range(Globals.N_BLOCKS):
+            blockShiftDict[f"block{i}"] = Sequences.gen_shiftOccurrence(n_subblocks)
+        return blockShiftDict
     
+
+
     
     @staticmethod
     def gen_shiftPossList() -> List[List[int]]:
@@ -42,14 +52,7 @@ class Sequences:
         poss3 = [1, 1, 2, 1]        
         poss4 = [2, 1, 2, 1] 
 
-        poss5 = [1, 2, 2, 1]        # should work, because Schmitt is open for 150 ms if nr 2 comes
-        poss6 = [2, 2, 1, 1]        # but marker for shift start is sent immediately, when nr 2 comes
-        poss7 = [2, 1, 1, 2]        # thus, participants have almost 850 ms to react
-        poss8 = [1, 2, 1, 2]
-        poss9 = [1, 1, 2, 2]
-
-        return [poss1, poss2, poss3, poss4, poss5, poss6, poss7, poss8, poss9]
-
+        return [poss1, poss2, poss3, poss4]
 
     @staticmethod
     def gen_nrSeq(position : str, shiftOccurrence : List[str]):
@@ -67,29 +70,31 @@ class Sequences:
         return nrSeq
 
 
+
+
     @staticmethod
     def generate_targetList() -> List[str]: 
-        targetList : List[str] = []                                          
-        targetList.append(random.choice(["left", "middle", "right"]))  # 0.block            
-        targetList.append("both")                                      # 1.block
+        targetList : List[str] = []  
+        k = int(Globals.N_BLOCKS / 4)                                       
+        targetList.extend( k*["left"])
+        targetList.extend( k*["right"])
+        targetList.extend( k*["middle"])
+        targetList.extend( k*["both"])
+        targetList = random.sample(targetList, k = 16)
 
-        helpList : List[str] = []
-        helpList.extend( 4*["left"])
-        helpList.extend( 4*["right"])
-        helpList.extend( 4*["middle"])
-        helpList.extend( 4*["both"])
-        helpList = random.sample(helpList, k = 16)
-
-        targetList = targetList + helpList
-
-        if(len(targetList != Globals.N_BLOCKS)):
-            print( COLORRED + "CAVE: nr of targets does not equal nr of blocks! " # thrown if N_BLOCKS was changed
-                    + COLOREND + "Check Sequences.generate_targetList()")
-            sys.exit()
-        
         return targetList
 
 
+
+
+    @staticmethod
+    def gen_randomFamList(famList : List[float]) -> List[float]:
+        if( len(famList) != 3):
+            print(COLORRED + "CAVE: Nr of fams does not equal 3! " + COLOREND + gen_randomFamList())
+            sys.exit()
+        return random.sample(famList, k=3)
+    
+    @staticmethod
     def generate_famList(participantNr : int) -> List[float]: # works
         """ for each 6 participants:
             [40.0, 35.3, 44.7]      # [B,A,C]
@@ -131,11 +136,3 @@ class Sequences:
 
         return famList
 
-
-
-    @staticmethod
-    def gen_randomFamList(famList : List[float]) -> List[float]:
-        if( len(famList) != 3):
-            print(COLORRED + "CAVE: Nr of fams does not equal 3! " + COLOREND + gen_randomFamList())
-            sys.exit()
-        return random.sample(famList, k=3)

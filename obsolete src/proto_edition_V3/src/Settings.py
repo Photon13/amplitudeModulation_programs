@@ -1,4 +1,3 @@
-
 class Settings:
 
     MODE : str = "testMode"

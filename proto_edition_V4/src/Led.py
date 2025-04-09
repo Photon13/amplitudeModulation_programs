@@ -56,15 +56,9 @@ class Led:
                 Led.turnOff_allLeds()
                 break
 
-    @staticmethod
-    def test_allLeds():
-        """ Leds are activated one after another, shine for 1 sec, resp."""
-        Led.turnOn_targetLed_forTimeIntervall("left", 1)
-        Led.turnOn_targetLed_forTimeIntervall("middle", 1)
-        Led.turnOn_targetLed_forTimeIntervall("right", 1)
-        Led.turnOn_targetLed_forTimeIntervall("both", 1)
 
 
+    
 
 
 

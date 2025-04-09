@@ -20,30 +20,30 @@ class Participant:
     nr : int
     famList : List[float]
     targetList : List[str]
+    n_subblocks : int
     blockShiftDict : dict
-
+    
 
 
     def __init__(self, participantNr : int):
         self.nr = participantNr
         self.famList = Sequences.generate_famList(self.nr)
-        #self.targetList = Sequences.generate_targetList()
-        self.blockShiftDict = Participant.generate_blockShiftDict()
-
-    def generate_blockShiftDict():
-        blockShiftDict : dict = {}
-        for i in range(Globals.N_BLOCKS):
-            blockShiftDict[f"block{i}"] = Sequences.generate_nrSeq(Globals.N_SUBBLOCKS)
-        return blockShiftDict
-
+        self.targetList = Sequences.generate_targetList()
+        # n_blocks == len(participant.targetList)
+        self.n_subblocks = Globals.N_SUBBLOCKS
+        self.blockShiftDict = Sequences.generate_blockShiftDict(self.n_subblocks)
         
+    
 
+    def setManually_famList(self, famList : List[float]):
+        self.famList = famList
 
-
+    def setManually_targetList(self, targetList : List[str]):
+        self.targetList = targetList
 
 
     def get_participantName(self) -> str:
-        return "participant-{self.nr}"
+        return f"participant-{self.nr}"
 
     
 
