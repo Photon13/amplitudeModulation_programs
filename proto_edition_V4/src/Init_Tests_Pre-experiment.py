@@ -31,13 +31,14 @@ COLOREND = '\033[0m'
 np.set_printoptions(linewidth = 200)
 
 def run_block(target):
-    Tests.test_threeSpeakers(Globals.N_SUBBLOCKS, Globals.FAM_LIST, shift=True)
+    Tests.test_threeSpeakers(Globals.N_SUBBLOCKS, [23.0, 41.0, 57.0], shift=True)
     Led.turnOn_targetLed_forTimeIntervall(target, Globals.N_SUBBLOCKS)
 
+def wait_4secs():
     ende = time.time() + 4
     while True:
         if( time.time()>= ende):
-            Led.turnOff_allLeds()
+            #Led.turnOff_allLeds()
             break
 
 
@@ -49,10 +50,19 @@ proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
 
 freefield.initialize('dome', device = proc_list)
 
-Tests.test_allLeds()
 
-run_block("left")
-#run_block("middle")
+
+#Tests.test_allLeds()
+
 #run_block("right")
-#run_block("both")#
+#run_block("left")
+#run_block("middle")
+#run_block("both")
 
+
+
+#x = "right"
+#shiftOccurrence = [x,x,x,x,x, x,x,x,x,x]
+#Sprecher.writeToAndTrigger_speakers(["left", "middle", "right"], Globals.FAM_LIST, shiftOccurrence)
+#Led.turnOn_targetLed_forTimeIntervall(x, 10)
+#wait_4secs()

@@ -19,7 +19,7 @@ class Globals:
     LED_COORDINATES = [(0, -25), (0, 0), (0, 25)]
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
 
-    FAM_A_BASE : float = 37.0
+    FAM_A_BASE : float = 33.0
     FAM_B_BASE : float = 43.0
     FAM_C_BASE : float = 53.0
 
@@ -43,6 +43,12 @@ class Globals:
     # + 40 sec test
 
     # per condition 8 blocks
+
+
+    # 5,6,RX82,-35,37.5,,
+    # 20,4,RX81,0,37.5,,
+    # 23,1,RX81,0,0,16,RX81
+    # 26,14,RX81,0,-37.5,,
 
     
 

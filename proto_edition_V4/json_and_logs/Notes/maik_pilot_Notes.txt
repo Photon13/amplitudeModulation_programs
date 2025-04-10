@@ -1,0 +1,5 @@
+speaker 5 (-35, +37.5) top left was playing additionally,
+and played the same sound as the right speaker
+therefore, often a shift seemed to come from the left or middle but is was unpossible to tell from which one
+
+every 2. block did not play sound
