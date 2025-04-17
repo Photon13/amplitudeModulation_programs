@@ -73,14 +73,14 @@ class Sequences:
 
 
     @staticmethod
-    def generate_targetList() -> List[str]: 
+    def generate_random_targetList() -> List[str]: 
         targetList : List[str] = []  
         k = int(Globals.N_BLOCKS / 4)                                       
         targetList.extend( k*["left"])
         targetList.extend( k*["right"])
         targetList.extend( k*["middle"])
         targetList.extend( k*["both"])
-        targetList = random.sample(targetList, k = 16)
+        targetList = random.sample(targetList, k = Globals.N_BLOCKS)
 
         return targetList
 
@@ -94,45 +94,11 @@ class Sequences:
             sys.exit()
         return random.sample(famList, k=3)
     
+
+
+
     @staticmethod
-    def generate_famList(participantNr : int) -> List[float]: # works
-        """ for each 6 participants:
-            [40.0, 35.3, 44.7]      # [B,A,C]
-            [35.3, 40.0, 44.7]      # [A,B,C]
-            [35.3, 44.7, 40.0]      # [A,C,B]
-            [44.7, 35.3, 40.0]      # [C,A,B]
-            [44.7, 40.0, 35.3]      # [C,B,A]
-            [40.0, 44.7, 35.3]      # [B,C,A]
-        """
+    def gen_ampRise(ampRiseList : List[float]):
+        return np.array(ampRiseList).astype('float64')
 
-        famList : List[float] = [1.0, 1.0, 1.0] # just as placeholder
-
-        if( (participantNr+2) %3 == 0):          # [1, 4, 7, 10, 13, 16, 19, 22, ...]
-            famList[1] = Globals.FAM_A_BASE      # *A*
-            if( (participantNr+2) %6 != 0):      # [1, 7, 13, 19, ...]
-                famList[0] = Globals.FAM_B_BASE  # BAC
-                famList[2] = Globals.FAM_C_BASE  # CAB
-            else:                                # [4, 10, 16, 22, ...]
-                famList[0] = Globals.FAM_C_BASE  # CAB
-                famList[2] = Globals.FAM_B_BASE  # BAC
-
-        elif( (participantNr+1) %3 == 0):        # [2, 5, 8, 11, 14, 17, 20, 23, ...]
-            famList[1] = Globals.FAM_B_BASE      # *B*
-            if( (participantNr+1) %6 != 0):      # [2, 8, 14, 20, ...]
-                famList[0] = Globals.FAM_A_BASE  # ABC
-                famList[2] = Globals.FAM_C_BASE  # CBA
-            else:                                # [5, 11, 17, 23, ...]
-                famList[0] = Globals.FAM_C_BASE
-                famList[2] = Globals.FAM_A_BASE
-
-        elif( (participantNr+0) %3 == 0):        # [3, 6, 9, 12, 15, 18, 21, 24, ...]
-            famList[1] = Globals.FAM_C_BASE      # *C*
-            if( (participantNr+0) %6 != 0):      # [3, 9, 15, 21, ...]
-                famList[0] = Globals.FAM_A_BASE  # ACB
-                famList[2] = Globals.FAM_B_BASE  # BCA
-            else:                                # [6, 12, 18, 24, ...]
-                famList[0] = Globals.FAM_B_BASE  # BCA
-                famList[2] = Globals.FAM_A_BASE  # ACB
-
-        return famList
 
