@@ -20,31 +20,6 @@ np.set_printoptions(linewidth = 200)
 
 class Sequences:
 
-
-    @staticmethod
-    def gen_shiftOccurrence_withoutShifts(n_subblocks : int) -> List[str]:
-        shiftOccurrence : List[str] = ["none"]
-        for i in range(1, n_subblocks):
-            shiftOccurrence.append("none")
-        return shiftOccurrence
-    
-    @staticmethod
-    def gen_shiftOccurrence(n_subblocks : int) -> List[str]:
-        shiftOccurrence : List[str] = ["none"]
-        for i in range(1, n_subblocks):
-            shiftOccurrence.append(random.choice(["left", "middle", "right"]))
-        return shiftOccurrence
-    
-    @staticmethod
-    def generate_blockShiftDict(n_subblocks : int):
-        blockShiftDict : dict = {}
-        for i in range(Globals.N_BLOCKS):
-            blockShiftDict[f"block{i}"] = Sequences.gen_shiftOccurrence(n_subblocks)
-        return blockShiftDict
-    
-
-
-    
     @staticmethod
     def gen_shiftPossList() -> List[List[int]]:
         poss1 = [2, 1, 1, 1]        
@@ -68,33 +43,6 @@ class Sequences:
                     nrSeq.append(nr)
         nrSeq = np.array(nrSeq).astype('int32')
         return nrSeq
-
-
-
-
-    @staticmethod
-    def generate_random_targetList() -> List[str]: 
-        targetList : List[str] = []  
-        k = int(Globals.N_BLOCKS / 4)                                       
-        targetList.extend( k*["left"])
-        targetList.extend( k*["right"])
-        targetList.extend( k*["middle"])
-        targetList.extend( k*["both"])
-        targetList = random.sample(targetList, k = Globals.N_BLOCKS)
-
-        return targetList
-
-
-
-
-    @staticmethod
-    def gen_randomFamList(famList : List[float]) -> List[float]:
-        if( len(famList) != 3):
-            print(COLORRED + "CAVE: Nr of fams does not equal 3! " + COLOREND + gen_randomFamList())
-            sys.exit()
-        return random.sample(famList, k=3)
-    
-
 
 
     @staticmethod

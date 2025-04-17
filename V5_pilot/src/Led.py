@@ -1,5 +1,5 @@
 from Globals import Globals
-from Sprecher import Sprecher
+from Sprecher_und_Procs import Sprecher
 
 import freefield
 
