@@ -98,7 +98,7 @@ class MNE_EEG:
         # SNR spectrum
         snr_mean = snrs.mean(axis=(0,1)) [freq_range]
         snr_std = snrs.std(axis=(0,1)) [freq_range]
-        axes[1].plot(reqs[freq_range], snr_mean, color = "r")
+        axes[1].plot(freqs[freq_range], snr_mean, color = "r")
         axes[1].fill_between(
             freqs[freq_range],
             snr_mean - snr_std,

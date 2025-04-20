@@ -13,7 +13,7 @@ import numpy as np
 class Sprecher_und_Procs:
      
     @staticmethod
-    def initFF():
+    def initFF() -> None:
 
         proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
                     ['RX81', 'RX8', Paths.PATH_RCX],
@@ -57,7 +57,7 @@ class Sprecher_und_Procs:
 
     
     @staticmethod
-    def turnTargetLedOn(leds : List[freefield.Speaker], target):
+    def turnTargetLedOn(leds : List[freefield.Speaker], target : str) -> None:
         if(target == "both"):
             freefield.write( f"bitmaskLeft", leds[0].digital_channel, leds[0].digital_proc)
             freefield.write( f"bitmaskRight", leds[2].digital_channel, leds[2].digital_proc)
@@ -71,7 +71,7 @@ class Sprecher_und_Procs:
 
 
     @staticmethod
-    def turnAllLedsOff(leds : List[freefield.Speaker]):
+    def turnAllLedsOff(leds : List[freefield.Speaker]) -> None:
         freefield.write( "bitmaskLeft", 0, leds[0].digital_proc)
         freefield.write( "bitmaskMiddle", 0, leds[1].digital_proc)
         freefield.write( "bitmaskRight", 0, leds[2].digital_proc)
