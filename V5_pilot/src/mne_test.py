@@ -111,16 +111,16 @@ raw.annotations.rename({
     "Stimulus/S 65" : "zBus",
     "Stimulus/S128" : "button"
 })
-
+# second block resp. manually removed
+# by changing S65 -> S66 there
 
 ###################
-raw.plot(clipping = None) # seems to work ? # but why 3 channels shown?
-inp = input("Type something: ") 
+#raw.plot(clipping = None) # seems to work ? # but why 3 channels shown?
+#inp = input("Type something: ") 
 ####################
 
 
-# bad epochs
-epochs = mne.Epochs(
+blockEpochs = mne.Epochs(
     raw,
     event_id = ["zBus"],
     tmin = +1.0,
@@ -130,14 +130,30 @@ epochs = mne.Epochs(
     verbose = False
 )
 
+# bad epochs
+badEpochs = mne.Epochs(
+    raw,
+    event_id = ["button"],
+    tmin = -0.5,
+    tmax = +0.5,
+    baseline = None,
+    picks = picks,
+    verbose = False
+)
+# ?
+
+blockEpochs.drop_bad(
+# ?
+
+# block: 40 sec (20000 samples, 500 samples/sec)
 
 #____CALC_POWER_SPECTRAL_DENSITY____#:
 tmin : float = 1.0
 tmax : float = 20.0
 fmin = 1.0
 fmax = 90.0
-sfreq = epochs.info["sfreq"]
-spectrum = epochs.compute_psd(
+sfreq = blockEpochs.info["sfreq"]
+spectrum = blockEpochs.compute_psd(
             "welch",
             n_fft = int(sfreq*(tmax-tmin)),
             n_overlap = 0,
@@ -162,6 +178,7 @@ freq_range = range( np.where(np.floor(freqs) == 1.0)[0][0],
 psds_plot = 10 * np.log10(psds)
 psds_mean = psds_plot.mean(axis=(0,1)) [freq_range]
 psds_std = psds_plot.std(axis=(0,1)) [freq_range]
+
 axes[0].plot(freqs[freq_range], psds_mean, color = "b")
 axes[0].fill_between(
             freqs[freq_range], 
@@ -175,7 +192,8 @@ axes[0].set(title = "PSD spectrum", ylabel = "Power Spectral Density [dB]")
 # SNR spectrum
 snr_mean = snrs.mean(axis=(0,1)) [freq_range]
 snr_std = snrs.std(axis=(0,1)) [freq_range]
-axes[1].plot(freqs[freq_range], snr_mean, color = "r")
+
+axes[1].plot(freqs[freq_range], snr_mean, color = "r") # <>.plot(x,y)
 axes[1].fill_between(
             freqs[freq_range],
             snr_mean - snr_std,
@@ -188,7 +206,11 @@ axes[1].set(
             xlabel = "Frequency [Hz]",
             ylabel = "SNR",
             ylim = [-2, 30],
-            xlim = [fmin, fmax]
+            xlim = [25.0, 55.0] # range of displayed freqs in plot
         )
+
+fig.xticks(np.arange(min(freqs[freq_range]), max(freqs[freq_range])+1, 1.0))
 fig.show()
 inp = input(" Type something: ")
+
+# played freqs: 33.0, 43.0, 53.0
