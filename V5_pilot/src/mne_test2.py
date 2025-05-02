@@ -4,6 +4,7 @@ import mne
 from typing import List
 import numpy as np
 import sys
+import pandas as pd
 
 from Paths import Paths
 
@@ -77,53 +78,64 @@ rawBV.annotations.rename({
 
 allEvents, allEvent_id = mne.events_from_annotations(
     raw = rawBV, 
-    event_id = get_eventIdDict("all")
+    event_id = {
+        "StartRecording" : 99999,
+        "shiftLeft" : 32, 
+        "shiftMiddle" : 2,
+        "shiftRight" : 1,
+        "zBus" : 65,
+        "button" : 128
+        }
 )
 # plotAllEvents_inRaw(rawBV, allEvents, allEvent_id)
 
 
 
-zBusEvents = mne.events_from_annotations(
+zBusEvents, zBusEvent_id = mne.events_from_annotations(
     raw = rawBV, 
-    event_id = get_eventIdDict("zBus")
+    event_id = {
+        "zBus" : 65
+        }
 )
 
 nrCurrentBlock = 0
 start_blockX = zBusEvents[nrCurrentBlock][2] /rawBV.info["sfreq"]
 end_blockX = start_blockX + 40
 rawBV_blockX = rawBV.copy().crop(tmin = start_blockX, tmax = end_blockX, include_tmax = False)
-# (drop last sec)
+# (drop last sec)  
 ###### The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
-buttonsAndShiftsEvents_blockX = mne.events_from_annotations(
+
+buttonsAndShiftsEvents_blockX, buttonsAndShiftsEvents_blockX_id = mne.events_from_annotations(
     raw = rawBV_blockX, 
-    event_id = get_eventIdDict("buttonsAndShiftsEvents")
+    event_id = {
+        "shiftLeft" : 32, 
+        "shiftMiddle" : 2,
+        "shiftRight" : 1,
+        "button" : 128
+        }
 )
 
 
 epochs_bockX = mne.Epochs(rawBV_blockX, buttonsAndShiftsEvents_blockX)
+#Exception has occurred: TypeError
+#events should be a NumPy array of integers, got <class 'tuple'>
+#ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (2,) + inhomogeneous part.
 
-metadata_buttonsAndShiftsEvents_blockX = epochs_bockX.make_metadata(
+metadata_buttonsAndShiftsEvents_blockX : pd.DataFrame = mne.epochs.make_metadata(
     events = buttonsAndShiftsEvents_blockX,
-    event_id = get_eventIdDict("buttonsAndShiftsEvents"),
+    event_id = buttonsAndShiftsEvents_blockX_id,
     tmin = 0.0,
-    tmax = 2.0,
+    tmax = 1.5,
     sfreq = rawBV.info["sfreq"],
     row_events = ["shiftLeft", "shiftMiddle", "shiftRight"]
 )[0]
 print(metadata_buttonsAndShiftsEvents_blockX)
 
+buttonDict_blockX = metadata_buttonsAndShiftsEvents_blockX.to_dict(orient = "list")
+print(buttonDict_blockX)
+
+#blockX_button_presses : List(tuple(str, float)) = []
+#for i in range( len(metadata_buttonsAndShiftsEvents_blockX)):
+#    if( metadata_buttonsAndShiftsEvents_blockX[i]):
 
 
-
-###### ?
-dictBlockData : dict = {}
-for i in range(0, 19, 2): # n blocks total for pilot maik == 20
-    blockNr = i
-    tmin = timePointsZBus[blockNr] / rawBV.info["sfreq"] # sec
-    tmax = tmin + 40 # sec
-    rawBV_block = rawBV.crop(tmin = tmin, tmax = tmax, include_tmax = True)
-    
-
-    blockData = [metadata, events_block, event_id_block]
-    dictBlockData[f"block{blockNr}"] = blockData
-print(dictBlockData)
