@@ -86,6 +86,22 @@ def loop_trough_blocks(nrCurrentBlock, rawBV):
     )[0]
     print(df_shifts_blockX)
 
+    times_shiftLeft_blockX = []
+    times_shiftMiddle_blockX = []
+    times_shiftRight_blockX = []
+
+    buttonsAndShiftsEvents_blockX_list = buttonsAndShiftsEvents_blockX.tolist()
+    for i in range( len(buttonsAndShiftsEvents_blockX_list) ):
+        if( buttonsAndShiftsEvents_blockX_list[i][2] == 32):
+            times_shiftLeft_blockX = buttonsAndShiftsEvents_blockX_list[0]
+        elif( buttonsAndShiftsEvents_blockX_list[i][2] == 2):
+            times_shiftMiddle_blockX = buttonsAndShiftsEvents_blockX_list[i][0]
+        elif( buttonsAndShiftsEvents_blockX_list[i][2] == 1):
+            times_shiftRight_blockX = buttonsAndShiftsEvents_blockX_list[i][0]
+        else:
+            print( COLORRED + "Invalid value in for-loop for times_shift<>_blockX" + COLOREND )
+
+    times_shifts_blockX = [times_shiftLeft_blockX, times_shiftMiddle_blockX, times_shiftRight_blockX]
 
     df_buttons_blockX : pd.DataFrame = mne.epochs.make_metadata(
         events = buttonsAndShiftsEvents_blockX,
@@ -95,10 +111,8 @@ def loop_trough_blocks(nrCurrentBlock, rawBV):
         sfreq = rawBV.info["sfreq"],
         row_events = ["shiftLeft", "shiftMiddle", "shiftRight"]
     )[0]
-    print(df_buttons_blockX)
 
     buttonDict_blockX = df_buttons_blockX.to_dict(orient = "list")
-    print(buttonDict_blockX)
 
     shiftLeftButton_blockX : List[float] = [] # relative (!) time points
     shiftMiddleButton_blockX : List[float] = []
@@ -116,7 +130,8 @@ def loop_trough_blocks(nrCurrentBlock, rawBV):
                 print( COLORRED + "Invalid entry in shift<position>_blockX" + COLOREND + "Message from for-loop buttonDict_blockX.")
 
 
-    return buttonsAndShiftsEvents_blockX, shiftLeftButton_blockX, shiftMiddleButton_blockX, shiftRightButton_blockX
+
+    return times_shifts_blockX, shiftLeftButton_blockX, shiftMiddleButton_blockX, shiftRightButton_blockX
 
 
 
@@ -172,11 +187,12 @@ blockDict = {}
 
 for i in range(0,2):
     currentBlockNr = i
-    blockDict[f"block{currentBlockNr}"] = [loop_trough_blocks(currentBlockNr, rawBV)]
-    # buttonsAndShiftsEvents_blockX, shiftLeftButton_blockX, shiftMiddleButton_blockX, shiftRightButton_blockX = loop_trough_blocks(currentBlockNr, rawBV)
+    blockDict[f"block{currentBlockNr}"] = [loop_trough_blocks(currentBlockNr, rawBV) ]
+    #buttonsAndShiftsEvents_blockX, shiftLeftButton_blockX, shiftMiddleButton_blockX, shiftRightButton_blockX = loop_trough_blocks(currentBlockNr, rawBV)
     # time points of shifts relative to zBus; time points button relative to shift in 1.5 sec time window after shift
 
-print(blockDict)
+print(blockDict["block0"])
+
 
 
 
