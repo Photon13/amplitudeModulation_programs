@@ -1,7 +1,5 @@
 from Globals import Globals
-from Sequences import Sequences
 from Paths import Paths
-from ParticipantConstants import ParticipantConstants
 
 import freefield
 
@@ -20,62 +18,83 @@ class Sprecher_und_Procs:
                     ['RX82', 'RX8', Paths.PATH_RCX]]
 
         freefield.initialize('dome', device = proc_list)
-
+        # freefield.set_logger('DEBUG')
 
     @staticmethod
-    def pickSpeakersAndLeds():
+    def pickSpeakersAndLeds() -> dict:
 
-        [leftSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[0])
-        [middleSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[1])
-        [rightSpeaker] = freefield.pick_speakers(Globals.SPEAKER_COORDINATES[2])
-        speakers : List[freefield.Speaker] = [leftSpeaker, middleSpeaker, rightSpeaker] 
-
-        [leftLed] = freefield.pick_speakers(Globals.LED_COORDINATES[0])
-        [middleLed] = freefield.pick_speakers(Globals.LED_COORDINATES[1])
-        [rightLed] = freefield.pick_speakers(Globals.LED_COORDINATES[2])
-        leds : List[freefield.Speaker] = [leftLed, middleLed, rightLed]
-
-        return speakers, leds
+        speakerLedDict : dict = {}
+        speakerLedDict["speakers"] = {
+            "speakerLeft" :   freefield.pick_speakers( Globals.SPEAKER_COORDINATES[0] ) [0],
+            "speakerMiddle" : freefield.pick_speakers( Globals.SPEAKER_COORDINATES[1] ) [0],
+            "speakerRight" :  freefield.pick_speakers( Globals.SPEAKER_COORDINATES[2] ) [0]
+        }
+        speakerLedDict["leds"] = {
+            "ledLeft" :   freefield.pick_speakers( Globals.LED_COORDINATES[0] ) [0],
+            "ledMiddle" : freefield.pick_speakers( Globals.LED_COORDINATES[1] ) [0],
+            "ledRight" :  freefield.pick_speakers( Globals.LED_COORDINATES[2] ) [0]
+        }
+        return speakerLedDict
     
 
-    @staticmethod
-    def writeToSpeaker(position : str, speakers : List[freefield.Speaker], participantNr : int, ampRiseList : List[float]):
-        if( position == "left"):
-            speaker = speakers[0]
-        elif( position == "middle"):
-            speaker = speakers[1]
-        else: 
-            speaker = speakers[2]
-
-        freefield.write(f"channel{position}", speaker.analog_channel, speaker.analog_proc)
-        freefield.write("volume", Globals.VOLUME, ["RX81", "RX82"]) 
-        freefield.write(f"fam{position}", ParticipantConstants.FAM_LIST_01234[participantNr], ["RX81", "RX82"])
-        
-        freefield.write(f"nrSeq{position}", np.array(ampRiseList).astype('float64'), speaker.analog_proc)
-        freefield.write("n_snippets", len(ampRiseList), ["RX81", "RX82"])
-        
-
-    
-    @staticmethod
-    def turnTargetLedOn(leds : List[freefield.Speaker], target : str) -> None:
-        if(target == "both"):
-            freefield.write( f"bitmaskLeft", leds[0].digital_channel, leds[0].digital_proc)
-            freefield.write( f"bitmaskRight", leds[2].digital_channel, leds[2].digital_proc)
-        
-        elif(target == "left"):
-            freefield.write( f"bitmaskLeft", leds[0].digital_channel, leds[0].digital_proc)
-        elif(target == "middle"):
-            freefield.write( f"bitmaskMiddle", leds[1].digital_channel, leds[1].digital_proc)
-        else:
-            freefield.write( f"bitmaskRight", leds[2].digital_channel, leds[2].digital_proc)
-
 
     @staticmethod
-    def turnAllLedsOff(leds : List[freefield.Speaker]) -> None:
-        freefield.write( "bitmaskLeft", 0, leds[0].digital_proc)
-        freefield.write( "bitmaskMiddle", 0, leds[1].digital_proc)
-        freefield.write( "bitmaskRight", 0, leds[2].digital_proc)
-    
+    def writeToSingleSpeaker(speakerLedDict : dict, position : str, fams : List[float], nrSeq : List[float]) -> None:
+
+        speaker = speakerLedDict["speakers"][f"speaker{position.capitalize()}"]
+
+        freefield.write(  "volume",            Globals.VOLUME,                    ["RX81", "RX82"] ) 
+        freefield.write(  "n_snippets",        len(nrSeq),                        ["RX81", "RX82"] )
+        freefield.write( f"fam{position}",     fams,                              ["RX81", "RX82"] )
+        freefield.write( f"channel{position}", speaker.analog_channel,            speaker.analog_proc )
+        freefield.write( f"nrSeq{position}",   np.array(nrSeq).astype('float64'), speaker.analog_proc )
+        
+        
+        
+
+    @staticmethod
+    def writeToSpeakers_fromBlockDict(speakerLedDict : dict, blockDict : dict, blockNr : int) -> None:
+
+        n_snippets = len( blockDict[f"block{blockNr}"]["nrSeqLeft"] )
+
+        freefield.write( "n_snippets",   n_snippets,     ["RX81", "RX82"] )
+        freefield.write( "volume",       Globals.VOLUME, ["RX81", "RX82"] )
+
+        positionen = ["Left", "Middle", "Right"]
+        for pos in positionen:
+            speaker =   speakerLedDict ["speakers"] [f"speaker{pos}"]
+            fam =       blockDict      ["fams"]     [f"fam{pos}"]
+            nrSeq =     blockDict      [f"block{blockNr}"] [f"nrSeq{pos}"]
+
+            freefield.write( f"channel{pos}",    speaker.analog_channel,             speaker.analog_proc )
+            freefield.write( f"fam{pos}",        fam,                                ["RX81", "RX82"] )
+            freefield.write( f"nrSeq{pos}",      np.array(nrSeq).astype('float64'),  speaker.analog_proc )
+        
+
+
+    @staticmethod
+    def turnTargetLedOn(speakerLedDict : dict, target : str) -> None:
+
+        if( target == "both" ):
+            led = speakerLedDict ["leds"] ["ledLeft"]
+            freefield.write( f"bitmaskLeft",  led.digital_channel, led.digital_proc)
+
+            led = speakerLedDict ["leds"] ["ledRight"]
+            freefield.write( f"bitmaskRight", led.digital_channel, led.digital_proc)
+        
+        elif( target == ("left" or "middle" or "right") ):
+            led = speakerLedDict ["leds"] [f"led{target.capitalize()}"]
+            freefield.write( f"bitmask{target.capitalize()}", led.digital_channel, led.digital_proc)
+
+
+
+    @staticmethod
+    def turnAllLedsOff(speakerLedDict : dict) -> None:
+
+        positionen = ["Left", "Middle", "Right"]
+        for pos in positionen:
+            freefield.write( "bitmaskLeft", 0, speakerLedDict["leds"][f"led{pos}"].digital_proc)
+
 
 
 
