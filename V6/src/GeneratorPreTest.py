@@ -57,18 +57,18 @@ class GeneratorPreTest:
         """ returns all possible amplitude values for nrseq in case a shift occurs;
         to modify range of amplitude values, new values must be manually pasted;
         current range is 110% to 130% amplitude """
-        #possAmpRiseList : List[float] = [0.1, 0.122, 0.144, 0.167, 0.189, 0.211, 0.233, 0.256, 0.278, 0.3]
-        possAmpRiseList : List[float] = [0.15, 0.178, 0.206, 0.233, 0.261, 0.289, 0.317, 0.344, 0.372, 0.4]
-
-        return possAmpRiseList
+        # [0.1, 0.122, 0.144, 0.167, 0.189, 0.211, 0.233, 0.256, 0.278, 0.3]
+        # [0.15, 0.178, 0.206, 0.233, 0.261, 0.289, 0.317, 0.344, 0.372, 0.4]
+            # range 0.15 to 0.3 seems to be good
+        return 0.1, 0.117, 0.133, 0.15, 0.167, 0.183, 0.2, 0.217, 0.233, 0.25
 
 
 
     @staticmethod
     def get_nrSeqs():
-        """ returns np.NDArrays[float] of nrSeqLeft, nrSeqMiddle and nrSeqRight;
-        each containing all possible ampRise values (as 1.10 etc.) 10 times, respectively;
-        ampRise values are separated by 1-3 0.0's (p = 0.7, 0.3, 0.1) """
+        """ returns Lists[float] of nrSeqLeft, nrSeqMiddle and nrSeqRight;
+        each containing all possible ampRise values (e.g. 1.10 etc.) 10 times, respectively;
+        ampRise values are separated by 1-3 0.0's (p = 0.5, 0.4, 0.1) """
 
         possAmpRiseList : List[float] = GeneratorPreTest.get_possAmpRiseList()
 
@@ -83,18 +83,23 @@ class GeneratorPreTest:
         nrSeqRight : List[float] = []
 
         for value in values:
-            pos = random.choice(["l", "m", "r"])
-            length = random.choices([1,2,3], weights = [0.5, 0.4, 0.1], k=1)[0]
+            #pos = random.choice(["l", "m", "r"]) #maybe bad idea 
+            pos = "l" # shifts always left
+            length = random.choices([1,2,3], weights = [0.6, 0.3, 0.1], k=1)[0] # probabilities seem to be proper
+                # pro value ca: 6*2sec + 3*4sec + 1*6sec = 12sec + 12sec + 6sec = 30sec
+                # 10 values * 30 sec = 300 sec = 5 min (sic)
+
+                # old: weights = [0.5, 0.4, 0.1]
 
             if( length == 1):
                 snippet =       [value, 0.0]
                 antiSnippet =   [0.0,   0.0]
             elif( length == 2):
-                snippet =       [value, 0.0, 0.0]
-                antiSnippet =   [0.0,   0.0, 0.0]
-            elif( length == 3):
                 snippet =       [value, 0.0, 0.0, 0.0]
                 antiSnippet =   [0.0,   0.0, 0.0, 0.0]
+            elif( length == 3):
+                snippet =       [value, 0.0, 0.0, 0.0, 0.0, 0.0]
+                antiSnippet =   [0.0,   0.0, 0.0, 0.0, 0.0, 0.0]
 
             if( pos == "l"):
                 for s in snippet:
@@ -103,7 +108,7 @@ class GeneratorPreTest:
                     nrSeqMiddle.append(a)
                     nrSeqRight.append(a)
             
-            elif( pos == "m"):
+            elif( pos == "m"): #keeping it here could safe work if using it was needed later
                 for s in snippet:
                     nrSeqMiddle.append(s)
                 for a in antiSnippet:
@@ -157,4 +162,4 @@ class GeneratorPreTest:
 
 
 
-GeneratorPreTest.print_possAmpRiseList(start = 0.15, end = 0.4)
+GeneratorPreTest.print_possAmpRiseList(start = 0.10, end = 0.25)
