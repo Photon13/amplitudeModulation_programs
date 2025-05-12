@@ -8,11 +8,16 @@ from Paths import Paths
 class Dateien_und_Json:
 
     @staticmethod #works
-    def get_pathBVFile(fileName : str):
+    def get_pathBVFile_preTest(fileName : str):
         """ Returns path of BrainVisionReceorder file as str;
         fileName must contain extension (.vmrk)"""
-        return str( Paths.PATH_FOLDER_BRAINVISION_RECORDER / fileName)
+        return str( Paths.PATH_FOLDER_BRAINVISION_RECORDER_PRETEST / fileName)
     
+    @staticmethod #works
+    def get_pathBVFile_mainExp(fileName : str):
+        """ Returns path of BrainVisionReceorder file as str;
+        fileName must contain extension (.vmrk)"""
+        return str( Paths.PATH_FOLDER_BRAINVISION_RECORDER_MAINEXP / fileName)
 
     
     @staticmethod #works

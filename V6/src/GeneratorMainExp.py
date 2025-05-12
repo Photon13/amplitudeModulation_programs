@@ -10,7 +10,7 @@ from GeneratorPreTest import GeneratorPreTest
 
 
 class GeneratorMainExp:
-    # Take directly from GeneratorPreTest
+    # Directly taken from GeneratorPreTest
         # GeneratorPreTest.randomlyAssign_fams()
         # GeneratorPreTest.gen_randomisedTargetList()
         # GeneratorPreTest.print_possAmpRiseList(start = 1.1, end = 1.3)
@@ -19,45 +19,59 @@ class GeneratorMainExp:
     @staticmethod
     def get_nrSeqs(ampRise : float): #works but parameter is annoying
 
+        # Create List of Lists, latter one containing shift and some sec no shift
         x : List[List[float]] = []
-        for i in range(3):
+        for i in range(6):
             x.append( [ampRise, 0.0] )
-        for i in range(3):
+        for i in range(8):
             x.append( [ampRise, 0.0, 0.0] )
-        for i in range(3):
+        for i in range(6):
             x.append( [ampRise, 0.0, 0.0, 0.0] )
-        random.shuffle( x )
+        random.shuffle( x ) # randomise order of snippets
+
+        # 8*2sec + 8*3sec + 8*4sec
+        # = 16sec + 24sec + 32sec = 62sec (+ 3sec empty # added later)
+        # -> per block: 65 sec
 
         y : List[float] = []
-        for lst in x:
-            for nr in lst:
+        for lst in x: # for each snippet:
+            for nr in lst: # for each float in snippet: take float and append
                 y.append( nr )
     
         nrSeqLeft : List[float] = []
         nrSeqMiddle : List[float] = []
         nrSeqRight : List[float] = []
 
-        possPositionsShift = ["l", "m", "r"]
+        for i in range(3): # first 3 sec no shift
+            nrSeqLeft.append( 0.0 )
+            nrSeqMiddle.append( 0.0 )
+            nrSeqRight.append( 0.0 )
 
-        for entry in y:
-            if( entry == 0.0 ):
+        possPositionsShift = ["l", "m", "r"]
+        for entry in y: # for each sec
+            if( entry == 0.0 ): # no shift at all (i.e. in none of the streams)
                 nrSeqLeft.append( entry )
                 nrSeqMiddle.append( entry )
                 nrSeqRight.append( entry )
-            else: 
-                shiftPos = random.choice( possPositionsShift )
+
+            else: # if shift shall occur
+                shiftPos = random.choice( possPositionsShift ) # randomly choose a position
+                # chosen position gets shift value, the others get 0.0
                 if( shiftPos == "l"):
                     nrSeqLeft.append( entry )
                     nrSeqMiddle.append( 0.0 )
                     nrSeqRight.append( 0.0 )
+
                 elif( shiftPos == "m"):
                     nrSeqLeft.append( 0.0 )
                     nrSeqMiddle.append( entry )
-                    nrSeqMiddle.append( 0.0 )
+                    nrSeqRight.append( 0.0 )
+
                 elif( shiftPos == "r"):
                     nrSeqLeft.append( 0.0 )
                     nrSeqMiddle.append( 0.0 )
                     nrSeqRight.append( entry )
+
         return nrSeqLeft, nrSeqMiddle, nrSeqRight
 
 
@@ -94,10 +108,14 @@ class GeneratorMainExp:
     
 
 #TEST:
-nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs(7.7)
-print(nrSeqLeft)
-print(len(nrSeqLeft))
-print(len(np.array(nrSeqLeft).astype('float64')))
+#nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs(7.7)
+#print("\n")
+#print(nrSeqLeft)
 #print(nrSeqMiddle)
 #print(nrSeqRight)
+#print(len(nrSeqLeft))
+#print(len(nrSeqMiddle))
+#print(len(nrSeqRight))
+#print(len(np.array(nrSeqLeft).astype('float64')))
+
 

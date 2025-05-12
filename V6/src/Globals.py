@@ -12,9 +12,9 @@ class Globals:
     FAM_C : float = 53.0
     FAM_LIST : List[float] = [FAM_A, FAM_B, FAM_C]
 
-    N_BLOCKS : int = 5*4 # je 1 min
+    N_BLOCKS : int = 5*4 # je 65 sec
 
-    VOLUME = 0.18
+    #VOLUME = 0.18
 
     #####
 

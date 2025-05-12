@@ -6,14 +6,6 @@ from Globals import Globals
 import time
 import freefield
 
-COLORBLUE   = '\33[34m'
-COLORGREEN = "\033[0;32m"
-COLORRED    = '\33[31m'
-COLORCYAN = '\033[36m'
-COLORPURPLE = '\033[35m'
-COLORYELLOW = '\033[33m'
-COLORFAT = '\033[1m'
-COLOREND = '\033[0m'
 
 class PreTest:
 
@@ -43,10 +35,12 @@ class PreTest:
             if( time.time() >= end ):
                 break
 
+    
 
-#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
-identifier : str = "testMarkerAnalysis1"        # nickname for participant
-#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
+
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
+identifier : str = "testMarkerAnalysis2"        # nickname for participant
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
 
 
 
@@ -55,13 +49,18 @@ speakerLedDict = Sprecher_und_Procs.pickSpeakersAndLeds()
 
 blockDict = PreTest.prepare_blockDict(identifier)
 
-print( COLORRED + "Remember to start recording!" + COLOREND)
+print( Globals.COLORRED + "Remember to start recording!" + Globals.COLOREND)
 PreTest.relayStart(timeIntervall = 15)
 
 for i in range( blockDict["n_blocks"] ):
     Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, i)
     freefield.play()
-    #run without stop
+    start = time.time()
+    duration_block = len(blockDict[f"block{i}"]["nrSeqLeft"]) #[sec]
+    while True:
+        if( time.time() >= (start + duration_block + 3) ): # 3 sec extra between blocks (for avoiding technical issues)
+            break
+    # directly continue with next block without confirmation by user
 
 
 

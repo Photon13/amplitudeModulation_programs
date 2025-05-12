@@ -10,5 +10,6 @@ class Paths:
     # Save copies:
     #PATH_FOLDER_BRAINVISION_RECORDER : Path = Path("d:\\Maik\\Studium\\Biologie Bachelor\\Bachelorarbeit\\amplitudeModulation\\BrainVision Recorder")
     
-    PATH_FOLDER_BRAINVISION_RECORDER : Path = PATH_CWD /"BrainVision Recorder files"/"EEG Recordings"
+    PATH_FOLDER_BRAINVISION_RECORDER_PRETEST : Path = PATH_CWD /"BrainVision Recorder files"/"EEG Marker Files PreTest"
+    PATH_FOLDER_BRAINVISION_RECORDER_MAINEXP : Path = PATH_CWD /"BrainVision Recorder files"/"EEG Main Exp"
     PATH_FOLDER_JSON : Path = PATH_CWD/"json"

@@ -30,13 +30,13 @@ class AnalysisPreTest_withoutMne:
         lines_withoutTitle : List[str] = []
         for i in range(11, len(lines)-1):
             lines_withoutTitle.append(lines[i])
-        print(lines_withoutTitle)
         return lines_withoutTitle
     
     @staticmethod
     def replaceMarkerNames(markerName):
         markerDict = {
-            ""     : "StartRecording",
+            ""     : "startRecording",
+            "S 97" : "?",
             "S 32" : "shiftLeft", 
             "S  2" : "shiftMiddle",
             "S  1" : "shiftRight",
@@ -58,7 +58,8 @@ class AnalysisPreTest_withoutMne:
     
     @staticmethod
     def get_allMarkerOccurrences_perBlock(allMarkerOccurrences : List[List]) -> dict:
-        """ Assigns marker occurrences (=[markerName, markerTime]) to respective block """
+        """ Assigns marker occurrences (= markerTime) to respective block and marker type
+        <dict>[block<blockNr>][<markerType>] """
         zBus_occurrences : List[int] = []
         shiftLeft_occurrences : List[int] = []
         shiftMiddle_occurrences : List[int] = []
@@ -78,7 +79,7 @@ class AnalysisPreTest_withoutMne:
                 button_occurrences.append( entry[1])
 
         blockDictMarkerOccurrences : dict = {}
-        print(COLORBLUE + f"{zBus_occurrences}" + COLOREND)
+
         for i in range( len(zBus_occurrences) ):
             blockStart_samp = zBus_occurrences[i]
             blockLength_samp : int = blockLength * sfreq
@@ -111,60 +112,77 @@ class AnalysisPreTest_withoutMne:
                 "shiftRight": shiftRight_occurrences_blockX,
                 "button" : button_occurrences_blockX
             }
-            return blockDictMarkerOccurrences
+        return blockDictMarkerOccurrences
 
     @staticmethod 
-    def get_possAmpRiseValues(blockDict : dict):
+    def get_possAmpRiseValues(blockDict : dict) -> List[float]:
         """ Grabs all tested ampRise values from the nrSeqs """
         possAmpRiseValues : List[float] = []
-        for i in range( blockDict["n_blocks"] ): # loop through blocks
-            for j in range( len(blockDict[f"block{i}"]["nrSeqLeft"]) ):
-                for pos in ["Left", "Middle", "Right"]:
-                    entry = blockDict[f"block{i}"][f"nrSeq{pos}"][j] # search in all nrSeqs (just in case they were used)
-                    if( entry != 0.0 ): # if entry is not 0.0
-                        if( possAmpRiseValues.count(entry) == 0 ): # if value does not yet exist in list
+        for b in range( blockDict["n_blocks"] ):                    # loop through blocks
+            for pos in ["Left", "Middle", "Right"]:                 # search in all nrSeqs (just in case they were used)
+                for entry in blockDict[f"block{b}"][f"nrSeq{pos}"]:
+                    if( entry > 0.0 ):                              # if entry is not 0.0
+                        if( possAmpRiseValues.count(entry) == 0 ):  # if value does not yet exist in list
                             possAmpRiseValues.append(entry)
 
         possAmpRiseValues.sort()
         return possAmpRiseValues
     
+    @staticmethod 
+    def get_n_correctDict(blockDict : dict, blockDictMarkerOccurrences : dict):
+        n_correctDict : dict = {}
+        possibleAmpRiseValues : List[float] = AnalysisPreTest_withoutMne.get_possAmpRiseValues(blockDict)
+
+        for ampRiseVal in possibleAmpRiseValues:
+            n_correctDict[f"n_correct_{ampRiseVal}"] = 0 # default
+
+        for b in range( len(blockDictMarkerOccurrences) ): # loop through blocks
+            for target in targets: # only take target stream(s)
+                shiftValues_blockX = blockDict[f"block{b}"][f"nrSeq{target.capitalize()}"] # get all shifts in target stream for block
+                buttons_blockX = blockDictMarkerOccurrences[f"block{b}"]["button"]    # get all button presses for block
+                shiftTimes = blockDictMarkerOccurrences[f"block{b}"][f"shift{target.capitalize()}"] 
+                for i in range( len(shiftTimes) ):
+                    lowerB : float = shiftTimes[i] + 0.05*sfreq   # intervall lower border  : 0.05 sec after shift
+                    higherB : float = shiftTimes[i] + 1.80*sfreq  # intervall higher border : 1.80 sec after shift
+                    if( shiftValues_blockX[i] != 0.0):
+                        if( any( lowerB <= b <= higherB for b in buttons_blockX) ):  # test whether button was pressed after shift in target stream
+                            n_correctDict[f"n_correct_{shiftValues_blockX[i]}"] += 1 # if any() -> ignores double presses due to button dysfunction
+        return n_correctDict
+    
+
+
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
+identifier : str = "testMarkerAnalysis2"
+
 sfreq = 500 #Hz
 blockLength : int = 40 #sec
-
-identifier : str = "testMarkerAnalysis0"
-
 targets = ["left"] #always
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§#
+
 
 
 fileBVName = f"{identifier}.vmrk"
 fileJsonName = f"{identifier}_preTest.txt"
 
-fileBVPath = Dateien_und_Json.get_pathBVFile(fileBVName)
+
+fileBVPath = Dateien_und_Json.get_pathBVFile_preTest(fileBVName)
 lines : List[str] = AnalysisPreTest_withoutMne.readLines(fileBVPath)
 lines_withoutTitle = AnalysisPreTest_withoutMne.removeTitle(lines)
 allMarkerOccurrences = AnalysisPreTest_withoutMne.get_allOccurrencesOfMarkers(lines_withoutTitle)
 blockDictMarkerOccurrences = AnalysisPreTest_withoutMne.get_allMarkerOccurrences_perBlock(allMarkerOccurrences)
 
-print(blockDictMarkerOccurrences)
+print(COLORPURPLE + f"{blockDictMarkerOccurrences}" + COLOREND)
 
 blockDict = Dateien_und_Json.readJson(fileJsonName)
-possibleAmpRiseValues = AnalysisPreTest_withoutMne.get_possAmpRiseValues(blockDict)
+laengeSec = 0
+for b in range( blockDict["n_blocks"]):
+    l = len(blockDict[f"block{b}"]["nrSeqLeft"])
+    laengeSec += l
+    print(l)
 
-resultDict : dict = {}
-for val in possibleAmpRiseValues:
-    n_correct = 0
-    for target in targets:
-        shifts = blockDictMarkerOccurrences[f"shift{target.capitalize()}"]
-        buttons = blockDictMarkerOccurrences["button"]
-        for s in shifts:
-            lowerB : float = s + 0.1*sfreq   # intervall lower border  : 0.1 sec after shift
-            higherB : float = s + 1.75*sfreq # intervall higher border : 1.75 sec after shift
-            if( any( lowerB <= b <= higherB for b in buttons) ):
-                n_correct += 1
-    total : int = 10
-    score : float = n_correct / float(total)
-    resultDict[f"val"] = score
+#print(COLORYELLOW + f"{blockDict}" + COLOREND)
 
-print(resultDict)
+n_correctDict :dict = AnalysisPreTest_withoutMne.get_n_correctDict(blockDict, blockDictMarkerOccurrences)
+#print(COLORCYAN + f"{n_correctDict}" + COLOREND)
+
+# reaction Time seems to be at least 1.6 sec

@@ -58,7 +58,7 @@ class Sprecher_und_Procs:
         n_snippets = len( blockDict[f"block{blockNr}"]["nrSeqLeft"] )
 
         freefield.write( "n_snippets",   n_snippets,     ["RX81", "RX82"] )
-        freefield.write( "volume",       Globals.VOLUME, ["RX81", "RX82"] )
+        #freefield.write( "volume",       Globals.VOLUME, ["RX81", "RX82"] )
 
         positionen = ["Left", "Middle", "Right"]
         for pos in positionen:

@@ -38,7 +38,7 @@ class GeneratorPreTest:
 
 
     @staticmethod
-    def print_possAmpRiseList(start = 1.1, end = 1.3) -> None:
+    def print_possAmpRiseList(start : float, end : float) -> None:
         """ take range from start value to end value (both inclusive) and divide it
         to get 10 values, that are equally spaced; print result, return None
         default: start = 110% amplitude, end = 130% amplitude """
@@ -68,7 +68,7 @@ class GeneratorPreTest:
     def get_nrSeqs():
         """ returns Lists[float] of nrSeqLeft, nrSeqMiddle and nrSeqRight;
         each containing all possible ampRise values (e.g. 1.10 etc.) 10 times, respectively;
-        ampRise values are separated by 1-3 0.0's (p = 0.5, 0.4, 0.1) """
+        ampRise values are separated by some 0.0's """
 
         possAmpRiseList : List[float] = GeneratorPreTest.get_possAmpRiseList()
 
@@ -82,24 +82,43 @@ class GeneratorPreTest:
         nrSeqMiddle : List[float] = []
         nrSeqRight : List[float] = []
 
-        for value in values:
-            #pos = random.choice(["l", "m", "r"]) #maybe bad idea 
-            pos = "l" # shifts always left
-            length = random.choices([1,2,3], weights = [0.6, 0.3, 0.1], k=1)[0] # probabilities seem to be proper
-                # pro value ca: 6*2sec + 3*4sec + 1*6sec = 12sec + 12sec + 6sec = 30sec
-                # 10 values * 30 sec = 300 sec = 5 min (sic)
+        #for value in values:
+        #    #pos = random.choice(["l", "m", "r"]) #maybe bad idea 
+        #    pos = "l" # shifts always left
+        #    length = random.choices([1,2,3], weights = [0.6, 0.3, 0.1], k=1)[0] # probabilities seem to be proper
+        #        # pro value ca: 6*2sec + 3*4sec + 1*6sec = 12sec + 12sec + 6sec = 30sec
+        #        # 10 values * 30 sec = 300 sec = 5 min (sic)
+        #
+        #        # old: weights = [0.5, 0.4, 0.1]
+        #
+        #    if( length == 1):
+        #        snippet =       [value, 0.0]
+        #        antiSnippet =   [0.0,   0.0]
+        #    elif( length == 2):
+        #        snippet =       [value, 0.0, 0.0, 0.0]
+        #        antiSnippet =   [0.0,   0.0, 0.0, 0.0]
+        #    elif( length == 3):
+        #        snippet =       [value, 0.0, 0.0, 0.0, 0.0, 0.0]
+        #        antiSnippet =   [0.0,   0.0, 0.0, 0.0, 0.0, 0.0]
+        #
 
-                # old: weights = [0.5, 0.4, 0.1]
+
+        for value in values:
+            pos = "l" # shifts always left
+            length = random.choices([1,2], weights = [0.6, 0.4], k=1)[0]
 
             if( length == 1):
-                snippet =       [value, 0.0]
-                antiSnippet =   [0.0,   0.0]
+                snippet =       [value, 0.0, 0.0]
+                antiSnippet =   [0.0,   0.0, 0.0]
+
             elif( length == 2):
-                snippet =       [value, 0.0, 0.0, 0.0]
-                antiSnippet =   [0.0,   0.0, 0.0, 0.0]
-            elif( length == 3):
                 snippet =       [value, 0.0, 0.0, 0.0, 0.0, 0.0]
                 antiSnippet =   [0.0,   0.0, 0.0, 0.0, 0.0, 0.0]
+            # 0.6 * 10 * 3sec + 0.4 * 10 * 6sec
+            # 18sec + 24sec = 42sec per value
+            # for 7-8 values ca. 5 min-5.5min
+
+
 
             if( pos == "l"):
                 for s in snippet:

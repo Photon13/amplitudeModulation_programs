@@ -43,9 +43,9 @@ for i in range( blockDict["n_blocks"] ):
     freefield.play()
 
     duration_block = len(blockDict[f"block{i}"]["nrSeqLeft"])
-    end = time.time() + duration_block
+
     while True:
-        if( time.time() >= end):
+        if( time.time() >= (time.time() + duration_block) ):
             break
     Sprecher_und_Procs.turnAllLedsOff()
     inp = input(Globals.COLORBLUE + "Continue with next block?" + Globals.COLOREND)
