@@ -142,7 +142,7 @@ badEpochs = mne.Epochs(
 )
 # ?
 
-blockEpochs.drop_bad(
+blockEpochs.drop_bad()
 # ?
 
 # block: 40 sec (20000 samples, 500 samples/sec)
