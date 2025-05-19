@@ -39,29 +39,20 @@ class Sprecher_und_Procs:
 
 
     @staticmethod
-    def writeToSingleSpeaker(speakerLedDict : dict, position : str, fams : List[float], nrSeq : List[float]) -> None:
-
-        speaker = speakerLedDict["speakers"][f"speaker{position.capitalize()}"]
-
-        freefield.write(  "volume",            Globals.VOLUME,                    ["RX81", "RX82"] ) 
-        freefield.write(  "n_snippets",        len(nrSeq),                        ["RX81", "RX82"] )
-        freefield.write( f"fam{position}",     fams,                              ["RX81", "RX82"] )
-        freefield.write( f"channel{position}", speaker.analog_channel,            speaker.analog_proc )
-        freefield.write( f"nrSeq{position}",   np.array(nrSeq).astype('float64'), speaker.analog_proc )
+    def writeToSingleSpeaker(speakerLedDict : dict, blockDict : dict, blockNr : int, position : str) -> None:
+        Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, blockNr, [f"{position.capitalize()}"] )
         
         
         
-
     @staticmethod
-    def writeToSpeakers_fromBlockDict(speakerLedDict : dict, blockDict : dict, blockNr : int) -> None:
+    def writeToSpeakers_fromBlockDict(speakerLedDict : dict, blockDict : dict, blockNr : int, positions : List[str] = ["Left", "Middle", "Right"] ) -> None:
 
         n_snippets = len( blockDict[f"block{blockNr}"]["nrSeqLeft"] )
 
         freefield.write( "n_snippets",   n_snippets,     ["RX81", "RX82"] )
         #freefield.write( "volume",       Globals.VOLUME, ["RX81", "RX82"] )
 
-        positionen = ["Left", "Middle", "Right"]
-        for pos in positionen:
+        for pos in positions:
             speaker =   speakerLedDict ["speakers"] [f"speaker{pos}"]
             fam =       blockDict      ["fams"]     [f"fam{pos}"]
             nrSeq =     blockDict      [f"block{blockNr}"] [f"nrSeq{pos}"]

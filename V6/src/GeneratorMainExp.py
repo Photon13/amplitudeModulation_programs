@@ -17,8 +17,9 @@ class GeneratorMainExp:
         # GeneratorPreTest.get_possAmpRiseList()
 
     @staticmethod
-    def get_nrSeqs(ampRise : float): #works but parameter is annoying
-
+    def get_nrSeqs(ampRiseRange : List[float]):
+        """ Give parameter ampRiseRange as [rise, rise] """
+        ampRise = ampRiseRange[0]
         # Create List of Lists, latter one containing shift and some sec no shift
         x : List[List[float]] = []
         for i in range(6):
@@ -77,7 +78,7 @@ class GeneratorMainExp:
 
 
     @staticmethod
-    def gen_blockdict(ampRise: str) -> dict:
+    def gen_blockdict(ampRiseRange : List[str]) -> dict:
         """ Generates blockDict containing fams ( adressable as blockDict["fams"]["fam<Position>"],
         targets ( adressable as blockDict["block<nr>"]["target"] ),
         and nrSeqs ( adressable as blockDict["block<nr>"]["nrSeq<Position>"] ) """
@@ -95,7 +96,7 @@ class GeneratorMainExp:
         targetList = GeneratorPreTest.gen_randomisedTargetList() 
         
         for i in range (Globals.N_BLOCKS):
-            nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs(ampRise)
+            nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs(ampRiseRange) #
             dictBlockX = {
                 "target" : targetList[i],
                 "nrSeqLeft" : nrSeqLeft,
@@ -108,7 +109,7 @@ class GeneratorMainExp:
     
 
 #TEST:
-#nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs(7.7)
+#nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorMainExp.get_nrSeqs([7.7, 7.7])
 #print("\n")
 #print(nrSeqLeft)
 #print(nrSeqMiddle)

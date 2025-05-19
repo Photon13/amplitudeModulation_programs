@@ -6,6 +6,7 @@ from GeneratorPreTest import GeneratorPreTest
 from Globals import Globals
 
 import time
+from typing import List
 import freefield
 
 COLORBLUE   = '\33[34m'
@@ -17,32 +18,36 @@ COLORYELLOW = '\033[33m'
 COLORFAT = '\033[1m'
 COLOREND = '\033[0m'
 
+# fct for checking spelling expType
+# preassign fams
+#   -> create blockdict, then change fams, then export json
 
-
-class init:
-
-    @staticmethod
-    def getBlockDict(expType : str, identifier, ampRise):
-        if(expType == "demo"):
-            return GeneratorMainExp.gen_blockdict(ampRise) # no json generation or reading
-        else:
-            return init.readJson_or_genNewBlockDict(expType, identifier, ampRise)
+class Init:
 
     @staticmethod
-    def readJson_or_genNewBlockDict(expType : str, identifier, ampRise):
-        exists = Dateien_und_Json.check_whetherJsonExists(f"{identifier}_{expType}.txt")
-        if( exists == True ):
-            blockDict = Dateien_und_Json.readJson(f"{identifier}_{expType}.txt")
-        else:
-            if(expType == "preTest"):
-                blockDict = GeneratorPreTest.gen_blockdict() # CAVE class
-            elif(expType == "mainExp"):
-                blockDict = GeneratorMainExp.gen_blockdict(ampRise) # CAVE class
-            Dateien_und_Json.export_toJson(blockDict, f"{identifier}_{expType}.txt")
-            blockDict = Dateien_und_Json.readJson(f"{identifier}_{expType}.txt")
+    def getBlockDict(expType : str, identifier : str, ampRiseRange : List[float]):
+        if(expType == "demo" or "testSingleSpeaker"):
+            blockDict = GeneratorMainExp.gen_blockdict(ampRiseRange) #
+
+        elif(expType == "preTest" or "mainExp"):
+            blockDict = Init.tryToReadJson(expType, identifier)
+            if(blockDict == None):
+                blockDict = GeneratorPreTest.gen_blockdict(ampRiseRange) #
+                Dateien_und_Json.export_toJson(blockDict, f"{identifier}_{expType}.txt")
+
         return blockDict
 
 
+    @staticmethod
+    def tryToReadJson(expType : str, identifier : str):
+        exists = Dateien_und_Json.check_whetherJsonExists(f"{identifier}_{expType}.txt")
+        if(exists == True):
+            blockDict = Dateien_und_Json.readJson(f"{identifier}_{expType}.txt")
+            return blockDict
+        else:
+            return None
+
+    #______________________________________________________________________________________________
 
     @staticmethod
     def stopUntilYes(message : str):
@@ -60,61 +65,77 @@ class init:
 
     @staticmethod
     def relayStart(timeToRelay : float) -> None:
-        init.stopUntilYes("Start?")
-        init.pauseProgrammForSomeTime(timeToRelay)
+        Init.stopUntilYes("Start?")
+        Init.pauseProgrammForSomeTime(timeToRelay)
 
-    
-
+    #______________________________________________________________________________________________
 
     @staticmethod
     def waitUntilBlockFinishes(blockDict : dict) -> None:
         duration_block = len(blockDict[f"block{i}"]["nrSeqLeft"])
-        init.pauseProgrammForSomeTime(duration_block)
+        Init.pauseProgrammForSomeTime(duration_block)
 
     @staticmethod
     def endBlock_and_startNewBlock(blockDict : dict) -> None:
-        init.waitUntilBlockFinishes(blockDict)
+        Init.waitUntilBlockFinishes(blockDict)
         Sprecher_und_Procs.turnAllLedsOff(speakerLedDict)
         if(expType == "mainExp"):
-            init.stopUntilYes("Continue with next block?")
+            Init.stopUntilYes("Continue with next block?")
         else: 
-            init.pauseProgrammForSomeTime(3.0)
+            Init.pauseProgrammForSomeTime(3.0)
 
 
 
-#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
-expTypes = ["demo", "preTest", "mainExp"]
-expType : str = "demo"                          #<<<<
 
-identifier : str = "testAll"
-#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§$$$$
+identifier : str = "teeest"                                      #<<<<
+
+expTypes = ["demo", "preTest", "mainExp", "testSingleSpeaker"]
+expType : str = "testSingleSpeaker"                              #<<<<
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 if(expType == "demo"):
-    ampRise : float = 0.4                   
+    ampRiseRange : List[float] = [0.4, 0.4]                  
 elif(expType == "preExp"):
-    ampRise : float = -666.0
+    ampRiseRange : List[float] = [0.1, 0.3]
 elif(expType == "mainExp"):
-    ampRise : float = 0.2                   #<<<<
+    ampRiseRange : List[float] = [0.2, 0.2]                      #<<<<
+
+elif(expType == "testSingleSpeaker"):
+    ampRiseRange : List[float] = [0.3, 0.3]
+    position = "Right"
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 
 
 
-blockDict = init.getBlockDict(expType, identifier, ampRise)
 
+blockDict = Init.getBlockDict(expType, identifier, ampRiseRange)
 Sprecher_und_Procs.initFF()
 speakerLedDict = Sprecher_und_Procs.pickSpeakersAndLeds()
-
 print( COLORRED + "Remember to start recording!" + COLOREND)
-init.relayStart(timeToRelay = 1)        #<<<<
+
+
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+Init.relayStart(timeToRelay = 1)            #<<<<
+#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
 
 for i in range( blockDict["n_blocks"] ):
-    Sprecher_und_Procs.turnTargetLedOn(speakerLedDict, target = blockDict[f"block{i}"]["target"])
-    Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, i)
+
+    if((expType == "testSingleSpeaker")):
+        Sprecher_und_Procs.turnTargetLedOn(speakerLedDict, position)
+        Sprecher_und_Procs.writeToSingleSpeaker(speakerLedDict, blockDict, i, position)
+    else:
+        Sprecher_und_Procs.turnTargetLedOn(speakerLedDict, blockDict[f"block{i}"]["target"])
+        Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, i)
+
     freefield.play()
 
     print(blockDict[f"block{i}"]["nrSeqLeft"])
     print(blockDict[f"block{i}"]["nrSeqMiddle"])
     print(blockDict[f"block{i}"]["nrSeqRight"])
 
-    init.endBlock_and_startNewBlock(blockDict)
+    Init.endBlock_and_startNewBlock(blockDict)
 
 

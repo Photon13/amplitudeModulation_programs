@@ -53,16 +53,24 @@ class GeneratorPreTest:
 
 
     @staticmethod
-    def get_possAmpRiseList() -> List[float]:
-        """ returns all possible amplitude values for nrseq in case a shift occurs;
-        to modify range of amplitude values, new values must be manually pasted;
-        current range is 110% to 130% amplitude """
-        # [0.1, 0.122, 0.144, 0.167, 0.189, 0.211, 0.233, 0.256, 0.278, 0.3]
-        # [0.15, 0.178, 0.206, 0.233, 0.261, 0.289, 0.317, 0.344, 0.372, 0.4]
-            # range 0.15 to 0.3 seems to be good
-        return 0.1, 0.117, 0.133, 0.15, 0.167, 0.183, 0.2, 0.217, 0.233, 0.25
+    def get_possAmpRiseList(ampRiseRange : List[float]) -> List[float]:
+        """ take range from start value to end value (both inclusive) and divide it
+        to get 10 values, that are equally spaced; print result, return None
+        default: start = 110% amplitude, end = 130% amplitude """
+        if( ampRiseRange[1] > ampRiseRange[0] ):
+            diff = ampRiseRange[1] - ampRiseRange[0]
+            k = ampRiseRange[0]
+        else: 
+            diff = ampRiseRange[0] - ampRiseRange[1]
+            k = ampRiseRange[1]
 
-
+        possAmpRiseList : List[float] = []
+        for i in range (10):
+            possAmpRiseList.append(round(k,3))
+            k += diff/9
+        # using log values does not seem to make a difference ... spaces stay the same
+        return possAmpRiseList
+    
 
     @staticmethod
     def get_nrSeqs():
@@ -71,37 +79,12 @@ class GeneratorPreTest:
         ampRise values are separated by some 0.0's """
 
         possAmpRiseList : List[float] = GeneratorPreTest.get_possAmpRiseList()
-
         values : List[float] = []
         for rise in possAmpRiseList:
             for i in range(10):
                 values.append(rise)
         random.shuffle(values) # works so far
     
-        nrSeqLeft : List[float] = []
-        nrSeqMiddle : List[float] = []
-        nrSeqRight : List[float] = []
-
-        #for value in values:
-        #    #pos = random.choice(["l", "m", "r"]) #maybe bad idea 
-        #    pos = "l" # shifts always left
-        #    length = random.choices([1,2,3], weights = [0.6, 0.3, 0.1], k=1)[0] # probabilities seem to be proper
-        #        # pro value ca: 6*2sec + 3*4sec + 1*6sec = 12sec + 12sec + 6sec = 30sec
-        #        # 10 values * 30 sec = 300 sec = 5 min (sic)
-        #
-        #        # old: weights = [0.5, 0.4, 0.1]
-        #
-        #    if( length == 1):
-        #        snippet =       [value, 0.0]
-        #        antiSnippet =   [0.0,   0.0]
-        #    elif( length == 2):
-        #        snippet =       [value, 0.0, 0.0, 0.0]
-        #        antiSnippet =   [0.0,   0.0, 0.0, 0.0]
-        #    elif( length == 3):
-        #        snippet =       [value, 0.0, 0.0, 0.0, 0.0, 0.0]
-        #        antiSnippet =   [0.0,   0.0, 0.0, 0.0, 0.0, 0.0]
-        #
-
 
         for value in values:
             pos = "l" # shifts always left
@@ -118,7 +101,9 @@ class GeneratorPreTest:
             # 18sec + 24sec = 42sec per value
             # for 7-8 values ca. 5 min-5.5min
 
-
+            nrSeqLeft : List[float] = []
+            nrSeqMiddle : List[float] = []
+            nrSeqRight : List[float] = []
 
             if( pos == "l"):
                 for s in snippet:
@@ -127,7 +112,7 @@ class GeneratorPreTest:
                     nrSeqMiddle.append(a)
                     nrSeqRight.append(a)
             
-            elif( pos == "m"): #keeping it here could safe work if using it was needed later
+            elif( pos == "m"): #keeping it here could safe work if other speakers shall be used
                 for s in snippet:
                     nrSeqMiddle.append(s)
                 for a in antiSnippet:
@@ -141,11 +126,7 @@ class GeneratorPreTest:
                     nrSeqLeft.append(a)
                     nrSeqMiddle.append(a)
 
-        #nrSeqLeft = np.array(nrSeqLeft).astype('float64') # ca. 247 secs
-        #nrSeqMiddle = np.array(nrSeqLeft).astype('float64')
-        #nrSeqRight = np.array(nrSeqLeft).astype('float64')
-
-        return nrSeqLeft, nrSeqMiddle, nrSeqRight # seems to work
+        return nrSeqLeft, nrSeqMiddle, nrSeqRight
 
 
 
@@ -168,7 +149,7 @@ class GeneratorPreTest:
         targetList = GeneratorPreTest.gen_randomisedTargetList() 
         
         for i in range (Globals.N_BLOCKS):
-            nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorPreTest.get_nrSeqs()
+            nrSeqLeft, nrSeqMiddle, nrSeqRight = GeneratorPreTest.get_nrSeqs() #
             dictBlockX = {
                 "target" : targetList[i],
                 "nrSeqLeft" : nrSeqLeft,

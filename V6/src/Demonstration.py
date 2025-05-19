@@ -20,8 +20,14 @@ speakerLedDict = Sprecher_und_Procs.pickSpeakersAndLeds()
 blockDict = GeneratorMainExp.gen_blockdict(ampRise) # only difference to MainExp -> drops blockDict after usage
 
 for i in range( blockDict["n_blocks"] ):
+    
     Sprecher_und_Procs.turnTargetLedOn(speakerLedDict, target = blockDict[f"block{i}"]["target"])
-    Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, i)
+    ####
+    target = "Right"
+    Sprecher_und_Procs.turnTargetLedOn(speakerLedDict, target)
+    Sprecher_und_Procs.writeToSingleSpeaker(speakerLedDict, blockDict, i, target)
+    #Sprecher_und_Procs.writeToSpeakers_fromBlockDict(speakerLedDict, blockDict, i)
+    ####
     freefield.play()
 
     duration_block = len(blockDict[f"block{i}"]["nrSeqLeft"])
@@ -31,3 +37,5 @@ for i in range( blockDict["n_blocks"] ):
             break
     Sprecher_und_Procs.turnAllLedsOff()
     inp = input(Globals.COLORBLUE + "Continue with next block?" + Globals.COLOREND)
+
+#LEDS NOT ON

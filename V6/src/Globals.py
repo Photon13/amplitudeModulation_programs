@@ -7,7 +7,7 @@ class Globals:
     LED_COORDINATES = [(0, -25), (0, 0), (0, 25)]
     SPEAKER_COORDINATES = [(-35, 0), (0, 0), (35, 0)]
 
-    FAM_A : float = 33.0
+    FAM_A : float = 31.0 #33.0
     FAM_B : float = 43.0
     FAM_C : float = 53.0
     FAM_LIST : List[float] = [FAM_A, FAM_B, FAM_C]
