@@ -6,6 +6,7 @@ from GeneratorPreTest import GeneratorPreTest
 from Globals import Globals
 
 import time
+import sys
 from typing import List
 import freefield
 
@@ -25,16 +26,24 @@ COLOREND = '\033[0m'
 class Init:
 
     @staticmethod
-    def getBlockDict(expType : str, identifier : str, ampRiseRange : List[float]):
+    def prepare(expType, identifier, ampRiseRange):
         if(expType == "demo" or "testSingleSpeaker"):
             blockDict = GeneratorMainExp.gen_blockdict(ampRiseRange) #
 
         elif(expType == "preTest" or "mainExp"):
             blockDict = Init.tryToReadJson(expType, identifier)
             if(blockDict == None):
+                print( COLORCYAN + "Generating new blockDict." + COLOREND)
                 blockDict = GeneratorPreTest.gen_blockdict(ampRiseRange) #
                 Dateien_und_Json.export_toJson(blockDict, f"{identifier}_{expType}.txt")
+            else:
+                print( COLORCYAN + "BlockDict fetched from memory." + COLOREND)
 
+        else:
+            print( COLORRED + "Invalid expType!" + COLOREND)
+            sys.exit()
+
+        print( COLORRED + "Remember to start recording!" + COLOREND)
         return blockDict
 
 
@@ -108,13 +117,9 @@ elif(expType == "testSingleSpeaker"):
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 
 
-
-
-blockDict = Init.getBlockDict(expType, identifier, ampRiseRange)
 Sprecher_und_Procs.initFF()
 speakerLedDict = Sprecher_und_Procs.pickSpeakersAndLeds()
-print( COLORRED + "Remember to start recording!" + COLOREND)
-
+blockDict= Init.prepare(expType, identifier, ampRiseRange)
 
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 Init.relayStart(timeToRelay = 1)            #<<<<
