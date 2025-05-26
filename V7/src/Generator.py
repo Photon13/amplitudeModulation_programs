@@ -1,9 +1,10 @@
 from typing import List
 import random
 
+
 class Generator:
 
-    @staticmethod
+    @staticmethod #works
     def generate_targetList():
         targetList : List[str] = []
         possTargets = ["left", "middle", "right", "both"]
@@ -12,22 +13,23 @@ class Generator:
         random.shuffle(targetList)
         return targetList
 
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-    @staticmethod
-    def generate_nrSeqs_mainExp(ampRise):
+    @staticmethod #works
+    def generate_nrSeqs_mainExp(ampRise : float) -> List:
         """ returns [nrSeqLeft, nrSeqMiddle, nrSeqRight] """
-        listOfLists = [ [], [], [] ]
+        listOfLists = [[], [], []]
 
         nList = []
-        nList.extend( [3] * (30*0.6) ) #18*3sec = 54sec
-        nList.extend( [6] * (30*0.4) ) #12*6sec = 72 sec
-        #total 90sec
+        nList.extend( [3] * int(30*0.6) ) #18*3sec = 54sec
+        nList.extend( [6] * int(30*0.4) ) #12*6sec = 72 sec
+        #total 90sec # total length = 126 ?????????
         random.shuffle(nList)
 
+        
         for n in nList:
             random.shuffle(listOfLists)
-            listOfLists[0].extend(ampRise)
+            listOfLists[0].append(ampRise)
             listOfLists[0].extend(Generator.generateListOfZeros(n-1))
             listOfLists[1].extend(Generator.generateListOfZeros(n))
             listOfLists[2].extend(Generator.generateListOfZeros(n))
@@ -36,14 +38,14 @@ class Generator:
         return listOfLists #[nrSeqLeft, nrSeqMiddle, nrSeqRight]
 
 
-    @staticmethod
-    def generate_nrSeqs_preTest(ampRiseRange : List[float]):
+    @staticmethod #works
+    def generate_nrSeqs_preTest(ampRiseRange : List[float]) -> List:
         listWithShifts = []
         
         nList = []
-        nList.extend( [3] * (80*0.6) ) #48*3sec
-        nList.extend( [6] * (80*0.4) ) #32*6sec
-        #total 336sec
+        nList.extend( [3] * int(80*0.6) ) #48*3sec
+        nList.extend( [6] * int(80*0.4) ) #32*6sec
+        #total 336sec #sic
         random.shuffle(nList)
 
         ampRiseList = Generator.generate_valuesInRange( ampRiseRange, n_values=8 )
@@ -51,19 +53,21 @@ class Generator:
         random.shuffle(ampRiseList)
 
         for n in nList:
-            listWithShifts.extend(ampRiseList[n])
+            listWithShifts.append(ampRiseList[n])
             listWithShifts.extend(Generator.generateListOfZeros(n-1))
 
         listWithZeros = Generator.generateListOfZeros( len(listWithShifts) )
-        return [listWithShifts, listWithZeros, listWithZeros]
+        return [listWithShifts, listWithZeros]
 
-
-
+    #---------------------------------------------------------------------------------
+    
     @staticmethod
     def generateListOfZeros(length : int) -> List[float]:
         result = []
         result.extend([0.0]*length)
         return result
+
+    #---------------------------------------------------------------------------------
 
     @staticmethod
     def duplicateListEntries(list : List, n : int) -> List: #works
@@ -73,15 +77,15 @@ class Generator:
             result.extend( [entry]*n )
         return result
 
-
+    #---------------------------------------------------------------------------------
 
     @staticmethod
     def generate_valuesInRange(borders : List[float], n_values : int):
-        result : List[float]
+        result : List[float] = []
         result.append( min(borders) )            # first entry is lower border
         difference = max(borders)-min(borders)
         step = difference/(n_values-1)           # using log values does not seem to make a difference ... spaces stay the same
-        for i in range( n_values-1 ):             # -1 because first entry already in list
+        for i in range( n_values-1 ):            # -1 because first entry already in list
             entry = result[-1] + step            # List[-1] returns last value
             result.append( round(entry,3) )
         return result
@@ -89,5 +93,17 @@ class Generator:
 
 
 
-#print(duplicateListEntries(["huhu"], 3))
+#listOfLists = Generator.generate_nrSeqs_mainExp(0.3)
+#for i in range(0,8):
+#    print (listOfLists[0][i], end = " ")
+#print("\n")
+#for j in range(0,8):
+#    print (listOfLists[1][j], end = " ")
+#print("\n")
+#for k in range(0,8):
+#    print (listOfLists[2][k], end = " ")
+
+#print(len(listOfLists[1]))
+#print(len(listOfLists[1]))
+#print(len(listOfLists[2]))
 

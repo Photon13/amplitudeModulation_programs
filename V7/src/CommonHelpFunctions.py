@@ -2,7 +2,7 @@ import time
 
 class CommonHelpFunctions:
 
-    @staticmethod
+    @staticmethod #works
     def waitForXSeconds(deltaT : int) -> None:
         stopTime = time.time() + deltaT
         while True:
