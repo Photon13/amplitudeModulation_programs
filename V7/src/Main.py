@@ -19,13 +19,15 @@ from Fams import Fams
 from typing import List
 import re
 
+import freefield
+
 
 class Main:
 
     identifier : str = "participant_0" # CAVE: underscore!
     expType : str =    "testLeds"
 
-    ampRiseRange : List[float] = [0.15, 0.3]
+    ampRiseRange : List[float] = [0.15, 0.3] # all inclusive :D
     ampRiseValue : float = 0.3
     
 
@@ -68,10 +70,13 @@ class Main:
     def testLeds() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
         CommonHelpFunctions.waitForXSeconds(5)
         targets = ["left", "middle", "right", "both"]
-        for t in targets:
+        for i in range(len(targets)):
+            t = targets[i]
+        #for t in targets:
             Freifeld.turnTargetLedOn(t)
-            CommonHelpFunctions.waitForXSeconds(1)
+            CommonHelpFunctions.waitForXSeconds(2)
             Freifeld.turnAllLedsOff()
+            CommonHelpFunctions.waitForXSeconds(2)
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
 
@@ -149,9 +154,6 @@ class Main:
 
 
 
-
-
-
 #-------------------#
 Freifeld.init_FF()  #
 #-----------------------------------------------#
@@ -172,3 +174,5 @@ elif( Main.expType == "testSingleSpeaker"):     #
 elif( Main.expType == "testLeds"):              #
     Main.testLeds()                             #
 #-----------------------------------------------#
+
+freefield.halt()

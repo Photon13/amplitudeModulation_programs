@@ -26,7 +26,6 @@ class Generator:
         #total 90sec # total length = 126 ?????????
         random.shuffle(nList)
 
-        
         for n in nList:
             random.shuffle(listOfLists)
             listOfLists[0].append(ampRise)
@@ -61,7 +60,7 @@ class Generator:
 
     #---------------------------------------------------------------------------------
     
-    @staticmethod
+    @staticmethod #works
     def generateListOfZeros(length : int) -> List[float]:
         result = []
         result.extend([0.0]*length)
@@ -69,7 +68,7 @@ class Generator:
 
     #---------------------------------------------------------------------------------
 
-    @staticmethod
+    @staticmethod #works
     def duplicateListEntries(list : List, n : int) -> List: #works
         """ result contains each value of original list n-times"""
         result : List = []
@@ -79,7 +78,7 @@ class Generator:
 
     #---------------------------------------------------------------------------------
 
-    @staticmethod
+    @staticmethod #works
     def generate_valuesInRange(borders : List[float], n_values : int):
         result : List[float] = []
         result.append( min(borders) )            # first entry is lower border
@@ -88,7 +87,7 @@ class Generator:
         for i in range( n_values-1 ):            # -1 because first entry already in list
             entry = result[-1] + step            # List[-1] returns last value
             result.append( round(entry,3) )
-        return result
+        return result # all values equally spaced
     
 
 

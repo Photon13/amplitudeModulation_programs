@@ -58,8 +58,29 @@ class Led:
 
 
 
-    
 
 
 
+###test:
+from Paths import Paths
+proc_list = [['RP2', 'RP2', Paths.PATH_RCX],
+             ['RX81', 'RX8', Paths.PATH_RCX],
+             ['RX82', 'RX8', Paths.PATH_RCX]]
 
+freefield.initialize('dome', device = proc_list)
+#leds = leds = freefield.pick_speakers(Globals.LED_COORDINATES)
+
+Led.turnOn_targetLed_forTimeIntervall("left", 1)
+Led.turnOn_targetLed_forTimeIntervall("middle", 1)
+Led.turnOn_targetLed_forTimeIntervall("right", 1)
+
+#print(leds[0].digital_channel) #4
+#print(leds[1].digital_channel) #8
+#print(leds[2].digital_channel) #16
+
+#[led] = freefield.pick_speakers(Globals.LED_COORDINATES[0])
+#print(led.digital_channel)
+#[led] = freefield.pick_speakers(Globals.LED_COORDINATES[1])
+#print(led.digital_channel)
+#[led] = freefield.pick_speakers(Globals.LED_COORDINATES[2])
+#print(led.digital_channel)

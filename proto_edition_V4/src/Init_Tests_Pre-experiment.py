@@ -52,7 +52,7 @@ freefield.initialize('dome', device = proc_list)
 
 
 
-#Tests.test_allLeds()
+Tests.test_allLeds()
 
 #run_block("right")
 #run_block("left")
