@@ -40,7 +40,7 @@ class Freifeld:
         freefield.write( f"channel{position.capitalize()}",    speaker.analog_channel,             speaker.analog_proc )
         freefield.write( f"fam{position.capitalize()}",        fam,                                ["RX81", "RX82"]    )
         freefield.write( f"nrSeq{position.capitalize()}",      np.array(nrSeq).astype('float64'),  speaker.analog_proc )
-        freefield.write( "blockLengthSec",                     len(nrSeq),                         ["RX81", "RX82"]    )
+        freefield.write(  "n_secs",                            len(nrSeq),                         ["RX81", "RX82"]    )
 
 
     @staticmethod
@@ -58,7 +58,7 @@ class Freifeld:
     
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    @staticmethod
+    @staticmethod #spelling correct
     def turnLedOn(position : str) -> None:
         ledCoordinates = Freifeld.COORDINATES_DICT[f"COORDINATES_LED_{position.upper()}"]
         [led] = freefield.pick_speakers(ledCoordinates)

@@ -1,7 +1,9 @@
 from freefield import freefield
+from pathlib import Path
+import os
 
 #from CommonHelpFunctions import CommonHelpFunctions #works
-#from Dateien import Dateien #works
+from Dateien import Dateien #works
 #from Fams import Fams #works
 from Generator import Generator #works
 
@@ -10,6 +12,7 @@ from Freifeld import Freifeld
 #from Leds import Leds
 #from Main import Main
 
+#_________________________________________________________________________
 
 #testLeds: issue:
 #Bits leuchten, aber Leds selbst nicht
@@ -20,9 +23,26 @@ from Freifeld import Freifeld
 #x="tag"
 #print(f"hello world{x}".capitalize())
 
+
+
+
+# !!!! MONKEY PATCH !!!! #
+Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx" #_test
+  # does actually override Freifeld.PATH_RCX for the whole runtime (-> also the following Freifeld.init_FF() uses the patched value))
+# !!!! MONKEY PATCH !!!! #
+
+
 Freifeld.init_FF()
-Freifeld.writeToSpeaker("left", 30.0, Generator.generateListOfZeros(10))
-freefield.play()
+
+
+
+#Freifeld.turnTargetLedOn("left")
+
+Freifeld.writeToSpeaker("left", 33.3, [0.3,0.4,0.5,0.0]) #?
+#Freifeld.writeToSpeaker("left", 30.0, Generator.generateListOfZeros(10))
+#freefield.play()
+
+
 """
 Exception has occurred: AttributeError
 'NoneType' object has no attribute 'SetTagVal'
