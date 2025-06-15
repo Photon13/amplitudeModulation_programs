@@ -17,21 +17,23 @@ class Generator:
 
     @staticmethod #works
     def generate_nrSeqs_mainExp(ampRise : float) -> List:
+        # length list correct
+        # no simultaneous shifts
         """ returns [nrSeqLeft, nrSeqMiddle, nrSeqRight] """
+    
+        dreiSechsList = []
+        dreiSechsList.extend( [3] * 16 ) # 2/3
+        dreiSechsList.extend( [6] * 8  ) # 1/3
+        #total 96sec per block
+        random.shuffle(dreiSechsList)
+
         listOfLists = [[], [], []]
-
-        nList = []
-        nList.extend( [3] * int(30*0.6) ) #18*3sec = 54sec
-        nList.extend( [6] * int(30*0.4) ) #12*6sec = 72 sec
-        #total 90sec # total length = 126 ?????????
-        random.shuffle(nList)
-
-        for n in nList:
+        for i in range( len(dreiSechsList) ):
             random.shuffle(listOfLists)
-            listOfLists[0].append(ampRise)
-            listOfLists[0].extend(Generator.generateListOfZeros(n-1))
-            listOfLists[1].extend(Generator.generateListOfZeros(n))
-            listOfLists[2].extend(Generator.generateListOfZeros(n))
+            listOfLists[0].append( ampRise )
+            listOfLists[0].extend( Generator.generateListOfZeros( dreiSechsList[i] - 1) )
+            listOfLists[1].extend( Generator.generateListOfZeros( dreiSechsList[i]) )
+            listOfLists[2].extend( Generator.generateListOfZeros( dreiSechsList[i]) )
 
         random.shuffle(listOfLists)
         return listOfLists #[nrSeqLeft, nrSeqMiddle, nrSeqRight]
@@ -39,21 +41,24 @@ class Generator:
 
     @staticmethod #works
     def generate_nrSeqs_preTest(ampRiseRange : List[float]) -> List:
-        listWithShifts = []
-        
-        nList = []
-        nList.extend( [3] * int(80*0.6) ) #48*3sec
-        nList.extend( [6] * int(80*0.4) ) #32*6sec
+        # length list correct
+        # n occurrences per value correct
+
+        dreiSechsList = []
+        dreiSechsList.extend( [3] * int(80*0.6) ) #48*3sec
+        dreiSechsList.extend( [6] * int(80*0.4) ) #32*6sec
         #total 336sec #sic
-        random.shuffle(nList)
+        random.shuffle(dreiSechsList)
 
         ampRiseList = Generator.generate_valuesInRange( ampRiseRange, n_values=8 )
         ampRiseList = Generator.duplicateListEntries( ampRiseList, n=10 )
         random.shuffle(ampRiseList)
 
-        for n in nList:
-            listWithShifts.append(ampRiseList[n])
-            listWithShifts.extend(Generator.generateListOfZeros(n-1))
+        listWithShifts = []
+        for i in range( len(ampRiseList) ):
+            listWithShifts.append(ampRiseList[i])
+            n_zeros = dreiSechsList[i] -1
+            listWithShifts.extend(Generator.generateListOfZeros(n_zeros))
 
         listWithZeros = Generator.generateListOfZeros( len(listWithShifts) )
         return [listWithShifts, listWithZeros]

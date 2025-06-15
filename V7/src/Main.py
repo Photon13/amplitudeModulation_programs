@@ -1,14 +1,4 @@
-#zbus trigger needed for test leds?
 # txt generation for pretest scores
-
-#review length mainExp again -> change to 90 secs??
-
-# test length expTypes
-# measure volume dB again
-
-# what if pretest shall be done twice? -> keep fams somehow (?)
-
-# fix beating from fams -> probably the 150 ms from rcx are causing this
 
 from Freifeld import Freifeld
 from CommonHelpFunctions import CommonHelpFunctions
@@ -17,14 +7,14 @@ from Dateien import Dateien
 from Fams import Fams
 
 from typing import List
-import re
-
 import freefield
+
+
 
 
 class Main:
 
-    identifier : str = "participant_0" # CAVE: underscore!
+    identifier : str = "participant_test2" # CAVE: underscore!
     expType : str =    "testLeds"
 
     ampRiseRange : List[float] = [0.15, 0.3] # all inclusive :D
@@ -37,9 +27,12 @@ class Main:
     # \\\ HELP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|
 
 
+
+
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 # >>>>> --------------------------------------------------------------------------- # >>>>> 
 
-    @staticmethod
+    @staticmethod #works
     def tryToUsePreAssignedFams() -> List[float]:
         if Main.identifier in Main.validParticipants:
             famsLMR : List[float] = Fams.famCombinationsDictLMR[Main.identifier]
@@ -47,14 +40,23 @@ class Main:
             famsLMR : List[float] = [Fams.famA, Fams.famB, Fams.famC]
         return famsLMR
 
-    @staticmethod
-    def writeToLogs():
-        Dateien.comment()
+    @staticmethod #works
+    def tryToComment():
+        while True:
+            inp1 = input(Dateien.COLORCYAN + "Create Comment? [yes/no]: " + Dateien.COLOREND)
+            if( inp1.lower() == "yes"):
+                Dateien.comment(Main.identifier, Main.expType)
+                break
+            elif( inp1.lower() == "no"):
+                break
 
-# >>>>> --------------------------------------------------------------------------- # >>>>>
-    
-    @staticmethod #works #126sec
-    def testSingleSpeaker() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+# >>>>> --------------------------------------------------------------------------- # >>>>> 
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+    @staticmethod #works 
+    def testSingleSpeaker() -> None: 
+        # tested online: length correct (126sec)
+
         for i in range( 1 ): # n repeats
             nrSeq = Generator.generate_nrSeqs_mainExp(Main.ampRiseValue)[0]
 
@@ -63,11 +65,10 @@ class Main:
             CommonHelpFunctions.waitForXSeconds( len(nrSeq) )
 
             CommonHelpFunctions.waitForXSeconds(2)
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
-
+        
 
     @staticmethod
-    def testLeds() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+    def testLeds() -> None: 
         CommonHelpFunctions.waitForXSeconds(5)
         targets = ["left", "middle", "right", "both"]
         for i in range(len(targets)):
@@ -77,12 +78,10 @@ class Main:
             CommonHelpFunctions.waitForXSeconds(2)
             Freifeld.turnAllLedsOff()
             CommonHelpFunctions.waitForXSeconds(2)
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
-
-
+ 
 
     @staticmethod
-    def demo() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+    def demo() -> None: 
         famsLMR = [Fams.famA, Fams.famB, Fams.famC]
         for i in range( 4 ): # n repeats
             nrSeqsLMR = Generator.generate_nrSeqs_mainExp(Main.ampRiseValue)
@@ -92,12 +91,13 @@ class Main:
             CommonHelpFunctions.waitForXSeconds( len(nrSeqsLMR[0]) )
 
             CommonHelpFunctions.waitForXSeconds(2)
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
-
-
+        
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
     @staticmethod
-    def preTest() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+    def preTest() -> None:
+        # tested offline: length block correct (336sec)
+          
         blockDict : dict = {}
         fileName : str = f"{Main.identifier}_blockDict_preTest.txt"
         
@@ -106,20 +106,24 @@ class Main:
         #__________________________________________________________________________#
         
         [nrSeq, zeroSeq]    = Generator.generate_nrSeqs_preTest( Main.ampRiseRange )
+        print(nrSeq) ###
         blockDict["nrSeq"]  = nrSeq 
         Dateien.write_Json( fileName, blockDict )
         #__________________________________________________________________________#
         
         Freifeld.writeToAllSpeakers( blockDict["famsLMR"], [nrSeq, zeroSeq, zeroSeq] )
         Freifeld.sendTrigger_afterShortDelay()
-
         CommonHelpFunctions.waitForXSeconds( len(nrSeq) )
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+        Main.tryToComment()
+        
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
     
-    
-    
-    @staticmethod
-    def mainExp() -> None: #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+    @staticmethod 
+    def mainExp() -> None: 
+        # tested offline: created blockDict correct
+        #                 length block correct (96sec)
+
         blockDict : dict = {}
         fileName : str = f"{Main.identifier}_blockDict_mainExp.txt"
         
@@ -138,7 +142,7 @@ class Main:
                                              "nrSeqMidde" : nrSeqsLMR[1], 
                                              "nrSeqRight" : nrSeqsLMR[2]   
             }
-            Dateien.write_Json( fileName, blockDict )
+            Dateien.write_Json( fileName, blockDict ) #override!
             #_______________________________________________________________________#
             
             Freifeld.turnTargetLedOn( blockDict["targetList"][blockNr] )
@@ -147,32 +151,30 @@ class Main:
 
             CommonHelpFunctions.waitForXSeconds( len(nrSeqsLMR[0]) )
             Freifeld.turnAllLedsOff()
-            
-            CommonHelpFunctions.waitForXSeconds(2)
-            inp : str = input("Continue with next block? [any]") ###
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
+            Main.tryToComment()
+            inp : str = input("Continue with next block? [any]: ") ###
+        
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
 
 #-------------------#
 Freifeld.init_FF()  #
-#-----------------------------------------------#
-if( Main.expType == "preTest" ):                #
-    Main.preTest()                              #
-    Main.writeToLogs()                          #
-                                                #
-elif( Main.expType == "mainExp" ):              #
-    Main.mainExp()                              #
-    Main.writeToLogs()                          #
-                                                #
-elif( Main.expType == "demo"):                  #
-    Main.demo()                                 #
-                                                #
-elif( Main.expType == "testSingleSpeaker"):     #
-    Main.testSingleSpeaker()                    #
-                                                #
-elif( Main.expType == "testLeds"):              #
-    Main.testLeds()                             #
-#-----------------------------------------------#
-
-freefield.halt()
+#---------------------------------------------------#
+if( Main.expType == "preTest" ):                    #
+    Main.preTest()                                  #
+                                                    #
+elif( Main.expType == "mainExp" ):                  #
+    Main.mainExp()                                  #
+                                                    #
+elif( Main.expType == "demo"):                      #
+    Main.demo()                                     #
+                                                    #
+elif( Main.expType == "testSingleSpeaker"):         #
+    Main.testSingleSpeaker()                        #
+                                                    #
+elif( Main.expType == "testLeds"):                  #
+    Main.testLeds()                                 #
+#---------------------------------------------------#
+freefield.halt()    #
+#-------------------#
