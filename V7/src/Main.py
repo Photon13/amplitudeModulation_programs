@@ -8,6 +8,8 @@ from Fams import Fams
 
 from typing import List
 import freefield
+from pathlib import Path
+import os
 
 
 
@@ -156,6 +158,15 @@ class Main:
             inp : str = input("Continue with next block? [any]: ") ###
         
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+# !!!! MONKEY PATCH !!!! #
+Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7.rcx" #_test
+#Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx" #_test
+  # does actually override Freifeld.PATH_RCX for the whole runtime (-> also the following Freifeld.init_FF() uses the patched value))
+# !!!! MONKEY PATCH !!!! #
+
+#bei V7_test.rcx blinkt bit 2 (bei nutzung rx81 oder rx82)
+# bei V7_rcx blinken korrekte bits (bei nutzung rx81 oder rx82)
 
 
 #-------------------#
