@@ -19,7 +19,7 @@ class Freifeld:
         "COORDINATES_LED_RIGHT"      :  (0, 25)
     }
 
-    PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7.rcx"
+    PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx"
 
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -40,11 +40,11 @@ class Freifeld:
         freefield.write( f"channel{position.capitalize()}",    speaker.analog_channel,             speaker.analog_proc )
         freefield.write( f"fam{position.capitalize()}",        fam,                                ["RX81", "RX82"]    )
         freefield.write( f"nrSeq{position.capitalize()}",      np.array(nrSeq).astype('float64'),  speaker.analog_proc )
-        freefield.write(  "n_secs",                            len(nrSeq),                         ["RX81", "RX82"]    )
+        freefield.write( "n_secs", len(nrSeq), ["RX81", "RX82"] )
 
 
     @staticmethod
-    def writeToAllSpeakers(famsLMR : List[float], nrSeqsLMR : List[float]):
+    def writeToAllSpeakers(famsLMR : List[float], nrSeqsLMR : List[List]):
         positions : List[str] = ["Left", "Middle", "Right"]
         for i in range(3):
             Freifeld.writeToSpeaker( positions[i], famsLMR[i], nrSeqsLMR[i] )

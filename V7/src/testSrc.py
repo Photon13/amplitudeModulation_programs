@@ -4,48 +4,42 @@ import os
 
 #from CommonHelpFunctions import CommonHelpFunctions #works
 #from Fams import Fams #works
-from Dateien import Dateien #works
+#from Dateien import Dateien #works
 from Generator import Generator #works
-from Main import Main
+#from Main import Main
 
 
-from Freifeld import Freifeld
+#from Freifeld import Freifeld
 #from Leds import Leds
 
 
-#________________________________________________________________________
-
-# !!!! MONKEY PATCH !!!! #
-Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx" #_test
-  # does actually override Freifeld.PATH_RCX for the whole runtime (-> also the following Freifeld.init_FF() uses the patched value))
-# !!!! MONKEY PATCH !!!! #
-
-
-Freifeld.init_FF()
-
-#Freifeld.turnTargetLedOn("left")
-
-Freifeld.writeToSpeaker("left", 33.3, [0.3,0.4,0.5,0.0]) #?
-#Freifeld.writeToSpeaker("left", 30.0, Generator.generateListOfZeros(10))
-#freefield.play()
+#nrSeq = Generator.generate_nrSeq_withShifts(20, ampRiseValue = 7.0)
+#print(nrSeq)
+#print("Breakpoint")
 
 
 
+
+
+
+
+"""
 #_________________________________________________________________________
 
 #testLeds: issue:
 #Bits leuchten, aber Leds selbst nicht
 # Digital I/O stecker drin auch schlecht, Leds sind dann permanent an (re,mi und oben)
 
-#_______________________________________________________________________
+#________________________________________________________________________
 
+# !!!! MONKEY PATCH !!!! #
+Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7.rcx" #_test
+#Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx" #_test
+  # does actually override Freifeld.PATH_RCX for the whole runtime (-> also the following Freifeld.init_FF() uses the patched value))
+# !!!! MONKEY PATCH !!!! #
 
-"""
-Exception has occurred: AttributeError
-'NoneType' object has no attribute 'SetTagVal'
-  File "C:\projects\Maik_R_F_K\Biologie Bachelor\Bachelorarbeit\amplitudeModulation\amplitudeModulation_programs\V7\src\Freifeld.py", line 44, in writeToSpeaker
-    freefield.write( f"channel{position.capitalize()}",    speaker.analog_channel,             speaker.analog_proc )
-  File "C:\projects\Maik_R_F_K\Biologie Bachelor\Bachelorarbeit\amplitudeModulation\amplitudeModulation_programs\V7\src\testSrc.py", line 24, in <module>
-    Freifeld.writeToSpeaker("left", 30.0, Generator.generateListOfZeros(10))
-AttributeError: 'NoneType' object has no attribute 'SetTagVal'
+#bei V7_test.rcx blinkt bit 2 (bei nutzung rx81 oder rx82)
+# bei V7_rcx blinken korrekte bits (bei nutzung rx81 oder rx82)
+
+#________________________________________________________________________
 """

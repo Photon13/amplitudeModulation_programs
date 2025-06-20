@@ -16,16 +16,16 @@ import os
 
 class Main:
 
-    identifier : str = "participant_test2" # CAVE: underscore!
-    expType : str =    "testLeds"
+    identifier : str = "preTestTest1" # CAVE: underscore!
+    expType : str =    "demo"
 
-    ampRiseRange : List[float] = [0.15, 0.3] # all inclusive :D
-    ampRiseValue : float = 0.3
+    ampRiseRange : List[float] = [0.15, 0.4] # all inclusive :D
+    ampRiseValue : float = 0.4
     
 
     # \\\ HELP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|
     validParticipants : List[str] = ["participant_1", "participant_2", "participant_3", "participant_4" ]
-    validExpTypes : List[str] =     ["preTest", "mainExp", "demo", "testSingleSpeaker", "testLeds"      ]
+    validExpTypes : List[str] =     ["preTest", "mainExp", "demo", "testAllSpeakers", "testSingleSpeaker", "testLeds"]
     # \\\ HELP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|
 
 
@@ -55,50 +55,57 @@ class Main:
 # >>>>> --------------------------------------------------------------------------- # >>>>> 
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
-    @staticmethod #works 
+    @staticmethod #works
     def testSingleSpeaker() -> None: 
-        # tested online: length correct (126sec)
+        # tested online: duration correct
+        zeroSeq = Generator.generateListOfZeros(20)
+        Freifeld.writeToSpeaker( "Left", Fams.famB, zeroSeq )
+        Freifeld.sendTrigger_afterShortDelay()
+        CommonHelpFunctions.waitForXSeconds( len(zeroSeq) )
 
-        for i in range( 1 ): # n repeats
-            nrSeq = Generator.generate_nrSeqs_mainExp(Main.ampRiseValue)[0]
-
-            Freifeld.writeToSpeaker( "Left", Fams.famB, nrSeq )
-            Freifeld.sendTrigger_afterShortDelay()
-            CommonHelpFunctions.waitForXSeconds( len(nrSeq) )
-
-            CommonHelpFunctions.waitForXSeconds(2)
+    @staticmethod #works
+    def testAllSpeakers() -> None: 
+        # tested online: duration correct
+        zeroSeq = Generator.generateListOfZeros(20)
+        Freifeld.writeToSpeaker( "Left",   Fams.famA, zeroSeq )
+        Freifeld.writeToSpeaker( "Middle", Fams.famB, zeroSeq )
+        Freifeld.writeToSpeaker( "Right",  Fams.famC, zeroSeq )
+        Freifeld.sendTrigger_afterShortDelay()
+        CommonHelpFunctions.waitForXSeconds( len(zeroSeq) )
         
 
     @staticmethod
     def testLeds() -> None: 
-        CommonHelpFunctions.waitForXSeconds(5)
+        CommonHelpFunctions.waitForXSeconds(0)
         targets = ["left", "middle", "right", "both"]
         for i in range(len(targets)):
             t = targets[i]
-        #for t in targets:
             Freifeld.turnTargetLedOn(t)
             CommonHelpFunctions.waitForXSeconds(2)
             Freifeld.turnAllLedsOff()
             CommonHelpFunctions.waitForXSeconds(2)
  
 
-    @staticmethod
+    @staticmethod #works
     def demo() -> None: 
-        famsLMR = [Fams.famA, Fams.famB, Fams.famC]
-        for i in range( 4 ): # n repeats
-            nrSeqsLMR = Generator.generate_nrSeqs_mainExp(Main.ampRiseValue)
+        # tested online: duration correct
+        duration = 20
+        nrSeq = Generator.generate_nrSeq_withShifts(duration, Main.ampRiseValue)
+        zeroSeq = Generator.generateListOfZeros( len(nrSeq) )
 
-            Freifeld.writeToAllSpeakers(famsLMR, nrSeqsLMR)
-            Freifeld.sendTrigger_afterShortDelay()
-            CommonHelpFunctions.waitForXSeconds( len(nrSeqsLMR[0]) )
+        Freifeld.writeToSpeaker( "Left",   Fams.famA, zeroSeq )
+        Freifeld.writeToSpeaker( "Middle", Fams.famB, zeroSeq )
+        Freifeld.writeToSpeaker( "Right",  Fams.famC, zeroSeq )
+    
+        Freifeld.sendTrigger_afterShortDelay()
+        CommonHelpFunctions.waitForXSeconds( len(nrSeq) )
 
-            CommonHelpFunctions.waitForXSeconds(2)
         
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
-    @staticmethod
+    @staticmethod #works
     def preTest() -> None:
-        # tested offline: length block correct (336sec)
+        # tested online: duration correct
           
         blockDict : dict = {}
         fileName : str = f"{Main.identifier}_blockDict_preTest.txt"
@@ -107,8 +114,10 @@ class Main:
         blockDict["famsLMR"]       = Main.tryToUsePreAssignedFams()
         #__________________________________________________________________________#
         
-        [nrSeq, zeroSeq]    = Generator.generate_nrSeqs_preTest( Main.ampRiseRange )
+        nrSeq   = Generator.generate_nrSeq_preTest( Main.ampRiseRange )
+        zeroSeq = Generator.generateListOfZeros( len(nrSeq) )
         print(nrSeq) ###
+
         blockDict["nrSeq"]  = nrSeq 
         Dateien.write_Json( fileName, blockDict )
         #__________________________________________________________________________#
@@ -159,15 +168,6 @@ class Main:
         
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
-# !!!! MONKEY PATCH !!!! #
-Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7.rcx" #_test
-#Freifeld.PATH_RCX = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx" #_test
-  # does actually override Freifeld.PATH_RCX for the whole runtime (-> also the following Freifeld.init_FF() uses the patched value))
-# !!!! MONKEY PATCH !!!! #
-
-#bei V7_test.rcx blinkt bit 2 (bei nutzung rx81 oder rx82)
-# bei V7_rcx blinken korrekte bits (bei nutzung rx81 oder rx82)
-
 
 #-------------------#
 Freifeld.init_FF()  #
@@ -183,6 +183,9 @@ elif( Main.expType == "demo"):                      #
                                                     #
 elif( Main.expType == "testSingleSpeaker"):         #
     Main.testSingleSpeaker()                        #
+                                                    #
+elif( Main.expType == "testAllSpeakers"):           #
+    Main.testAllSpeakers()                          #
                                                     #
 elif( Main.expType == "testLeds"):                  #
     Main.testLeds()                                 #

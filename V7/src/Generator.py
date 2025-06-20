@@ -40,7 +40,7 @@ class Generator:
 
 
     @staticmethod #works
-    def generate_nrSeqs_preTest(ampRiseRange : List[float]) -> List:
+    def generate_nrSeq_preTest(ampRiseRange : List[float]) -> List:
         # length list correct
         # n occurrences per value correct
 
@@ -60,10 +60,23 @@ class Generator:
             n_zeros = dreiSechsList[i] -1
             listWithShifts.extend(Generator.generateListOfZeros(n_zeros))
 
-        listWithZeros = Generator.generateListOfZeros( len(listWithShifts) )
-        return [listWithShifts, listWithZeros]
+        return listWithShifts
 
     #---------------------------------------------------------------------------------
+    
+    @staticmethod 
+    def generate_nrSeq_withShifts(length : int, ampRiseValue : int) -> List[float]:
+        # example output: [0.0, 0.0, 0.0, 7.0, 0.0, 0.0, 7.0, 0.0, 0.0, 7.0, 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.0, 0.0]
+        nrSeq = Generator.generateListOfZeros( length )
+        i = 0
+        while True:
+            choice = random.choices( [3, 6], [0.6, 0.4], k=1 )[0]
+            i += choice
+            if( i >= length-1 ):
+                break
+            nrSeq[i] = ampRiseValue     
+        return nrSeq
+
     
     @staticmethod #works
     def generateListOfZeros(length : int) -> List[float]:
