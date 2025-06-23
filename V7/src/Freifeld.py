@@ -19,7 +19,8 @@ class Freifeld:
         "COORDINATES_LED_RIGHT"      :  (0, 25)
     }
 
-    PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx"
+    #PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx"
+    PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7_fixShift.rcx"
 
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

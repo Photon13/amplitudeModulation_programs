@@ -20,7 +20,7 @@ class Main:
     expType : str =    "demo"
 
     ampRiseRange : List[float] = [0.15, 0.4] # all inclusive :D
-    ampRiseValue : float = 0.4
+    ampRiseValue : float = 1.5 #0.3 #0.4
     
 
     # \\\ HELP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|
@@ -93,7 +93,7 @@ class Main:
         nrSeq = Generator.generate_nrSeq_withShifts(duration, Main.ampRiseValue)
         zeroSeq = Generator.generateListOfZeros( len(nrSeq) )
 
-        Freifeld.writeToSpeaker( "Left",   Fams.famA, zeroSeq )
+        Freifeld.writeToSpeaker( "Left",   Fams.famA, nrSeq )
         Freifeld.writeToSpeaker( "Middle", Fams.famB, zeroSeq )
         Freifeld.writeToSpeaker( "Right",  Fams.famC, zeroSeq )
     
@@ -167,6 +167,10 @@ class Main:
             inp : str = input("Continue with next block? [any]: ") ###
         
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+
+
+
 
 
 #-------------------#
