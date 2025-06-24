@@ -11,12 +11,12 @@ import freefield
 class Freifeld:
 
     COORDINATES_DICT = {
-        "COORDINATES_SPEAKER_LEFT"   :  (-35, 0),
-        "COORDINATES_SPEAKER_MIDDLE" :  (0, 0),
-        "COORDINATES_SPEAKER_RIGHT"  :  (35, 0),
-        "COORDINATES_LED_LEFT"       :  (0, -25),
-        "COORDINATES_LED_MIDDLE"     :  (0, 0),
-        "COORDINATES_LED_RIGHT"      :  (0, 25)
+        "speakerLeft"   :  (-35, 0),
+        "speakerMiddle" :  (0, 0),
+        "speakerRight"  :  (35, 0),
+        "ledLeft"       :  (0, -25),
+        "ledMiddle"     :  (0, 0),
+        "ledRight"      :  (0, 25)
     }
 
     #PATH_RCX : Path = Path(os.getcwd()) /"data"/"rcx"/"V7_test.rcx"
@@ -36,12 +36,18 @@ class Freifeld:
 
     @staticmethod
     def writeToSpeaker(position : str, fam : float, nrSeq : List[float]):
-        speakerCoordinates = Freifeld.COORDINATES_DICT[f"COORDINATES_SPEAKER_{position.upper()}"]
-        [speaker] = freefield.pick_speakers(speakerCoordinates) 
-        freefield.write( f"channel{position.capitalize()}",    speaker.analog_channel,             speaker.analog_proc )
-        freefield.write( f"fam{position.capitalize()}",        fam,                                ["RX81", "RX82"]    )
-        freefield.write( f"nrSeq{position.capitalize()}",      np.array(nrSeq).astype('float64'),  speaker.analog_proc )
-        freefield.write( "n_secs", len(nrSeq), ["RX81", "RX82"] )
+        pos    = position.upper() #new
+        n_secs = len(nrSeq)       #new
+        nrSeq  = np.array(nrSeq).astype('float32') #new: 32 bit
+
+        speakerCoordinates = Freifeld.COORDINATES_DICT[f"speaker{pos}"]
+        [speaker] = freefield.pick_speakers([speakerCoordinates])  #new: []
+
+        freefield.write( f"channel{pos}", speaker.analog_channel, speaker.analog_proc ) #new: pos
+        freefield.write( f"nrSeq{pos}",   nrSeq,                  speaker.analog_proc )
+        freefield.write( f"fam{pos}",     fam,                    ["RX81", "RX82"]    )
+        freefield.write( "n_secs",        n_secs,                 ["RX81", "RX82"]    )
+        
 
 
     @staticmethod
@@ -59,11 +65,13 @@ class Freifeld:
     
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    @staticmethod #spelling correct
+    @staticmethod
     def turnLedOn(position : str) -> None:
-        ledCoordinates = Freifeld.COORDINATES_DICT[f"COORDINATES_LED_{position.upper()}"]
-        [led] = freefield.pick_speakers(ledCoordinates)
-        freefield.write( f"bitmask{position.capitalize()}",  led.digital_channel, led.digital_proc)
+        pos = position.capitalize()
+        ledCoordinates = Freifeld.COORDINATES_DICT[f"led{pos}"]
+        [led] = freefield.pick_speakers( [ledCoordinates] )
+
+        freefield.write( f"bitmask{pos}",  led.digital_channel, led.digital_proc)
 
     @staticmethod
     def turnTargetLedOn(target : str) -> None:
@@ -76,10 +84,10 @@ class Freifeld:
 
     @staticmethod
     def turnAllLedsOff() -> None:
-        positions = ["Left", "Middle", "Right"]
-        for pos in positions:
-            ledCoordinates = Freifeld.COORDINATES_DICT[f"COORDINATES_LED_{pos.upper()}"]
-            [led] = freefield.pick_speakers(ledCoordinates)
-            freefield.write( f"bitmask{pos.capitalize()}",  0, led.digital_proc)
+        for pos in ["Left", "Middle", "Right"]:
+            ledCoordinates = Freifeld.COORDINATES_DICT[f"led{pos}"]
+            [led] = freefield.pick_speakers( [ledCoordinates] )
+
+            freefield.write( f"bitmask{pos}", 0, led.digital_proc)
 
 
