@@ -53,10 +53,10 @@ class V8_TEST:
         }
 
         for pos in ["Left", "Middle", "Right"]:
-            [speaker] = freefield.pickSpeakers( [V8_TEST.getCoordinates( "speaker", f"{pos}")] )
+            [speaker] = freefield.pick_speakers( [V8_TEST.getCoordinates( "speaker", f"{pos}")] )
             freefield.write( f"channel{pos}", speaker.analog_channel,     speaker.analog_proc )
             freefield.write( f"fam{pos}",     famsDict[f"{pos}"],        ["RX81", "RX82"]     )
             freefield.write( f"nrSeq{pos}",   nrSeqsDict[f"{pos}"],      speaker.analog_proc  )
             freefield.write( "n_secs",        len(nrSeqsDict[f"{pos}"]), ["RX81", "RX82"]     )
 
-V8_TEST.try_float64_array_and_fam()
+#V8_TEST.try_float64_array_and_fam()
