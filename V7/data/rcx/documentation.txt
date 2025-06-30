@@ -1,2 +1,0 @@
-newest: V7_fixShift.rcx
-(Copy of V7_test.rcx with fixed Led Channels)
