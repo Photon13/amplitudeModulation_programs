@@ -102,11 +102,11 @@ class Init:
 identifier : str = "teeest"                                      #<<<<
 
 expTypes = ["demo", "preTest", "mainExp", "testSingleSpeaker"]
-expType : str = "testSingleSpeaker"                              #<<<<
+expType : str = "preTest"                              #<<<<
 #§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 if(expType == "demo"):
     ampRiseRange : List[float] = [0.4, 0.4]                  
-elif(expType == "preExp"):
+elif(expType == "preTest"):
     ampRiseRange : List[float] = [0.1, 0.3]
 elif(expType == "mainExp"):
     ampRiseRange : List[float] = [0.2, 0.2]                      #<<<<

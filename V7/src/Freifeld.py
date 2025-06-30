@@ -40,7 +40,7 @@ class Freifeld:
         [speaker] = freefield.pick_speakers(speakerCoordinates) 
         freefield.write( f"channel{position.capitalize()}",    speaker.analog_channel,             speaker.analog_proc )
         freefield.write( f"fam{position.capitalize()}",        fam,                                ["RX81", "RX82"]    )
-        freefield.write( f"nrSeq{position.capitalize()}",      np.array(nrSeq).astype('float64'),  speaker.analog_proc )
+        freefield.write( f"nrSeq{position.capitalize()}",      np.array(nrSeq).astype('float32'),  speaker.analog_proc )
         freefield.write( "n_secs", len(nrSeq), ["RX81", "RX82"] )
 
 
