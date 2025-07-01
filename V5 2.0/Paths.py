@@ -6,7 +6,7 @@ class Paths:
 
     PATH_CWD : Path = Path( os.getcwd() )
     #PATH_RCX : Path = PATH_CWD /"data"/"rcx"/"V5_pilot.rcx"
-    PATH_RCX : Path = PATH_CWD /"V5_pilot.rcx"
+    PATH_RCX : Path = PATH_CWD /"V5 2.0.rcx"
 
     #PATH_JSON_FOLDER = PATH_CWD / "participant_json" / Settings.MODE
 
