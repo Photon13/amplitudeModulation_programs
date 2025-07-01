@@ -16,10 +16,10 @@ import os
 
 class Main:
 
-    identifier : str = "preTestTest1" # CAVE: underscore!
-    expType : str =    "demo"
+    identifier : str = "preTestTest010725" # CAVE: underscore!
+    expType : str =    "preTest"
 
-    ampRiseRange : List[float] = [0.15, 0.4] # all inclusive :D
+    ampRiseRange : List[float] = [0.5, 0.6] # all inclusive :D #[0.15, 0.3]
     ampRiseValue : float = 1.5 #0.3 #0.4
     
 

@@ -24,11 +24,13 @@ class PreTest:
         otherwise a new blockDict is generated, pushed to Json and returned """
         exists = Dateien_und_Json.check_whetherJsonExists(f"{identifier}_preTest.txt")
         if( exists == True ):
-            blockDict = Dateien_und_Json.readJson(f"{identifier}_preTest.txt")
+            #blockDict = Dateien_und_Json.readJson(f"{identifier}_preTest.txt")
+            blockDict = Dateien_und_Json.get_blockDict_fromJson(f"{identifier}_preTest.txt")
         else:
             blockDict = GeneratorPreTest.gen_blockdict() # CAVE class
             Dateien_und_Json.export_toJson(blockDict, f"{identifier}_preTest.txt")
-            blockDict = Dateien_und_Json.readJson(f"{identifier}_preTest.txt")
+            #blockDict = Dateien_und_Json.readJson(f"{identifier}_preTest.txt")
+            blockDict = Dateien_und_Json.get_blockDict_fromJson(f"{identifier}_preTest.txt")
         return blockDict
 
     @staticmethod

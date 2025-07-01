@@ -12,7 +12,8 @@ from Generator import Generator
 
 participantNr = ParticipantConstants.currentParticipantNr
 #ampRiseList = ParticipantConstants.pre_AMP_RISE_LIST_01234[participantNr]
-ampRiseList = Generator.gen_pre_AmpRiseList([0.10, 0.15, 0.2])
+#ampRiseList = Generator.gen_pre_AmpRiseList([0.10, 0.15, 0.2])
+ampRiseList = Generator.gen_pre_AmpRiseList([0.5, 0.6, 0.7])
 emptyAmpRiseList = Generator.gen_empty_AmpRiseList(len(ampRiseList))
 
 Sprecher_und_Procs.initFF()
@@ -20,6 +21,7 @@ speakers, leds = Sprecher_und_Procs.pickSpeakersAndLeds()
 
 Sprecher_und_Procs.turnTargetLedOn(leds, "middle") # PROBLEM?
 Sprecher_und_Procs.writeToSpeaker("left", speakers, participantNr, ampRiseList)
+print(ampRiseList)
 Sprecher_und_Procs.writeToSpeaker("middle", speakers, participantNr, emptyAmpRiseList)
 Sprecher_und_Procs.writeToSpeaker("right", speakers, participantNr, emptyAmpRiseList)
 

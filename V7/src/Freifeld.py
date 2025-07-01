@@ -36,7 +36,7 @@ class Freifeld:
 
     @staticmethod
     def writeToSpeaker(position : str, fam : float, nrSeq : List[float]):
-        pos    = position.upper() #new
+        pos    = position.capitalize() #new
         n_secs = len(nrSeq)       #new
         nrSeq  = np.array(nrSeq).astype('float32') #new: 32 bit
 

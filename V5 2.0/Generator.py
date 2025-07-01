@@ -1,0 +1,78 @@
+from typing import List
+import random
+import numpy as np
+
+from Globals import Globals
+from ParticipantConstants import ParticipantConstants
+
+
+class Generator:
+
+    @staticmethod #from V7
+    def generate_nrSeq_preTest(ampRiseRange : List[float]) -> List:
+        # length list correct
+        # n occurrences per value correct
+
+        dreiSechsList = []
+        dreiSechsList.extend( [3] * int(80*0.6) ) #48*3sec
+        dreiSechsList.extend( [6] * int(80*0.4) ) #32*6sec
+        #total 336sec #sic
+        random.shuffle(dreiSechsList)
+
+        ampRiseList = Generator.generate_valuesInRange( ampRiseRange, n_values=8 )
+        ampRiseList = Generator.duplicateListEntries( ampRiseList, n=10 )
+        random.shuffle(ampRiseList)
+
+        listWithShifts = []
+        for i in range( len(ampRiseList) ):
+            listWithShifts.append(ampRiseList[i])
+            n_zeros = dreiSechsList[i] -1
+            listWithShifts.extend(Generator.generateListOfZeros(n_zeros))
+
+        return listWithShifts
+    
+
+    @staticmethod #from V7
+    def generateListOfZeros(length : int) -> List[float]:
+        result = []
+        result.extend([0.0]*length)
+        return result
+
+    #---------------------------------------------------------------------------------
+
+    @staticmethod #works
+    def duplicateListEntries(list : List, n : int) -> List: #works
+        """ result contains each value of original list n-times"""
+        result : List = []
+        for entry in list:
+            result.extend( [entry]*n )
+        return result
+
+    
+
+    @staticmethod #works
+    def generate_valuesInRange(borders : List[float], n_values : int):
+        result : List[float] = []
+        result.append( min(borders) )            # first entry is lower border
+        difference = max(borders)-min(borders)
+        step = difference/(n_values-1)           # using log values does not seem to make a difference ... spaces stay the same
+        for i in range( n_values-1 ):            # -1 because first entry already in list
+            entry = result[-1] + step            # List[-1] returns last value
+            result.append( round(entry,3) )
+        return result # all values equally spaced
+    
+    #---------------------------------------------------------------------------------
+    
+    @staticmethod #from V7
+    def generate_targetList():
+        targetList : List[str] = []
+        possTargets = ["left", "middle", "right", "both"]
+        for target in possTargets:
+            targetList.extend([target]*4)
+        random.shuffle(targetList)
+        return targetList
+
+
+
+
+
