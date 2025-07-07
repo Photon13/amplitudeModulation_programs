@@ -9,6 +9,31 @@ from ParticipantConstants import ParticipantConstants
 class Generator:
 
     @staticmethod #from V7
+    def generate_nrSeqs_mainExp(ampRise : float) -> List:
+        # length list correct
+        # no simultaneous shifts
+        """ returns [nrSeqLeft, nrSeqMiddle, nrSeqRight] """
+    
+        dreiSechsList = []
+        dreiSechsList.extend( [3] * 16 ) # 2/3
+        dreiSechsList.extend( [6] * 8  ) # 1/3
+        #total 96sec per block
+        random.shuffle(dreiSechsList)
+
+        listOfLists = [[], [], []]
+        for i in range( len(dreiSechsList) ):
+            random.shuffle(listOfLists)
+            listOfLists[0].append( ampRise )
+            listOfLists[0].extend( Generator.generateListOfZeros( dreiSechsList[i] - 1) )
+            listOfLists[1].extend( Generator.generateListOfZeros( dreiSechsList[i]) )
+            listOfLists[2].extend( Generator.generateListOfZeros( dreiSechsList[i]) )
+
+        random.shuffle(listOfLists)
+        return listOfLists #[nrSeqLeft, nrSeqMiddle, nrSeqRight]
+
+
+
+    @staticmethod #from V7
     def generate_nrSeq_preTest(ampRiseRange : List[float]) -> List:
         # length list correct
         # n occurrences per value correct

@@ -32,31 +32,33 @@ class Init_preTest:
         listWithShifts = Generator.generate_nrSeq_preTest(ampRiseRange)
         emptyAmpRiseList = Generator.generateListOfZeros(len(listWithShifts))
 
+
         famsLMR = ParticipantConstants.FAM_LIST_01234[participantNr] 
-        print(famsLMR)
+
+        ###
         
-
-
         while True:
             inp = input(Globals.COLORRED + "Remember to start recording! " + Globals.COLORCYAN + "Start? [yes]: " + Globals.COLOREND)
             if( inp.lower() == "yes"):
                 break
 
 
-
         Sprecher_und_Procs.initFF()
         speakers, leds = Sprecher_und_Procs.pickSpeakersAndLeds()
 
+        ##
 
         Sprecher_und_Procs.turnTargetLedOn(leds, "left")
 
         Sprecher_und_Procs.writeToSpeaker("left", speakers, famsLMR, listWithShifts)
-        print(listWithShifts)
         Sprecher_und_Procs.writeToSpeaker("middle", speakers, famsLMR, emptyAmpRiseList)
         Sprecher_und_Procs.writeToSpeaker("right", speakers, famsLMR, emptyAmpRiseList)
+        print(f"listWithshifts = {listWithShifts}")
 
         freefield.play()
 
+        ##
+        
         time.sleep(len(listWithShifts))
         Sprecher_und_Procs.turnAllLedsOff(leds)
         freefield.halt()
