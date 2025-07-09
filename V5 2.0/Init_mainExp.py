@@ -79,9 +79,12 @@ class Init_mainExp:
         freefield.halt()
         print(Globals.COLORCYAN + "Remember to ask participant about their perception of the task." + Globals.COLOREND)
 
-##             
+## 
 
-Init_mainExp.run_mainExp()
+
+
+
+#Init_mainExp.run_mainExp()
 
         # end: comment for json
 

@@ -55,7 +55,7 @@ class Sprecher_und_Procs:
         freefield.write("volume", Globals.VOLUME, ["RX81", "RX82"]) 
         freefield.write(f"fam{position}", famsLMR[i], ["RX81", "RX82"])
         
-        freefield.write(f"nrSeq{position}", np.array(ampRiseList).astype('float64'), speakers[i].analog_proc)
+        freefield.write(f"nrSeq{position}", np.array(ampRiseList).astype('float64'), ["RX81", "RX82"])
         freefield.write("n_snippets", len(ampRiseList), ["RX81", "RX82"])
         
 
