@@ -3,27 +3,6 @@ from Globals import Globals
 class ParticipantConstants:
 
 
-    #ENTER VALUES AFTER RUNNING PRETEST:
-    pre_AMP_RISE_LIST_0 = [0.186, 0.0, 0.0, 0.0, 0.0, 0.0, 0.258, 0.0, 0.0, 0.186, 0.0, 0.0, 0.0, 0.0, 0.0, 0.366, 0.0, 0.0, 0.33, 0.0, 0.0, 0.258, 0.0, 0.0, 0.0, 0.0, 0.0, 0.186, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33, 0.0, 0.0, 0.33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.258, 0.0, 0.0, 0.0, 0.0, 0.0, 0.294, 0.0, 0.0, 0.366, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33, 0.0, 0.0, 0.294, 0.0, 0.0, 0.366, 0.0, 0.0, 0.0, 0.0, 0.0, 0.186, 0.0, 0.0, 0.366, 0.0, 0.0, 0.0, 0.0, 0.0, 0.294, 0.0, 0.0, 0.366, 0.0, 0.0, 0.186, 0.0, 0.0, 0.0, 0.0, 0.0, 0.366, 0.0, 0.0, 0.366, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.402, 0.0, 0.0, 0.33, 0.0, 0.0, 0.186, 0.0, 0.0, 0.15, 0.0, 0.0, 0.33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.366, 0.0, 0.0, 0.258, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.258, 0.0, 0.0, 0.366, 0.0, 0.0, 0.0, 0.0, 0.0, 0.294, 0.0, 0.0, 0.294, 0.0, 0.0, 0.0, 0.0, 0.0, 0.402, 0.0, 0.0, 0.402, 0.0, 0.0, 0.222, 0.0, 0.0, 0.33, 0.0, 0.0, 0.402, 0.0, 0.0, 0.0, 0.0, 0.0, 0.222, 0.0, 0.0, 0.222, 0.0, 0.0, 0.186, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.294, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.258, 0.0, 0.0, 0.402, 0.0, 0.0, 0.186, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33, 0.0, 0.0, 0.222, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33, 0.0, 0.0, 0.402, 0.0, 0.0, 0.294, 0.0, 0.0, 0.294, 0.0, 0.0, 0.0, 0.0, 0.0, 0.222, 0.0, 0.0, 0.0, 0.0, 0.0, 0.258, 0.0, 0.0, 0.0, 0.0, 0.0, 0.402, 0.0, 0.0, 0.222, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15, 0.0, 0.0, 0.258, 0.0, 0.0, 0.222, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.366, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.402, 0.0, 0.0, 0.402, 0.0, 0.0, 0.222, 0.0, 0.0, 0.402, 0.0, 0.0, 0.15, 0.0, 0.0, 0.258, 0.0, 0.0, 0.294, 0.0, 0.0, 0.222, 0.0, 0.0, 0.15, 0.0, 0.0, 0.294, 0.0, 0.0, 0.0, 0.0, 0.0, 0.186, 0.0, 0.0, 0.186, 0.0, 0.0, 0.258, 0.0, 0.0, 0.0, 0.0, 0.0, 0.222, 0.0, 0.0, 0.0, 0.0, 0.0]
-    pre_AMP_RISE_LIST_1 = []
-    pre_AMP_RISE_LIST_2 = []
-    pre_AMP_RISE_LIST_3 = []
-    pre_AMP_RISE_LIST_4 = []
-    pre_AMP_RISE_LIST_01234 = [pre_AMP_RISE_LIST_0, pre_AMP_RISE_LIST_1, pre_AMP_RISE_LIST_2, pre_AMP_RISE_LIST_3, pre_AMP_RISE_LIST_4]
-    
-    #ENTER VALUES AFTER RUNNING PRETEST:
-    AMP_RISE_0 = 0.3
-    AMP_RISE_1 = None
-    AMP_RISE_2 = None
-    AMP_RISE_3 = None
-    AMP_RISE_3 = None
-    AMP_RISE_4 = None
-    AMP_RISE_01234 = [AMP_RISE_0, AMP_RISE_1, AMP_RISE_2, AMP_RISE_3, AMP_RISE_4]
-    #______
-
-
-
-
     #FOLLOWING VALUES NOT TO BE CHANGED:
     FAM_LIST_0 = Globals.FAM_LIST
     FAM_LIST_1 = [Globals.FAM_A, Globals.FAM_C, Globals.FAM_B] 
@@ -39,4 +18,18 @@ class ParticipantConstants:
     TARGET_LIST_4 = ['middle', 'right', 'left', 'both', 'left', 'right', 'middle', 'both', 'right', 'left', 'middle', 'right', 'middle', 'left', 'both', 'middle', 'both', 'both', 'right', 'left']
     TARGET_LIST_01234 = [TARGET_LIST_0, TARGET_LIST_1, TARGET_LIST_2, TARGET_LIST_3, TARGET_LIST_4]
     #______
+ 
 
+    @staticmethod
+    def get_famList(participantNr):
+        if participantNr in [0,1,2,3,4]:
+            return ParticipantConstants.FAM_LIST_01234[participantNr]
+        else:
+            return ParticipantConstants.FAM_LIST_01234[0]
+        
+    @staticmethod
+    def get_targetList(participantNr):
+        if participantNr in [0,1,2,3,4]:
+            return ParticipantConstants.TARGET_LIST_01234[participantNr]
+        else:
+            return ParticipantConstants.TARGET_LIST_01234[0]
