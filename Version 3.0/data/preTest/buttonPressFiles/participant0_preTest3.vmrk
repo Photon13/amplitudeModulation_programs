@@ -1,0 +1,68 @@
+Brain Vision Data Exchange Marker File, Version 1.0
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=participant0_preTest3.eeg
+
+[Marker Infos]
+; Each entry: Mk<Marker number>=<Type>,<Description>,<Position in data points>,
+; <Size in data points>, <Channel number (0 = marker is related to all channels)>
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in type or description text are coded as "\1".
+Mk1=New Segment,,1,1,0,20250724154755249244
+Mk2=Stimulus,S161,18011,1,0
+Mk3=Stimulus,S 32,19511,1,0
+Mk4=Stimulus,S 32,21011,1,0
+Mk5=Stimulus,S 32,22511,1,0
+Mk6=Stimulus,S 32,25511,1,0
+Mk7=Stimulus,S128,25950,1,0
+Mk8=Stimulus,S 32,27011,1,0
+Mk9=Stimulus,S 32,30011,1,0
+Mk10=Stimulus,S128,30492,1,0
+Mk11=Stimulus,S 32,33011,1,0
+Mk12=Stimulus,S 32,34511,1,0
+Mk13=Stimulus,S 32,36011,1,0
+Mk14=Stimulus,S128,36339,1,0
+Mk15=Stimulus,S 32,37511,1,0
+Mk16=Stimulus,S128,37898,1,0
+Mk17=Stimulus,S 32,40511,1,0
+Mk18=Stimulus,S128,40863,1,0
+Mk19=Stimulus,S 32,42011,1,0
+Mk20=Stimulus,S128,42359,1,0
+Mk21=Stimulus,S 32,43511,1,0
+Mk22=Stimulus,S 32,45011,1,0
+Mk23=Stimulus,S 32,46511,1,0
+Mk24=Stimulus,S128,46869,1,0
+Mk25=Stimulus,S 32,48011,1,0
+Mk26=Stimulus,S128,48607,1,0
+Mk27=Stimulus,S 32,49511,1,0
+Mk28=Stimulus,S 32,52511,1,0
+Mk29=Stimulus,S 32,54011,1,0
+Mk30=Stimulus,S128,54558,1,0
+Mk31=Stimulus,S 32,57011,1,0
+Mk32=Stimulus,S 32,58511,1,0
+Mk33=Stimulus,S 32,60011,1,0
+Mk34=Stimulus,S128,60343,1,0
+Mk35=Stimulus,S 32,61511,1,0
+Mk36=Stimulus,S 32,64511,1,0
+Mk37=Stimulus,S 32,66011,1,0
+Mk38=Stimulus,S 32,67511,1,0
+Mk39=Stimulus,S128,67890,1,0
+Mk40=Stimulus,S 32,69011,1,0
+Mk41=Stimulus,S128,69514,1,0
+Mk42=Stimulus,S 32,72010,1,0
+Mk43=Stimulus,S 32,75010,1,0
+Mk44=Stimulus,S 32,76510,1,0
+Mk45=Stimulus,S128,76927,1,0
+Mk46=Stimulus,S 32,78010,1,0
+Mk47=Stimulus,S 32,79510,1,0
+Mk48=Stimulus,S 32,81010,1,0
+Mk49=Stimulus,S 32,84010,1,0
+Mk50=Stimulus,S128,84478,1,0
+Mk51=Stimulus,S 32,87010,1,0
+Mk52=Stimulus,S128,87569,1,0
+Mk53=Stimulus,S 32,88510,1,0
+Mk54=Stimulus,S 32,90010,1,0
+Mk55=Stimulus,S 32,91510,1,0
+Mk56=Stimulus,S 32,93010,1,0
+Mk57=Stimulus,S 32,96010,1,0
