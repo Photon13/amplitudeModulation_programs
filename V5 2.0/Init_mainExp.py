@@ -30,7 +30,7 @@ class Init_mainExp:
         #Alx:  3                                        #
         #Blnc: 4                                        # 
                                                         #
-        ampRise = 0.3                                   #
+        ampRise = 0.28                                   #
                                                         #             
         #===============================================#
 
@@ -45,6 +45,9 @@ class Init_mainExp:
             if( inp.lower() == "yes"):
                 break
 
+        ##
+        time.sleep(90)
+        ##
 
         Sprecher_und_Procs.initFF()
         speakers, leds = Sprecher_und_Procs.pickSpeakersAndLeds()
@@ -88,10 +91,13 @@ class Init_mainExp:
             time.sleep(len(nrSeqList_left))
             Sprecher_und_Procs.turnAllLedsOff(leds)
 
-            inp = input("Continue with next block? [yes]: ")
-            while True:
-                if( inp.lower() == "yes" ):
-                    break
+            #inp = input("Continue with next block? [yes]: ")
+            #while True:
+            #    if( inp.lower() == "yes" ):
+            #        break
+
+            ##
+            time.sleep(3)
 
         ####_____________________________________________________________________
 
@@ -101,7 +107,7 @@ class Init_mainExp:
 ## 
 
 
-#Init_mainExp.run_mainExp()
+Init_mainExp.run_mainExp()
 
 
     

@@ -33,7 +33,7 @@ class ButtonPressAnalysis:
 
         ###############################
         participantNr           = 0   #
-        preTest_trial           = 0   #
+        preTest_trial           = 2   #
         ###############################
 
         cls.pathVmrk            = Path( "button press files\\participant%d\\participant%d_preTest%d.vmrk"  %(participantNr, participantNr, preTest_trial) )
@@ -53,10 +53,12 @@ class ButtonPressAnalysis:
 
     @staticmethod
     def get_ampRise_perSec_fromTxtFile(pathFile) -> List[float]:
-        """ Liest jenes File, das die Liste enthält, welche den verwendeten ampRiseWert pro Sekunde angibt (d.h. nrSeqLeft)."""
+        """ Liest jenes File, das die Listen enthält, welche den verwendeten ampRiseWert pro Sekunde angibt (d.h. nrSeqLeft)."""
         with open(pathFile, "r") as f:
             ampRise_perSec : List[float] = json.load(f)
-        return ampRise_perSec
+            ampRise_perSec_combined = ampRise_perSec[0]
+            ampRise_perSec_combined.extend( ampRise_perSec[1] )
+        return ampRise_perSec_combined
 
     @staticmethod
     def entferneNullen(liste : List[float]) -> List[float]:
@@ -204,5 +206,5 @@ class ButtonPressAnalysis:
 
 
 
-#ButtonPressAnalysis()
-#print(ButtonPressAnalysis.resultDict)
+ButtonPressAnalysis()
+print(ButtonPressAnalysis.resultDict)
