@@ -199,7 +199,7 @@ class ButtonPressAnalysis:
             t_shift = tSecRel_perMarker["S 32"][i]          #
 
             for t_button in tSecRel_perMarker["S128"]:             # Vergleich der Zeitpunkte der Button-Ereignisse mit den Shift-Ereignissen
-                if( t_shift - 0.5 <= t_button <= t_shift + 1.5):   # ! Die Button-Marker scheinen häufig kurz vor dem Shift-Marker aufzutreten
+                if( t_shift <= t_button <= t_shift + 2.0):   	
                     ampRiseType = ampRise_perShiftOcc[i]           # Zum Shift-Ereignis zugehöriger ampRise-Typ wird herausgesucht
                     resultDict[f"{ampRiseType}"] += 1              # Counter des zugehörigen AmpRise-Types wird um 1 erhöht
         return resultDict
