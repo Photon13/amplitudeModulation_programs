@@ -24,9 +24,9 @@ class PreTest:
 
         #===============================================#               
                                                         #                            
-        participantNr = 0            # <--              #       # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4      
+        participantNr = 2            # <--              #       # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4      
                                                         #
-        preTest_trial = 3            # <--              #
+        preTest_trial = 1            # <--              #
                                                         #
         ampRiseRange = [0.15, 0.35]       # <--         #       # default: [0.15, 0.35]   #both inclusive
                                                         #             
@@ -74,5 +74,5 @@ class PreTest:
     ####
 
 
-#PreTest.run_preTest() #funzt
+PreTest.run_preTest() #funzt
 # 2min 56 sec

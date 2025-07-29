@@ -23,9 +23,9 @@ class MainExperiment:
     def run_mainExperiment():
 
         #####################
-        pNr = 13            #          # <--
-                            #
-        ampRise = 0.35      #
+        pNr = 2             #          # <---
+                            #                                   # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4
+        ampRise = 0.353     #          # <---
         #####################
 
         pathBlockDict =  BlockDict.get_pathBlockDict( pNr ) 
@@ -42,10 +42,14 @@ class MainExperiment:
 
         count = 0 
         for i in range( len(blockDict) ):
+            
+
             target    : str         = blockDict[f"block{i}"]["condition"]
             freqComb  : str         = blockDict[f"block{i}"]["freqComb"]
             famsLMR   : List[float] = FreqComb.get_fams_fromFreqComb( freqComb )
             nrSeqsLMR : List[List]  = Generator.generate_nrSeqs_mainExp(ampRise)
+
+            print(COLORPURPLE + f"block{i}   target = {target}\n" + COLOREND)
 
             with open( pathNrSeqs, "a" ) as f:
                 f.write(   f"nrSeqLeft = {nrSeqsLMR[0]}\n"   ) # einfach nur reinmüllen
@@ -64,11 +68,10 @@ class MainExperiment:
         
             count += 1 
             if( count == 4): # n blocks nach denen Pause auftreten soll
-                print(COLORPURPLE + f"block{i}\n" + COLOREND)
-                #while True:
-                #    inp = input("Continue? [yes]: ")
-                #    if( inp.lower() == "yes"):
-                #        break
+                while True:
+                    inp = input("Continue? [yes]: ")
+                    if( inp.lower() == "yes"):
+                        break
                 
                 count = 0
             Leds.turnAllLedsOff(leds)

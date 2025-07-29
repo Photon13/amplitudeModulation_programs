@@ -14,9 +14,9 @@ import time
 class Init_Test:
 
     @staticmethod
-    def demonstration():
+    def demonstration(shift : bool):
         famsLMR = Globals.FAM_LIST
-        ampRiseRange = [0.3, 0.3]
+        ampRiseRange = [0.6, 0.6]
 
         Procs.initFF()
         speakers, leds = Procs.pickSpeakersAndLeds()
@@ -26,7 +26,10 @@ class Init_Test:
 
         Sprecher.writeToSpeaker("left", speakers, famsLMR, nullList)  
         Sprecher.writeToSpeaker("middle", speakers, famsLMR, nullList)
-        Sprecher.writeToSpeaker("right", speakers, famsLMR, shiftList1)
+        if( shift == True ):
+            Sprecher.writeToSpeaker("right", speakers, famsLMR, shiftList1)
+        else:
+            Sprecher.writeToSpeaker("right", speakers, famsLMR, nullList)
 
         freefield.play()
 
@@ -94,9 +97,11 @@ class Init_Test:
 
 
 
-Init_Test.testSpeakers() #funzt
+#Init_Test.testSpeakers() #funzt
 #Init_Test.run_testAllLeds() #funzt
-#Init_Test.demonstration() #funzt
+
+#Init_Test.demonstration(shift=False)
+Init_Test.demonstration(shift=True)
 
 # Shifts mittlerer Sprecher scheinen leiser zu sein, wenn man auf dem Stuhl sitzt
 # aber wenn man das ohr direkt vor den jeweiligen Lautsprecher platziert, scheinen die shifts aller Lautsprecher gleich laut zu sein

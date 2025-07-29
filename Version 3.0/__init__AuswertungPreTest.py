@@ -32,8 +32,9 @@ class ButtonPressAnalysis:
     def __init__(cls):
 
         ###############################
-        participantNr           = 0   #
-        preTest_trial           = 3   #
+        participantNr           = 2   #         # <---
+                                      #                                 # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4
+        preTest_trial           = 1   #         # <---
         ###############################
 
         cls.pathVmrk            = Path( "data\\preTest\\buttonPressFiles\\participant%d_preTest%d.vmrk"            %(participantNr, preTest_trial) )
@@ -176,7 +177,7 @@ class ButtonPressAnalysis:
 
         for i in range( len(buttonList)-1, -1, -1): # for( i=len-1 ; i=>0 ; i-- )
             # Bouncing: Zweiter Marker tritt meistens weiger als 0.2 Sekunden nach erstem Marker auf
-            if( buttonList[i] - 0.25 <= buttonList[i-1] <= buttonList[i] ): 
+            if( buttonList[i] - 2.0 <= buttonList[i-1] <= buttonList[i] ):                              ##
                 advancedButtonList1[i] = -6.6 # Nur ein Platzhalter
         
         advancedButtonList2 = [value for value in advancedButtonList1 if value != -6.6] # Übernimmt alle Werte der alten Liste, die nicht -6.6 sind
