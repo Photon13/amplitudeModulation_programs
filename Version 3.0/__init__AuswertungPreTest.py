@@ -32,9 +32,9 @@ class ButtonPressAnalysis:
     def __init__(cls):
 
         ###############################
-        participantNr           = 2   #         # <---
+        participantNr           = 4   #         # <---
                                       #                                 # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4
-        preTest_trial           = 1   #         # <---
+        preTest_trial           = 4   #         # <---
         ###############################
 
         cls.pathVmrk            = Path( "data\\preTest\\buttonPressFiles\\participant%d_preTest%d.vmrk"            %(participantNr, preTest_trial) )
