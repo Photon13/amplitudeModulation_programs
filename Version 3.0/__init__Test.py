@@ -13,6 +13,45 @@ import time
 
 class Init_Test:
 
+
+    @staticmethod
+    def einzelSprecherExperiment( respDuration : int ):
+
+        inp = input( "start part1 ? (attention towards speaker)")
+
+        famsLMR = Globals.FAM_LIST
+        Procs.initFF()
+        speakers, leds = Procs.pickSpeakersAndLeds()
+
+        nullList = Generator.generateListOfZeros( respDuration )
+
+        Sprecher.writeToSpeaker("left", speakers, famsLMR, nullList)  
+        Leds.turnTargetLedOn( leds, "left")
+
+        freefield.play()
+        time.sleep(len(nullList))
+        Leds.turnAllLedsOff(leds)
+
+        ######################################################################
+        inp = input( "Continue with part2 ? (no attention towards speaker) ")
+
+        famsLMR = Globals.FAM_LIST
+        Procs.initFF()
+        speakers, leds = Procs.pickSpeakersAndLeds()
+
+        nullList = Generator.generateListOfZeros( respDuration )
+
+        Sprecher.writeToSpeaker("left", speakers, famsLMR, nullList)  
+
+        freefield.play()
+        time.sleep(len(nullList))
+
+
+
+        
+
+
+
     @staticmethod
     def demonstration(shift : bool):
         famsLMR = Globals.FAM_LIST
@@ -30,8 +69,11 @@ class Init_Test:
             Sprecher.writeToSpeaker("right", speakers, famsLMR, shiftList1)
         else:
             Sprecher.writeToSpeaker("right", speakers, famsLMR, nullList)
+        Leds.turnTargetLedOn(leds, "right")
 
         freefield.play()
+        time.sleep(len(shiftList1))
+        Leds.turnAllLedsOff(leds)
 
 
     @staticmethod
@@ -101,7 +143,16 @@ class Init_Test:
 #Init_Test.run_testAllLeds() #funzt
 
 #Init_Test.demonstration(shift=False)
-Init_Test.demonstration(shift=True)
+#Init_Test.demonstration(shift=True)
+
+
+
+
+#Init_Test.einzelSprecherExperiment( 150 ) # 2.5 min
+
+
+
+
 
 # Shifts mittlerer Sprecher scheinen leiser zu sein, wenn man auf dem Stuhl sitzt
 # aber wenn man das ohr direkt vor den jeweiligen Lautsprecher platziert, scheinen die shifts aller Lautsprecher gleich laut zu sein
