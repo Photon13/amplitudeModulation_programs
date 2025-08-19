@@ -148,7 +148,7 @@ class Init_Test:
 
 
 
-#Init_Test.einzelSprecherExperiment( 150 ) # 2.5 min
+Init_Test.einzelSprecherExperiment( 150 ) # 2.5 min
 
 
 

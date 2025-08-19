@@ -23,9 +23,9 @@ class MainExperiment:
     def run_mainExperiment():
 
         #####################
-        pNr = 1             #          # <---
+        pNr = 3             #          # <---
                             #                                   # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4
-        ampRise = 0.372       #          # <---
+        ampRise = 0.286       #          # <---
         #####################
 
         pathBlockDict =  BlockDict.get_pathBlockDict( pNr ) 

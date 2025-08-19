@@ -24,9 +24,9 @@ class PreTest:
 
         #===============================================#               
                                                         #                            
-        participantNr = 1            # <--              #       # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4      
+        participantNr = 3            # <--              #       # Mk:0,    Gl:1,   Tm:2,   Alx:3,   Blnc:4      
                                                         #
-        preTest_trial = 1            # <--              #
+        preTest_trial = 3            # <--              #
                                                         #
         ampRiseRange = [0.2, 0.5]       # <--           #       # default: [0.15, 0.35]   #both inclusive
                                                         #             
